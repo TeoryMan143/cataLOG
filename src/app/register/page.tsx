@@ -89,7 +89,7 @@ function RegisterPage() {
             {text}
           </Button>
         ))}
-        <Link href='#' className='text-center text-white underline'>
+        <Link href='#' className='text-center text-white underline text-sm'>
           Ya tengo una cuenta
         </Link>
       </div>
