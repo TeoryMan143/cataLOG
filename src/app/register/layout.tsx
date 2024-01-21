@@ -1,3 +1,4 @@
+import Logo from '@/components/logo';
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
@@ -14,6 +15,7 @@ function RegisterLayout({ children }: { children: React.ReactNode }) {
       <main className='h-[100dvh] grid place-content-center relative z-10'>
         {children}
       </main>
+      <Logo className='absolute right-0 bottom-0 text-6xl text-white' />
     </>
   );
 }
