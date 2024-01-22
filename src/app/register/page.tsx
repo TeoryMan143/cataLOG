@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import Button from '../../components/button';
-import EmailButton from './email-button';
+import EmailButton from './_email-button';
 
 const buttons = [
   {

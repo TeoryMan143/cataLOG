@@ -6,7 +6,7 @@ import Input from '@/components/input';
 import Button from '@/components/button';
 import { type FormUserSchema, formUserSchema } from '@/core/schemas/user';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { ResgisterInputs } from './types';
+import { ResgisterInputs } from './_types';
 import { resgisterUser } from '@/lib/auth';
 
 function RegisterEmailForm() {

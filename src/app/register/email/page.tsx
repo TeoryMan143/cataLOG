@@ -1,5 +1,5 @@
 import Logo from '@/components/logo';
-import RegisterEmailForm from './register-email-form';
+import RegisterEmailForm from './_register-email-form';
 
 function EmailPage() {
   return (
