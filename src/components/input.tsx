@@ -15,10 +15,10 @@ const Input = forwardRef<null, Props>(function Input(
 ) {
   return (
     <div>
-      <div className='relative'>
+      <div className='relative w-72 bg-gray-300/55 flex'>
         <span
           className={cn(
-            'absolute left-6 top-1/2 -translate-y-1/2 text-2xl text-white z-10',
+            'absolute left-5 top-1/2 -translate-y-1/2 text-2xl text-white z-10',
             {
               'text-red-600': error,
             }
@@ -29,7 +29,7 @@ const Input = forwardRef<null, Props>(function Input(
         <input
           className={cn(
             `
-            w-72 bg-gray-300/55 py-2 text-center backdrop-blur-sm text-black
+            ml-16 py-2 text-center backdrop-blur-sm text-black flex-1 bg-transparent
             placeholder:italic placeholder:text-slate-800 placeholder:tracking-widest placeholder:text-sm
             focus:backdrop-blur-none focus:bg-gray-500
             `,
