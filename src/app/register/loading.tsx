@@ -1,4 +1,4 @@
 function LoadingPage() {
-  return <div>LoadingPage</div>;
+  return <div>Cargado...</div>;
 }
 export default LoadingPage;
