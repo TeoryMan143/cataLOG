@@ -1,12 +1,13 @@
 'use client';
 
-import { useForm } from 'react-hook-form';
+import { SubmitHandler, useForm } from 'react-hook-form';
 import { Icon } from '@iconify/react';
 import Input from '@/components/input';
 import Button from '@/components/button';
 import { type FormUserSchema, formUserSchema } from '@/core/schemas/user';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { ResgisterInputs } from './types';
+import { resgisterUser } from '@/lib/auth';
 
 function RegisterEmailForm() {
   const {
@@ -53,8 +54,9 @@ function RegisterEmailForm() {
     },
   ];
 
-  const onSubmit = async (data: FormUserSchema) => {
-    await new Promise(resolve => setTimeout(resolve, 2000));
+  const onSubmit: SubmitHandler<FormUserSchema> = async data => {
+    const res = await resgisterUser(data);
+    console.log(res);
     reset();
   };
 
