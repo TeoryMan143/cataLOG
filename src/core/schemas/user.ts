@@ -27,5 +27,9 @@ export const formUserSchema = requestUserSchema
     message: 'Las contraseñas no coinciden',
     path: ['confirmPassword'],
   });
+export const formUserSchemaValidator = formUserSchema.transform(user => {
+  const { confirmPassword, ...otherProps } = user;
+  return otherProps;
+});
 
 export type FormUserSchema = z.infer<typeof formUserSchema>;

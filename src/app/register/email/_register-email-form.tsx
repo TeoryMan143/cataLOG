@@ -8,16 +8,21 @@ import { type FormUserSchema, formUserSchema } from '@/core/schemas/user';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { ResgisterInputs } from './_types';
 import { resgisterUser } from '@/lib/auth';
+import { useState } from 'react';
+import { ActionResponse } from '@/lib/types';
 
 function RegisterEmailForm() {
   const {
     register,
     handleSubmit,
+    setError,
     reset,
     formState: { errors, isSubmitting },
   } = useForm<FormUserSchema>({
     resolver: zodResolver(formUserSchema),
   });
+
+  const [serverError, setServerError] = useState<ActionResponse | null>(null);
 
   const inputs: ResgisterInputs[] = [
     {
@@ -56,7 +61,15 @@ function RegisterEmailForm() {
 
   const onSubmit: SubmitHandler<FormUserSchema> = async data => {
     const res = await resgisterUser(data);
+
     console.log(res);
+
+    if (res.errorType === 'duplicated-email' && res.errors) {
+      return setError('email', { message: res.errors[0] });
+    }
+
+    if (!res.success) return setServerError(res);
+
     reset();
   };
 
@@ -72,6 +85,17 @@ function RegisterEmailForm() {
           type={password ? 'password' : undefined}
         />
       ))}
+
+      {serverError && (
+        <div className='bg-red-200 text-red-600 mt-1 text-center max-w-72 p-0.5'>
+          <p>Server error: {serverError.errorType}</p>
+          <ul>
+            {serverError.errors?.map(error => (
+              <li key={crypto.randomUUID()}>{error}</li>
+            ))}
+          </ul>
+        </div>
+      )}
 
       <Button
         disabled={isSubmitting}
