@@ -10,6 +10,7 @@ import { ResgisterInputs } from './_types';
 import { resgisterUser } from '@/lib/auth';
 import { useState } from 'react';
 import { ActionResponse } from '@/lib/types';
+import { useRouter } from 'next/navigation';
 
 function RegisterEmailForm() {
   const {
@@ -22,7 +23,11 @@ function RegisterEmailForm() {
     resolver: zodResolver(formUserSchema),
   });
 
-  const [serverError, setServerError] = useState<ActionResponse | null>(null);
+  const router = useRouter();
+
+  const [serverError, setServerError] = useState<ActionResponse<any> | null>(
+    null
+  );
 
   const inputs: ResgisterInputs[] = [
     {
@@ -42,27 +47,26 @@ function RegisterEmailForm() {
       icon: <Icon icon='material-symbols:phone-android-outline-rounded' />,
       placeholder: 'Número de teléfono',
       error: errors.number,
+      type: 'number',
     },
     {
       name: 'password',
       icon: <Icon icon='fluent:password-20-regular' />,
       placeholder: 'Contraseña',
       error: errors.password,
-      password: true,
+      type: 'password',
     },
     {
       name: 'confirmPassword',
       icon: <Icon icon='fluent:password-20-filled' />,
       placeholder: 'Confirmar contraseña',
       error: errors.confirmPassword,
-      password: true,
+      type: 'password',
     },
   ];
 
   const onSubmit: SubmitHandler<FormUserSchema> = async data => {
     const res = await resgisterUser(data);
-
-    console.log(res);
 
     if (res.errorType === 'duplicated-email' && res.errors) {
       return setError('email', { message: res.errors[0] });
@@ -71,18 +75,17 @@ function RegisterEmailForm() {
     if (!res.success) return setServerError(res);
 
     reset();
+    router.replace('/login');
   };
 
   return (
     <form className='flex flex-col gap-3' onSubmit={handleSubmit(onSubmit)}>
-      {inputs.map(({ icon: Icon, placeholder, error, name, password }) => (
+      {inputs.map(({ icon: Icon, name, ...otherProps }) => (
         <Input
-          {...register(name)}
+          {...register(name, { valueAsNumber: name === 'number' })}
           icon={Icon}
-          placeholder={placeholder}
           key={crypto.randomUUID()}
-          error={error}
-          type={password ? 'password' : undefined}
+          {...otherProps}
         />
       ))}
 

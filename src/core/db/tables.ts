@@ -1,5 +1,5 @@
 import { sql } from 'drizzle-orm';
-import { pgTable, text, uniqueIndex, uuid } from 'drizzle-orm/pg-core';
+import { integer, pgTable, text, uniqueIndex, uuid } from 'drizzle-orm/pg-core';
 
 export const users = pgTable(
   'users',
@@ -10,7 +10,7 @@ export const users = pgTable(
     name: text('name').notNull(),
     email: text('email').notNull().unique(),
     password: text('password').notNull(),
-    number: text('number').notNull(),
+    number: integer('number').notNull(),
   },
   users => {
     return {

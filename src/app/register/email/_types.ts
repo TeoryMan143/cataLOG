@@ -1,3 +1,4 @@
+import { HTMLInputTypeAttribute } from 'react';
 import { FieldError } from 'react-hook-form';
 
 export type ResgisterInputs = {
@@ -5,5 +6,5 @@ export type ResgisterInputs = {
   icon?: React.ReactElement<React.ComponentProps<'svg'>>;
   placeholder: string;
   error?: FieldError;
-  password?: boolean;
+  type?: HTMLInputTypeAttribute;
 };

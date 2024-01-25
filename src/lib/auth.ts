@@ -1,18 +1,14 @@
 'use server';
 
-import {
-  FormUserSchema,
-  formUserSchema,
-  formUserSchemaValidator,
-} from '@/core/schemas/user';
+import { FormUserSchema, User, formUserSchema } from '@/core/schemas/user';
 import { ActionResponse } from './types';
 import { db } from '@/core/db/config';
 import { users } from '@/core/db/tables';
-import { DrizzleError } from 'drizzle-orm';
+import { hashPassword } from '@/core/utils';
 
 export async function resgisterUser(
   data: FormUserSchema
-): Promise<ActionResponse<any>> {
+): Promise<ActionResponse<User | undefined>> {
   const result = formUserSchema.safeParse(data);
 
   let zodErrors: string[] = [];
@@ -28,11 +24,18 @@ export async function resgisterUser(
   }
 
   if (!result.success) return { success: false };
+
+  const userData = result.data;
+
   try {
-    const newUser = await db.insert(users).values(result.data).returning();
+    const password = userData.password;
+    const hashedPass = hashPassword(password);
+    const newUserData = { ...userData, password: hashedPass };
+    const newUser = await db.insert(users).values(newUserData).returning();
     return { success: true, result: newUser[0] };
   } catch (e) {
-    if (e instanceof DrizzleError && e.name === 'error') {
+    const exp: any = e;
+    if (exp.constraint === 'users_email_unique') {
       return {
         success: false,
         errorType: 'duplicated-email',
