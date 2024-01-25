@@ -1,6 +1,6 @@
 import { createInsertSchema } from 'drizzle-zod';
 import { users } from '../db/tables';
-import { z } from 'zod';
+import { string, z } from 'zod';
 
 export const dbUserSchema = createInsertSchema(users);
 export const requestUserSchema = dbUserSchema.omit({ id: true });
@@ -8,11 +8,10 @@ export const formUserSchema = requestUserSchema
   .extend({
     confirmPassword: z.string({ required_error: 'Campo requerido' }),
     number: z
-      .string({ required_error: 'Campo requerido' })
-      .regex(
-        new RegExp('^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-s./0-9]*$'),
-        'Introduce un numero valido'
-      ),
+      .number({ required_error: 'Campo requerido' })
+      .int('Ingresa un numero válido')
+      .min(3000000000)
+      .max(3000000000),
     email: z
       .string({ required_error: 'Campo requerido' })
       .email('Ingresa un email válido'),
@@ -27,9 +26,9 @@ export const formUserSchema = requestUserSchema
     message: 'Las contraseñas no coinciden',
     path: ['confirmPassword'],
   });
-export const formUserSchemaValidator = formUserSchema.transform(user => {
-  const { confirmPassword, ...otherProps } = user;
-  return otherProps;
+const userSchema = dbUserSchema.extend({
+  id: z.string(),
 });
 
 export type FormUserSchema = z.infer<typeof formUserSchema>;
+export type User = z.infer<typeof userSchema>;

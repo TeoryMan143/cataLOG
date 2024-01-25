@@ -6,6 +6,8 @@ export const authConfig = {
   },
   callbacks: {
     authorized({ auth, request: { nextUrl } }) {
+      console.log('LODOFOADOFOAS');
+
       const isLoggedIn = !!auth?.user;
       const isOnLoginPage =
         nextUrl.pathname.startsWith('/register') ||
@@ -13,8 +15,7 @@ export const authConfig = {
       if (isOnLoginPage && isLoggedIn) {
         return Response.redirect(new URL('/', nextUrl));
       }
-      if (isLoggedIn) return true;
-      return false;
+      return isLoggedIn;
     },
   },
   providers: [],
