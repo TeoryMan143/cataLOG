@@ -4,7 +4,11 @@ import { FormUserSchema, User, formUserSchema } from '@/core/schemas/user';
 import { ActionResponse } from './types';
 import { db } from '@/core/db/config';
 import { users } from '@/core/db/tables';
-import { hashPassword } from '@/core/utils';
+import bcrypt from 'bcrypt';
+
+async function hashPassword(password: string) {
+  return bcrypt.hash(password, await bcrypt.genSalt());
+}
 
 export async function resgisterUser(
   data: FormUserSchema
@@ -29,7 +33,7 @@ export async function resgisterUser(
 
   try {
     const password = userData.password;
-    const hashedPass = hashPassword(password);
+    const hashedPass = await hashPassword(password);
     const newUserData = { ...userData, password: hashedPass };
     const newUser = await db.insert(users).values(newUserData).returning();
     return { success: true, result: newUser[0] };

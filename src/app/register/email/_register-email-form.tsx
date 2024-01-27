@@ -9,7 +9,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { ResgisterInputs } from './_types';
 import { resgisterUser } from '@/lib/auth';
 import { useState } from 'react';
-import { ActionResponse } from '@/lib/types';
+import type { ActionResponse } from '@/lib/types';
 import { useRouter } from 'next/navigation';
 
 function RegisterEmailForm() {

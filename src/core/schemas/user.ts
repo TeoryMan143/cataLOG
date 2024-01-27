@@ -1,6 +1,6 @@
 import { createInsertSchema } from 'drizzle-zod';
 import { users } from '../db/tables';
-import { string, z } from 'zod';
+import { z } from 'zod';
 
 export const dbUserSchema = createInsertSchema(users);
 export const requestUserSchema = dbUserSchema.omit({ id: true });
@@ -11,7 +11,7 @@ export const formUserSchema = requestUserSchema
       .number({ required_error: 'Campo requerido' })
       .int('Ingresa un numero válido')
       .min(3000000000)
-      .max(3000000000),
+      .max(3999999999),
     email: z
       .string({ required_error: 'Campo requerido' })
       .email('Ingresa un email válido'),
@@ -28,6 +28,11 @@ export const formUserSchema = requestUserSchema
   });
 const userSchema = dbUserSchema.extend({
   id: z.string(),
+});
+
+export const loginCredentials = z.object({
+  email: z.string().email(),
+  password: z.string(),
 });
 
 export type FormUserSchema = z.infer<typeof formUserSchema>;
