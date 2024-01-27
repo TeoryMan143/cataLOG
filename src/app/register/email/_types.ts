@@ -1,10 +1,9 @@
-import { HTMLInputTypeAttribute } from 'react';
+import React, { HTMLInputTypeAttribute } from 'react';
 import { FieldError } from 'react-hook-form';
 
-export type ResgisterInputs = {
+export interface ResgisterInputs
+  extends React.ComponentPropsWithoutRef<'input'> {
   name: 'number' | 'email' | 'name' | 'password' | 'confirmPassword';
   icon?: React.ReactElement<React.ComponentProps<'svg'>>;
-  placeholder: string;
   error?: FieldError;
-  type?: HTMLInputTypeAttribute;
-};
+}
