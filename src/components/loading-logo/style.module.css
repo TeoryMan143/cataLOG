@@ -1,0 +1,9 @@
+.animation {
+  animation: 0.5s ease-in blink 1s infinite alternate;
+}
+
+@keyframes blink {
+  to {
+    color: #333;
+  }
+}

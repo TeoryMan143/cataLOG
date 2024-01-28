@@ -6,7 +6,9 @@ export const metadata: Metadata = {
   title: 'Iniciar Sesión',
 };
 
-function Login() {
+async function Login() {
+  await new Promise(resolve => setTimeout(resolve, 5000));
+
   return (
     <div className='flex flex-col gap-6 items-center'>
       <h2 className='font-bold text-[1.7rem] text-white text-center'>
