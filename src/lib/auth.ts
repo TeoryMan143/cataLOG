@@ -1,17 +1,25 @@
 'use server';
 
-import { FormUserSchema, User, formUserSchema } from '@/core/schemas/user';
+import {
+  FormUserSchema,
+  User,
+  formUserSchema,
+  loginCredentials,
+} from '@/core/schemas/user';
 import { ActionResponse } from './types';
 import { db } from '@/core/db/config';
 import { users } from '@/core/db/tables';
 import bcrypt from 'bcrypt';
+import { signIn } from '../../auth';
+import { redirect } from 'next/navigation';
+import { AuthError } from 'next-auth';
 
 async function hashPassword(password: string) {
   return bcrypt.hash(password, await bcrypt.genSalt());
 }
 
 export async function resgisterUser(
-  data: FormUserSchema
+  data: unknown
 ): Promise<ActionResponse<User | undefined>> {
   const result = formUserSchema.safeParse(data);
 
@@ -38,6 +46,7 @@ export async function resgisterUser(
     const newUser = await db.insert(users).values(newUserData).returning();
     return { success: true, result: newUser[0] };
   } catch (e) {
+    console.error(e);
     const exp: any = e;
     if (exp.constraint === 'users_email_unique') {
       return {
@@ -47,5 +56,23 @@ export async function resgisterUser(
       };
     }
     return { success: false, errorType: 'insertion', errors: ['db'] };
+  }
+}
+
+export async function loginUser(data: Object): Promise<ActionResponse> {
+  try {
+    await signIn('credentials', { ...data, redirect: false });
+    redirect('/');
+  } catch (e) {
+    console.error(e);
+    const { type } = e as AuthError;
+    if (type === 'CredentialsSignin') {
+      return {
+        success: false,
+        errorType: 'auth',
+        errors: ['Unvalid redentials'],
+      };
+    }
+    throw e;
   }
 }

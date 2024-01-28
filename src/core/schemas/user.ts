@@ -10,8 +10,8 @@ export const formUserSchema = requestUserSchema
     number: z
       .number({ required_error: 'Campo requerido' })
       .int('Ingresa un numero válido')
-      .min(3000000000)
-      .max(3999999999),
+      .min(3000000000, 'Ingresa un numero válido')
+      .max(3999999999, 'Ingresa un numero válido'),
     email: z
       .string({ required_error: 'Campo requerido' })
       .email('Ingresa un email válido'),
@@ -31,9 +31,12 @@ const userSchema = dbUserSchema.extend({
 });
 
 export const loginCredentials = z.object({
-  email: z.string().email(),
-  password: z.string(),
+  email: z
+    .string({ required_error: 'Campo requerido' })
+    .email('Ingresa un email válido'),
+  password: z.string({ required_error: 'Campo requerido' }),
 });
 
+export type LoginCredentials = z.infer<typeof loginCredentials>;
 export type FormUserSchema = z.infer<typeof formUserSchema>;
 export type User = z.infer<typeof userSchema>;

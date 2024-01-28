@@ -3,7 +3,7 @@ import { authConfig } from './auth.config';
 import Credentials from 'next-auth/providers/credentials';
 import { getUserByEmail } from '@/lib/db/users';
 import { loginCredentials } from '@/core/schemas/user';
-// import bcrypt from 'bcrypt';
+import bcrypt from 'bcrypt';
 
 export const { auth, signIn, signOut } = NextAuth({
   ...authConfig,
@@ -18,8 +18,8 @@ export const { auth, signIn, signOut } = NextAuth({
         const user = await getUserByEmail(email);
         if (!user) return null;
 
-        // const passwordsMatch = await bcrypt.compare(password, user.password);
-        // if (!passwordsMatch) return null;
+        const passwordsMatch = await bcrypt.compare(password, user.password);
+        if (!passwordsMatch) return null;
 
         return user;
       },
