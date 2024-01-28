@@ -1,11 +1,6 @@
 'use server';
 
-import {
-  FormUserSchema,
-  User,
-  formUserSchema,
-  loginCredentials,
-} from '@/core/schemas/user';
+import { User, formUserSchema } from '@/core/schemas/user';
 import { ActionResponse } from './types';
 import { db } from '@/core/db/config';
 import { users } from '@/core/db/tables';
