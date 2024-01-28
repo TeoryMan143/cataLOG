@@ -3,7 +3,7 @@ function Logo(props: React.ComponentProps<'svg'>) {
     <svg
       {...props}
       xmlns='http://www.w3.org/2000/svg'
-      viewBox='0 0 64 80'
+      viewBox='0 0 64 64'
       width='0.98em'
       height='1em'
       x='0px'
