@@ -6,11 +6,12 @@ import Input from '@/components/input';
 import Button from '@/components/button';
 import { type FormUserSchema, formUserSchema } from '@/core/schemas/user';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { ResgisterInputs } from './_types';
+import { ResgisterInputs } from '../_types';
 import { resgisterUser } from '@/lib/auth';
 import { useState } from 'react';
 import type { ActionResponse } from '@/lib/types';
 import { useRouter } from 'next/navigation';
+import { Toaster, toast } from 'sonner';
 
 function RegisterEmailForm() {
   const {
@@ -66,13 +67,21 @@ function RegisterEmailForm() {
   ];
 
   const onSubmit: SubmitHandler<FormUserSchema> = async data => {
+    const toastId = toast.loading('Registrando informacion...');
+
     const res = await resgisterUser(data);
 
     if (res.errorType === 'duplicated-email' && res.errors) {
+      toast.error('Email duplicado', { id: toastId });
       return setError('email', { message: res.errors[0] });
     }
 
-    if (!res.success) return setServerError(res);
+    if (!res.success) {
+      toast.error('Error del servidor', { id: toastId });
+      return setServerError(res);
+    }
+
+    toast.success('Registrado correctamente', { id: toastId });
 
     reset();
     router.push('/login');
@@ -112,6 +121,7 @@ function RegisterEmailForm() {
       >
         ¡Crear cuenta cataLOG!
       </Button>
+      <Toaster />
     </form>
   );
 }
