@@ -75,7 +75,7 @@ function RegisterEmailForm() {
     if (!res.success) return setServerError(res);
 
     reset();
-    router.replace('/login');
+    router.push('/login');
   };
 
   return (
