@@ -100,7 +100,7 @@ function RegisterEmailForm() {
         <Input
           className='
             border-black 
-            lg:border lg:focus:bg-amber-100
+            lg:border lg:focus:bg-amber-100 lg:bg-gray-300
           '
           {...register(name, { valueAsNumber: name === 'number' })}
           icon={Icon}

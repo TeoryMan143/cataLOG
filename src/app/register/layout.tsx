@@ -8,7 +8,7 @@ export const metadata: Metadata = {
 
 function RegisterLayout({ children }: { children: React.ReactNode }) {
   return (
-    <div className='lg:flex'>
+    <div className='lg:flex lg:max-h-[100dvh]'>
       <div
         className='
         bg-[url("/bg-register.webp")] absolute w-[100dvw] h-[100dvh] bg-[center_right_-28rem] bg-cover
@@ -21,7 +21,7 @@ function RegisterLayout({ children }: { children: React.ReactNode }) {
       <main
         className='
         h-[100dvh] grid place-content-center relative z-10
-        lg:flex-1
+        lg:flex-1 lg:max-h-[100dvh]
       '
       >
         {children}

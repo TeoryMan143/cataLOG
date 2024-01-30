@@ -51,9 +51,9 @@ function LoginEmailForm() {
     <form className='flex flex-col gap-3' onSubmit={handleSubmit(onSubmit)}>
       <Input
         className='
-            border-black 
-            lg:border lg:focus:bg-amber-100
-          '
+          border-black 
+          lg:border lg:focus:bg-amber-100 lg:bg-gray-300
+        '
         placeholder='Correo electrónico'
         icon={<Icon icon='uiw:mail' className='text-xl lg:text-black' />}
         {...register('email')}
@@ -62,7 +62,7 @@ function LoginEmailForm() {
       <Input
         className='
             border-black 
-            lg:border lg:focus:bg-amber-100
+            lg:border lg:focus:bg-amber-100 lg:bg-gray-300
           '
         placeholder='Contraseña'
         icon={
