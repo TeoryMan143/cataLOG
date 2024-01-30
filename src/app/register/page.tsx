@@ -62,7 +62,7 @@ function RegisterPage() {
           lg:text-black lg:text-6xl lg:mb-16
       '
       >
-        ¡Resgístrate a cataLOG!
+        ¡Regístrate a cataLOG!
       </h2>
       <div
         className='
