@@ -56,13 +56,27 @@ const buttons = [
 function RegisterPage() {
   return (
     <div className='flex flex-col items-center'>
-      <h2 className='font-bold text-5xl text-white mb-10 text-center'>
+      <h2
+        className='
+          font-bold text-5xl text-white mb-10 text-center
+          lg:text-black lg:text-6xl lg:mb-16
+      '
+      >
         ¡Resgístrate a cataLOG!
       </h2>
-      <div className='flex flex-col gap-3'>
+      <div
+        className='
+          flex flex-col gap-3 items-stretch
+          lg:gap-4
+        '
+      >
         <EmailButton
           href='/register/email'
-          className='font-semibold flex justify-center items-center gap-3 w-[22rem]'
+          className='
+            font-semibold flex justify-center items-center gap-3 px-10
+            hover:bg-amber-100
+            lg:border-2 lg:border-black lg:py-2
+          '
         >
           <svg
             xmlns='http://www.w3.org/2000/svg'
@@ -80,7 +94,11 @@ function RegisterPage() {
         </EmailButton>
         {buttons.map(({ text, icon: Icon }) => (
           <Button
-            className='font-semibold flex justify-center items-center gap-3 w-[22rem]'
+            className='
+              font-semibold flex justify-center items-center gap-3
+              hover:bg-amber-100
+              lg:border-2 lg:border-black lg:py-2
+            '
             key={crypto.randomUUID()}
           >
             {Icon}
