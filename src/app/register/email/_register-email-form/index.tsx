@@ -33,33 +33,40 @@ function RegisterEmailForm() {
   const inputs: ResgisterInputs[] = [
     {
       name: 'name',
-      icon: <Icon icon='ph:user-circle-fill' />,
+      icon: <Icon icon='ph:user-circle-fill' className='lg:text-black' />,
       placeholder: 'Nombre completo',
       error: errors.name,
     },
     {
       name: 'email',
-      icon: <Icon icon='uiw:mail' className='text-xl' />,
+      icon: <Icon icon='uiw:mail' className='text-xl lg:text-black' />,
       placeholder: 'Correo electrónico',
       error: errors.email,
     },
     {
       name: 'number',
-      icon: <Icon icon='material-symbols:phone-android-outline-rounded' />,
+      icon: (
+        <Icon
+          icon='material-symbols:phone-android-outline-rounded'
+          className='lg:text-black'
+        />
+      ),
       placeholder: 'Número de teléfono',
       error: errors.number,
       type: 'number',
     },
     {
       name: 'password',
-      icon: <Icon icon='fluent:password-20-regular' />,
+      icon: (
+        <Icon icon='fluent:password-20-regular' className='lg:text-black' />
+      ),
       placeholder: 'Contraseña',
       error: errors.password,
       type: 'password',
     },
     {
       name: 'confirmPassword',
-      icon: <Icon icon='fluent:password-20-filled' />,
+      icon: <Icon icon='fluent:password-20-filled' className='lg:text-black' />,
       placeholder: 'Confirmar contraseña',
       error: errors.confirmPassword,
       type: 'password',
@@ -91,6 +98,10 @@ function RegisterEmailForm() {
     <form className='flex flex-col gap-3' onSubmit={handleSubmit(onSubmit)}>
       {inputs.map(({ icon: Icon, name, ...otherProps }) => (
         <Input
+          className='
+            border-black 
+            lg:border lg:focus:bg-amber-100
+          '
           {...register(name, { valueAsNumber: name === 'number' })}
           icon={Icon}
           key={crypto.randomUUID()}

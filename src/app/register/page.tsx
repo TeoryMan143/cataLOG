@@ -1,6 +1,8 @@
 import Link from 'next/link';
 import Button from '../../components/button';
 import EmailButton from './_email-button';
+import { cn } from '@/core/utils';
+import { workSans } from '@/core/fonts';
 
 const buttons = [
   {
@@ -57,10 +59,13 @@ function RegisterPage() {
   return (
     <div className='flex flex-col items-center'>
       <h2
-        className='
+        className={cn(
+          workSans.className,
+          `
           font-bold text-5xl text-white mb-10 text-center
           lg:text-black lg:text-6xl lg:mb-16
-      '
+        `
+        )}
       >
         ¡Regístrate a cataLOG!
       </h2>

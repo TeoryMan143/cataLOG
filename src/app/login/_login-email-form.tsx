@@ -50,14 +50,24 @@ function LoginEmailForm() {
   return (
     <form className='flex flex-col gap-3' onSubmit={handleSubmit(onSubmit)}>
       <Input
+        className='
+            border-black 
+            lg:border lg:focus:bg-amber-100
+          '
         placeholder='Correo electrónico'
-        icon={<Icon icon='uiw:mail' className='text-xl' />}
+        icon={<Icon icon='uiw:mail' className='text-xl lg:text-black' />}
         {...register('email')}
         error={errors.email}
       />
       <Input
+        className='
+            border-black 
+            lg:border lg:focus:bg-amber-100
+          '
         placeholder='Contraseña'
-        icon={<Icon icon='fluent:password-20-filled' />}
+        icon={
+          <Icon icon='fluent:password-20-filled' className='lg:text-black' />
+        }
         type='password'
         {...register('password')}
         error={errors.password}

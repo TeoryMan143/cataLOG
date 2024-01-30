@@ -1,6 +1,8 @@
 import Logo from '@/components/logo';
 import LoginEmailForm from './_login-email-form';
 import { Metadata } from 'next';
+import { cn } from '@/core/utils';
+import { workSans } from '@/core/fonts';
 
 export const metadata: Metadata = {
   title: 'Iniciar Sesión',
@@ -9,11 +11,29 @@ export const metadata: Metadata = {
 function Login() {
   return (
     <div className='flex flex-col gap-6 items-center'>
-      <h2 className='font-bold text-[1.7rem] text-white text-center'>
+      <h2
+        className={cn(
+          workSans.className,
+          `
+          font-bold text-5xl text-white mb-10 text-center
+          lg:text-black lg:text-6xl lg:mb-8
+        `
+        )}
+      >
         Ingresa a catalog
       </h2>
-      <div className='bg-black rounded-full p-16 relative border-2 border-white'>
-        <Logo className='text-8xl text-slate-300 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2' />
+      <div
+        className='
+          bg-black rounded-full p-16 relative border-4 border-white
+          lg:bg-transparent lg:border-black
+        '
+      >
+        <Logo
+          className='
+            text-8xl text-white absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2
+            lg:text-black
+          '
+        />
       </div>
       <LoginEmailForm />
     </div>

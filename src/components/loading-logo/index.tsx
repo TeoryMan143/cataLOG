@@ -1,4 +1,4 @@
-import { sawarabi } from '@/core/fonts';
+import { workSans } from '@/core/fonts';
 import Logo from '../logo';
 import styles from './style.module.css';
 import { cn } from '@/core/utils';
@@ -9,7 +9,7 @@ function LaodingLogo() {
       <Logo className={cn(styles.animation, 'text-9xl text-white')} />
       <p
         className={cn(
-          sawarabi.className,
+          workSans.className,
           styles.animation,
           'text-center text-lg text-white'
         )}

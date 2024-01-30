@@ -12,7 +12,7 @@ function RegisterLayout({ children }: { children: React.ReactNode }) {
       <div
         className='
         bg-[url("/bg-register.webp")] absolute w-[100dvw] h-[100dvh] bg-[center_right_-28rem] bg-cover
-        lg:relative lg:inset-auto lg:flex-[1.5]
+        lg:relative lg:inset-auto lg:flex-[1.5] lg:bg-center
       '
       ></div>
       <div className='bg-black/30 w-[100dvw] h-[100dvh] absolute lg:hidden'></div>
