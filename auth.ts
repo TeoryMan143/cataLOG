@@ -1,11 +1,12 @@
 import NextAuth from 'next-auth';
 import { authConfig } from './auth.config';
-import Credentials from 'next-auth/providers/credentials';
+import Credentials from '@auth/core/providers/credentials';
+import Google from '@auth/core/providers/google';
 import { getUserByEmail } from '@/lib/db/users';
 import { loginCredentials } from '@/core/schemas/user';
 import bcrypt from 'bcrypt';
 
-export const { auth, signIn, signOut } = NextAuth({
+export const { auth, signIn, signOut, handlers } = NextAuth({
   ...authConfig,
   providers: [
     Credentials({
@@ -24,5 +25,18 @@ export const { auth, signIn, signOut } = NextAuth({
         return user;
       },
     }),
+    Google({
+      clientId: process.env.GOOGLE_CLIENT_ID,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+    }),
   ],
+  callbacks: {
+    async signIn({ profile, account }) {
+      if (account?.provider === 'google') {
+        console.log(profile);
+        return false;
+      }
+      return true;
+    },
+  },
 });

@@ -71,3 +71,7 @@ export async function loginUser(data: Object): Promise<ActionResponse> {
     throw e;
   }
 }
+
+export async function signInGoogle() {
+  await signIn('google');
+}

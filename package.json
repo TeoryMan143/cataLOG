@@ -11,6 +11,8 @@
     "migration:run": "drizzle-kit push:pg"
   },
   "dependencies": {
+    "@auth/core": "^0.25.0",
+    "@auth/drizzle-adapter": "^0.5.0",
     "@hookform/resolvers": "^3.3.4",
     "@vercel/postgres": "^0.5.1",
     "bcrypt": "^5.1.1",

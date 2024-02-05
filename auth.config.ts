@@ -1,6 +1,9 @@
 import type { NextAuthConfig } from 'next-auth';
+import { DrizzleAdapter } from '@auth/drizzle-adapter';
+import { db } from '@/core/db/config';
 
 export const authConfig = {
+  adapter: DrizzleAdapter(db),
   pages: {
     signIn: '/login',
   },
