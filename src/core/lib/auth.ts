@@ -5,7 +5,7 @@ import { ActionResponse } from './types';
 import { db } from '@/core/db/config';
 import { users } from '@/core/db/tables';
 import bcrypt from 'bcrypt';
-import { signIn } from '../../auth';
+import { signIn } from '../../../auth';
 import { redirect } from 'next/navigation';
 import { AuthError } from 'next-auth';
 

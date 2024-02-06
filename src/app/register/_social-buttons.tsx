@@ -1,8 +1,7 @@
 'use client';
 
 import Button from '@/components/button';
-import { signIn } from '../../../auth';
-import { signInGoogle } from '@/lib/auth';
+import { signInGoogle } from '@/core/lib/auth';
 
 const buttons = [
   {

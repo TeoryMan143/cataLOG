@@ -3,8 +3,8 @@
 import Button from '@/components/button';
 import Input from '@/components/input';
 import { type LoginCredentials, loginCredentials } from '@/core/schemas/user';
-import { loginUser } from '@/lib/auth';
-import type { ActionResponse } from '@/lib/types';
+import { loginUser } from '@/core/lib/auth';
+import type { ActionResponse } from '@/core/lib/types';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Icon } from '@iconify/react';
 import { useState } from 'react';

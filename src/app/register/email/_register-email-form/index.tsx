@@ -7,9 +7,9 @@ import Button from '@/components/button';
 import { type FormUserSchema, formUserSchema } from '@/core/schemas/user';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { ResgisterInputs } from '../_types';
-import { resgisterUser } from '@/lib/auth';
+import { resgisterUser } from '@/core/lib/auth';
 import { useState } from 'react';
-import type { ActionResponse } from '@/lib/types';
+import type { ActionResponse } from '@/core/lib/types';
 import { useRouter } from 'next/navigation';
 import { Toaster, toast } from 'sonner';
 
