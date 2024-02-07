@@ -12,7 +12,7 @@ import {
 import type { AdapterAccount } from '@auth/core/adapters';
 
 export const users = pgTable(
-  'users',
+  'user',
   {
     id: uuid('id')
       .default(sql`uuid_generate_v4()`)
@@ -21,6 +21,8 @@ export const users = pgTable(
     email: text('email').notNull().unique(),
     password: text('password').notNull(),
     number: bigint('number', { mode: 'number' }).notNull(),
+    emailVerified: timestamp('emailVerified', { mode: 'date' }),
+    image: text('image'),
   },
   users => {
     return {
