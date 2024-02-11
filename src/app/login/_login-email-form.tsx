@@ -10,6 +10,7 @@ import { Icon } from '@iconify/react';
 import { useState } from 'react';
 import { type SubmitHandler, useForm } from 'react-hook-form';
 import { Toaster, toast } from 'sonner';
+import { useRouter } from 'next/navigation';
 
 function LoginEmailForm() {
   const {
@@ -26,19 +27,21 @@ function LoginEmailForm() {
 
   const [credentialsError, setCredentialsError] = useState(false);
 
+  const router = useRouter();
+
   const onSubmit: SubmitHandler<LoginCredentials> = async data => {
     const toastId = toast.loading('Verificando informacion...');
     try {
       const res = await loginUser(data);
 
-      if (res.errorType === 'auth') {
+      if (res?.errorType === 'auth') {
         toast.error('Email o contraseña incorrectos', { id: toastId });
         return setCredentialsError(true);
       }
 
-      if (!res.success) {
+      if (!res?.success) {
         toast.error('Error del servidor', { id: toastId });
-        return setServerError(res);
+        return setServerError(res!);
       }
     } catch (error) {
       console.log('in imcsisas'); // La taberna knows
@@ -104,7 +107,13 @@ function LoginEmailForm() {
       >
         Iniciar sesión
       </Button>
-      <Toaster />
+      <Toaster
+        toastOptions={{
+          classNames: {
+            title: 'lg:text-lg',
+          },
+        }}
+      />
     </form>
   );
 }

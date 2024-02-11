@@ -104,7 +104,7 @@ function RegisterEmailForm() {
           '
           {...register(name, { valueAsNumber: name === 'number' })}
           icon={Icon}
-          key={crypto.randomUUID()}
+          key={name}
           {...otherProps}
         />
       ))}
@@ -132,7 +132,13 @@ function RegisterEmailForm() {
       >
         ¡Crear cuenta cataLOG!
       </Button>
-      <Toaster />
+      <Toaster
+        toastOptions={{
+          classNames: {
+            title: 'lg:text-lg',
+          },
+        }}
+      />
     </form>
   );
 }

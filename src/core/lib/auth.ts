@@ -6,7 +6,6 @@ import { db } from '@/core/db/config';
 import { users } from '@/core/db/tables';
 import bcrypt from 'bcrypt';
 import { signIn } from '../../../auth';
-import { redirect } from 'next/navigation';
 import { AuthError } from 'next-auth';
 
 async function hashPassword(password: string) {
@@ -54,10 +53,11 @@ export async function resgisterUser(
   }
 }
 
-export async function loginUser(data: Object): Promise<ActionResponse> {
+export async function loginUser(
+  data: Object
+): Promise<ActionResponse | undefined> {
   try {
-    await signIn('credentials', { ...data, redirect: false });
-    redirect('/');
+    await signIn('credentials', { ...data, redirectTo: '/' });
   } catch (e) {
     console.error(e);
     const { type } = e as AuthError;
@@ -73,5 +73,5 @@ export async function loginUser(data: Object): Promise<ActionResponse> {
 }
 
 export async function signInGoogle() {
-  await signIn('google');
+  await signIn('google', { redirectTo: '/' });
 }

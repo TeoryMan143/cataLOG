@@ -63,10 +63,10 @@ function SocialButtons() {
       {buttons.map(({ text, icon: Icon, onClick }) => (
         <Button
           className='
-              font-semibold flex justify-center items-center gap-3
-              hover:bg-amber-100
-              lg:border-2 lg:border-black lg:py-2
-            '
+            font-semibold flex justify-center items-center gap-3
+            hover:bg-amber-100
+            lg:border-2 lg:border-black lg:py-2
+          '
           key={crypto.randomUUID()}
           onClick={onClick}
         >

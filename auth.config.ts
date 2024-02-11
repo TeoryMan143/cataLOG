@@ -4,6 +4,9 @@ import { db } from '@/core/db/config';
 
 export const authConfig = {
   adapter: DrizzleAdapter(db),
+  session: {
+    strategy: 'jwt',
+  },
   pages: {
     signIn: '/login',
   },
