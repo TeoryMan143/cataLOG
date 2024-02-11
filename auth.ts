@@ -5,6 +5,7 @@ import Google from 'next-auth/providers/google';
 import { getUserByEmail } from '@/core/lib/db/users';
 import { loginCredentials } from '@/core/schemas/user';
 import bcrypt from 'bcrypt';
+import { resgisterUser } from '@/core/lib/auth';
 
 export const handler = NextAuth({
   ...authConfig,
@@ -32,9 +33,13 @@ export const handler = NextAuth({
   ],
   callbacks: {
     async signIn({ profile, account }) {
-      console.log(account?.provider);
       if (account?.provider === 'google') {
-        console.log(profile, 'google provider');
+        if (!profile) return false;
+        const user = await getUserByEmail(profile.email!);
+        if (user) {
+          const { id, ...rest } = user;
+          await resgisterUser(rest);
+        }
       }
       return true;
     },
