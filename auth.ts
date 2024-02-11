@@ -38,7 +38,8 @@ export const handler = NextAuth({
         const user = await getUserByEmail(profile.email!);
         if (user) {
           const { id, ...rest } = user;
-          await resgisterUser(rest);
+          const newUser = await resgisterUser(rest);
+          console.log(newUser);
         }
       }
       return true;
