@@ -32,7 +32,8 @@ const buttons = [
       </svg>
     ),
     async onClick() {
-      await signInGoogle();
+      // await signInGoogle();
+      console.log('nothing...'); //TODO: THIS WILL WORK
     },
   },
   {

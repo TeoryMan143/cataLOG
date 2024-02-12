@@ -40,7 +40,12 @@ export const handler = NextAuth({
         const user = await getUserByEmail(profile.email!);
         if (user) {
           const { id, ...rest } = user;
-          const newUser = await resgisterUser(rest);
+          const res = await resgisterUser(rest);
+          if (!res.result) {
+            console.log(res.errorType, res.errors);
+            return false;
+          }
+          const newUser = res.result;
           console.log(newUser);
         }
       }
