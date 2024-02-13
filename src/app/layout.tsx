@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import { openSans } from '@/core/fonts';
 import './globals.css';
+import { cn } from '@/core/utils';
 
 export const metadata: Metadata = {
   title: 'cataLOG',
@@ -14,7 +15,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang='es'>
-      <body className={openSans.className}>{children}</body>
+      <body className={cn(openSans.className, 'overflow-hidden')}>
+        {children}
+      </body>
     </html>
   );
 }
