@@ -1,0 +1,15 @@
+.underLineAnim::after {
+  content: '';
+  height: 1.5px;
+  background: #fff;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: 0;
+  width: 0;
+  transition: all 0.2s ease-out;
+}
+
+.underLineAnim:hover::after {
+  width: 100%;
+}

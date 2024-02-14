@@ -1,7 +1,6 @@
 import Logo from '@/components/logo';
 import SearchBar from '@/components/search-var';
 import NavDrawer from './_page-components/nav-drawer';
-import SignOutButton from '@/components/sign-out-button';
 import { auth } from '../../auth';
 import { SessionProvider } from 'next-auth/react';
 
@@ -22,9 +21,7 @@ export default async function Home() {
           <p className='text-center'>Catálogo</p>
         </div>
       </header>
-      <main className='pt-4'>
-        <SignOutButton />
-      </main>
+      <main className='pt-4'></main>
     </>
   );
 }

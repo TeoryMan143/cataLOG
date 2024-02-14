@@ -1,31 +1,18 @@
-import Link from 'next/link';
-
-const urls = [
-  {
-    id: crypto.randomUUID(),
-    href: '/cart',
-    text: 'Ver carrito',
-  },
-  {
-    id: crypto.randomUUID(),
-    href: '/history',
-    text: 'Historial de compras',
-  },
-  {
-    id: crypto.randomUUID(),
-    href: '/businesses',
-    text: 'Mis negocios',
-  },
-];
+import NavLink from './nav-link';
+import SignOutButton from './nav-link/sign-out-button';
+import urls from './urls-data';
 
 function NavLinks() {
   return (
-    <ul>
-      {urls.map(({ id, href, text }) => (
+    <ul className='flex flex-col gap-1'>
+      {urls.map(({ id, href, text, icon }) => (
         <li key={id}>
-          <Link href={href}>{text}</Link>
+          <NavLink href={href} icon={icon}>
+            {text}
+          </NavLink>
         </li>
       ))}
+      <SignOutButton />
     </ul>
   );
 }
