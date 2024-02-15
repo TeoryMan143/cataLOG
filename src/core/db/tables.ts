@@ -4,6 +4,7 @@ import {
   integer,
   pgTable,
   primaryKey,
+  real,
   text,
   timestamp,
   uniqueIndex,
@@ -74,3 +75,28 @@ export const verificationTokens = pgTable(
     compoundKey: primaryKey({ columns: [vt.identifier, vt.token] }),
   })
 );
+
+export const businesses = pgTable(
+  'business',
+  {
+    id: uuid('id')
+      .default(sql`uuid_generate_v4()`)
+      .primaryKey(),
+    name: text('name').notNull(),
+    rut: text('rut').notNull().unique(),
+    address: text('address').notNull().unique(),
+    userId: uuid('user_id').references(() => users.id),
+  },
+  bs => ({
+    rutIdx: uniqueIndex('rut_idx').on(bs.address),
+  })
+);
+
+export const products = pgTable('product', {
+  id: uuid('id')
+    .default(sql`uuid_generate_v4()`)
+    .primaryKey(),
+  displayName: text('display_name').notNull(),
+  price: real('price').notNull(),
+  description: text('description').notNull(),
+});
