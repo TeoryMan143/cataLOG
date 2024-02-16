@@ -4,7 +4,7 @@ import Button from '@/components/button';
 import Input from '@/components/input';
 import { type LoginCredentials, loginCredentials } from '@/core/schemas/user';
 import { loginUser } from '@/core/lib/auth';
-import type { ActionResponse } from '@/core/lib/types';
+import type { ActionError, ActionResponse } from '@/core/lib/types';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Icon } from '@iconify/react';
 import { useState } from 'react';
@@ -20,9 +20,7 @@ function LoginEmailForm() {
     resolver: zodResolver(loginCredentials),
   });
 
-  const [serverError, setServerError] = useState<ActionResponse<any> | null>(
-    null
-  );
+  const [serverError, setServerError] = useState<ActionError | null>(null);
 
   const [credentialsError, setCredentialsError] = useState(false);
 
@@ -31,7 +29,7 @@ function LoginEmailForm() {
     try {
       const res = await loginUser(data);
 
-      if (res?.errorType === 'auth') {
+      if (!res?.success && res?.errorType === 'auth') {
         toast.error('Email o contraseña incorrectos', { id: toastId });
         return setCredentialsError(true);
       }
