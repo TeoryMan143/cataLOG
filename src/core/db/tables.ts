@@ -83,14 +83,14 @@ export const businesses = pgTable(
       .default(sql`uuid_generate_v4()`)
       .primaryKey(),
     name: text('name').notNull(),
-    rut: text('rut').notNull(),
+    nit: text('nit').notNull(),
     address: text('address').notNull().unique(),
     accountId: uuid('account_id')
       .notNull()
       .references(() => users.id),
   },
   bs => ({
-    rutIdx: uniqueIndex('rut_idx').on(bs.address),
+    nitIdx: uniqueIndex('nit_idx').on(bs.address),
   })
 );
 
