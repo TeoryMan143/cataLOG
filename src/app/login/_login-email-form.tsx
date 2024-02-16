@@ -10,7 +10,6 @@ import { Icon } from '@iconify/react';
 import { useState } from 'react';
 import { type SubmitHandler, useForm } from 'react-hook-form';
 import { Toaster, toast } from 'sonner';
-import { useRouter } from 'next/navigation';
 
 function LoginEmailForm() {
   const {
@@ -26,8 +25,6 @@ function LoginEmailForm() {
   );
 
   const [credentialsError, setCredentialsError] = useState(false);
-
-  const router = useRouter();
 
   const onSubmit: SubmitHandler<LoginCredentials> = async data => {
     const toastId = toast.loading('Verificando informacion...');
