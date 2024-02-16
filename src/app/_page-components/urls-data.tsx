@@ -47,7 +47,7 @@ const urls = [
   },
   {
     id: crypto.randomUUID(),
-    href: '/businesses',
+    href: '/business',
     text: 'Mis negocios',
     icon: (
       <svg
