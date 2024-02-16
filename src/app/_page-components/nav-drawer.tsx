@@ -1,6 +1,6 @@
 'use client';
 
-import { cn } from '@/core/utils';
+import { cn } from '@/core/client-utils';
 import { Icon } from '@iconify/react';
 import { useSession } from 'next-auth/react';
 import { useEffect, useRef, useState } from 'react';

@@ -1,7 +1,7 @@
 import { workSans } from '@/core/fonts';
 import Logo from '../logo';
 import styles from './style.module.css';
-import { cn } from '@/core/utils';
+import { cn } from '@/core/client-utils';
 
 function LaodingLogo() {
   return (

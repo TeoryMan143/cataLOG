@@ -1,4 +1,4 @@
-import { cn } from '@/core/utils';
+import { cn } from '@/core/client-utils';
 import Link from 'next/link';
 
 interface Props extends React.ComponentProps<typeof Link> {

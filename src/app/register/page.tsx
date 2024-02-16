@@ -1,5 +1,5 @@
 import EmailButton from './_email-button';
-import { cn } from '@/core/utils';
+import { cn } from '@/core/client-utils';
 import { workSans } from '@/core/fonts';
 import SocialButtons from './_social-buttons';
 

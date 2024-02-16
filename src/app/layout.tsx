@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import { openSans } from '@/core/fonts';
 import './globals.css';
-import { cn } from '@/core/utils';
+import { cn } from '@/core/client-utils';
 
 export const metadata: Metadata = {
   title: 'cataLOG',

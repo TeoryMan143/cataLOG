@@ -1,6 +1,6 @@
 'use client';
 
-import { cn } from '@/core/utils';
+import { cn } from '@/core/client-utils';
 import { forwardRef, useMemo, useState } from 'react';
 import { FieldError } from 'react-hook-form';
 import { Icon as SvgIcon } from '@iconify/react';

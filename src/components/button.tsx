@@ -1,4 +1,4 @@
-import { cn } from '@/core/utils';
+import { cn } from '@/core/client-utils';
 
 interface Props extends React.ComponentProps<'button'> {
   variant?: 'dark' | 'light';

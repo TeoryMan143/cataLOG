@@ -1,5 +1,5 @@
 import RegisterEmailForm from './_register-email-form';
-import { cn } from '@/core/utils';
+import { cn } from '@/core/client-utils';
 import { workSans } from '@/core/fonts';
 
 function EmailPage() {

@@ -1,4 +1,4 @@
-import { cn } from '@/core/utils';
+import { cn } from '@/core/client-utils';
 import Link from 'next/link';
 import style from './style.module.css';
 

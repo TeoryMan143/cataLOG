@@ -4,13 +4,9 @@ import { User, formUserSchema } from '@/core/schemas/user';
 import { ActionResponse } from './types';
 import { db } from '@/core/db/config';
 import { users } from '@/core/db/tables';
-import bcrypt from 'bcrypt';
 import { signIn } from '../../../auth';
 import { AuthError } from 'next-auth';
-
-async function hashPassword(password: string) {
-  return bcrypt.hash(password, await bcrypt.genSalt());
-}
+import { hashPassword } from '@/core/server-utils';
 
 export async function resgisterUser(
   data: unknown

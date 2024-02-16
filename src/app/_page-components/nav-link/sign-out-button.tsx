@@ -1,6 +1,6 @@
 'use client';
 
-import { cn } from '@/core/utils';
+import { cn } from '@/core/client-utils';
 import { out } from './sign-out-action';
 import style from './style.module.css';
 
