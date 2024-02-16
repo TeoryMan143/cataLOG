@@ -9,7 +9,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { ResgisterInputs } from '../_types';
 import { resgisterUser } from '@/core/lib/auth';
 import { useState } from 'react';
-import type { ActionResponse } from '@/core/lib/types';
+import type { ActionError } from '@/core/lib/types';
 import { useRouter } from 'next/navigation';
 import { Toaster, toast } from 'sonner';
 
@@ -26,9 +26,7 @@ function RegisterEmailForm() {
 
   const router = useRouter();
 
-  const [serverError, setServerError] = useState<ActionResponse<any> | null>(
-    null
-  );
+  const [serverError, setServerError] = useState<ActionError | null>(null);
 
   const inputs: ResgisterInputs[] = [
     {
@@ -78,7 +76,7 @@ function RegisterEmailForm() {
 
     const res = await resgisterUser(data);
 
-    if (res.errorType === 'duplicated-email' && res.errors) {
+    if (!res.success && res.errorType === 'duplicated-email') {
       toast.error('Email duplicado', { id: toastId });
       return setError('email', { message: res.errors[0] });
     }
