@@ -1,4 +1,4 @@
-import { sql } from 'drizzle-orm';
+import { relations, sql } from 'drizzle-orm';
 import {
   bigint,
   integer,
@@ -19,7 +19,7 @@ export const users = pgTable(
       .default(sql`uuid_generate_v4()`)
       .primaryKey(),
     name: text('name').notNull(),
-    email: text('email').notNull().unique(),
+    email: text('email').notNull(),
     password: text('password').notNull(),
     number: bigint('number', { mode: 'number' }).notNull(),
     emailVerified: timestamp('emailVerified', { mode: 'date' }),
@@ -83,9 +83,11 @@ export const businesses = pgTable(
       .default(sql`uuid_generate_v4()`)
       .primaryKey(),
     name: text('name').notNull(),
-    rut: text('rut').notNull().unique(),
+    rut: text('rut').notNull(),
     address: text('address').notNull().unique(),
-    userId: uuid('user_id').references(() => users.id),
+    accountId: uuid('account_id')
+      .notNull()
+      .references(() => users.id),
   },
   bs => ({
     rutIdx: uniqueIndex('rut_idx').on(bs.address),
@@ -99,4 +101,51 @@ export const products = pgTable('product', {
   displayName: text('display_name').notNull(),
   price: real('price').notNull(),
   description: text('description').notNull(),
+  businessId: uuid('business_id')
+    .notNull()
+    .references(() => users.id, { onDelete: 'cascade' }),
 });
+
+export const productsRelations = relations(products, ({ many }) => ({
+  productsCategories: many(productsCategories),
+}));
+
+export const categories = pgTable('category', {
+  id: uuid('id')
+    .default(sql`uuid_generate_v4()`)
+    .primaryKey(),
+  name: text('name').notNull(),
+});
+
+export const categoriesRelations = relations(categories, ({ many }) => ({
+  productsCategories: many(productsCategories),
+}));
+
+export const productsCategories = pgTable(
+  'product_categories',
+  {
+    productId: uuid('product_id')
+      .notNull()
+      .references(() => products.id, { onDelete: 'cascade' }),
+    categoryId: uuid('category_id')
+      .notNull()
+      .references(() => categories.id, { onDelete: 'cascade' }),
+  },
+  pc => ({
+    compoundKey: primaryKey({ columns: [pc.categoryId, pc.productId] }),
+  })
+);
+
+export const productsCategoriesRelations = relations(
+  productsCategories,
+  ({ one }) => ({
+    product: one(products, {
+      fields: [productsCategories.productId],
+      references: [products.id],
+    }),
+    category: one(categories, {
+      fields: [productsCategories.categoryId],
+      references: [categories.id],
+    }),
+  })
+);
