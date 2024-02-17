@@ -25,7 +25,8 @@ export async function resgisterUser(
     }
   }
 
-  if (!result.success) return { success: false };
+  if (!result.success)
+    return { success: false, errorType: 'insertion', errors: ['pass'] };
 
   const userData = result.data;
 
