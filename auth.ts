@@ -41,7 +41,7 @@ export const handler = NextAuth({
         if (user) {
           const { id, ...rest } = user;
           const res = await resgisterUser(rest);
-          if (!res.result) {
+          if (!res.success) {
             console.log(res.errorType, res.errors);
             return false;
           }

@@ -2,13 +2,15 @@
 
 import Button from '@/components/button';
 import Input from '@/components/input';
-import type { ActionResponse } from '@/core/lib/types';
+import type { ActionError, ActionResponse } from '@/core/lib/types';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Icon } from '@iconify/react';
 import { useState } from 'react';
 import { type SubmitHandler, useForm } from 'react-hook-form';
 import { Toaster, toast } from 'sonner';
 import { FormBusiness, formBusinessSchema } from '@/core/schemas/business';
+import { registerBusiness } from '@/core/lib/business';
+import { useRouter } from 'next/navigation';
 
 function RegisterBusinessForm() {
   const {
@@ -19,19 +21,29 @@ function RegisterBusinessForm() {
     resolver: zodResolver(formBusinessSchema),
   });
 
-  const [serverError, setServerError] = useState<ActionResponse<any> | null>(
-    null
-  );
+  const [serverError, setServerError] = useState<ActionError | null>(null);
+
+  const router = useRouter();
 
   const onSubmit: SubmitHandler<FormBusiness> = async data => {
-    //TODO: Submit business
+    const toastId = toast.loading('Registrando negocio...');
+
+    const res = await registerBusiness(data);
+
+    if (!res.success) {
+      toast.error('Error del servidor', { id: toastId });
+      return setServerError(res);
+    }
+
+    toast.success('Rgistrado correctamente', { id: toastId });
+    router.replace('/business');
   };
 
   return (
     <form className='flex flex-col gap-3' onSubmit={handleSubmit(onSubmit)}>
       <Input
         className='
-          border-black 
+          border-black
           lg:border lg:focus:bg-amber-100 lg:bg-gray-300
         '
         placeholder='Nombre de la empresa'
@@ -41,12 +53,11 @@ function RegisterBusinessForm() {
       />
       <Input
         className='
-            border-black 
-            lg:border lg:focus:bg-amber-100 lg:bg-gray-300
-          '
+          border-black
+          lg:border lg:focus:bg-amber-100 lg:bg-gray-300
+        '
         placeholder='NIT'
         icon={<Icon icon='f7:number' className='lg:text-black' />}
-        type='password'
         {...register('nit')}
         error={errors.nit}
       />
@@ -62,7 +73,6 @@ function RegisterBusinessForm() {
             className='lg:text-black'
           />
         }
-        type='password'
         {...register('address')}
         error={errors.address}
       />
