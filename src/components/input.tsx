@@ -26,7 +26,7 @@ const showType = ({
   return type;
 };
 
-const Input = forwardRef<null, Props>(function Input(
+const Input = forwardRef<HTMLInputElement, Props>(function Input(
   { className, icon: Icon, error, type, ...props },
   ref
 ) {
