@@ -70,5 +70,5 @@ export async function loginUser(
 }
 
 export async function signInGoogle() {
-  await signIn('google', { redirectTo: '/' });
+  await signIn('google');
 }

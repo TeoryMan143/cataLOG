@@ -17,7 +17,7 @@ function NavLink({ className, children, icon, ...props }: Props) {
       {...props}
     >
       {icon}
-      <span className='flex-1'>{children}</span>
+      {children && <span className='flex-1'>{children}</span>}
     </Link>
   );
 }

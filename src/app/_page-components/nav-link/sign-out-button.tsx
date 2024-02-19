@@ -4,7 +4,7 @@ import { cn } from '@/core/client-utils';
 import { out } from './sign-out-action';
 import style from './style.module.css';
 
-function SignOutButton() {
+function SignOutButton({ active }: { active?: boolean }) {
   return (
     <button
       className={cn(
@@ -29,7 +29,7 @@ function SignOutButton() {
           d='M15 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h8m4-9l-4-4m4 4l-4 4m4-4H9'
         />
       </svg>
-      <span className='flex-1'>Cerrar sesión</span>
+      <span className={`flex-1 ${active ? '' : 'hidden'}`}>Cerrar sesión</span>
     </button>
   );
 }

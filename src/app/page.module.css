@@ -1,0 +1,36 @@
+.mainDistribution {
+  display: grid;
+  grid-template-rows: auto 1fr;
+  grid-template-columns: 1fr;
+}
+
+@media (min-width: 1024px) {
+  .mainDistribution {
+    grid-template-columns: 1fr auto;
+    grid-template-areas:
+      'header header aside'
+      'main main aside'
+      'main main aside';
+  }
+}
+
+.mainArea,
+.headerArea,
+.asideArea {
+  grid-area: unset;
+}
+
+@media (min-width: 1024px) {
+  .mainArea {
+    grid-area: main;
+  }
+
+  .headerArea {
+    grid-area: header;
+  }
+
+  .asideArea {
+    grid-area: aside;
+    display: flex;
+  }
+}

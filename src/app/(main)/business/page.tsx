@@ -13,12 +13,11 @@ async function BusinessPage() {
   const { user } = session;
 
   const dbUser = await getUserByEmail(user.email!);
-
   if (!dbUser) {
     redirect('/login', RedirectType.replace);
   }
-  const res = await getAcountBusinesses(dbUser.id);
 
+  const res = await getAcountBusinesses(dbUser.id);
   if (!res.success || res.result.length === 0) {
     redirect('/business/register', RedirectType.replace);
   }
