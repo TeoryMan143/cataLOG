@@ -88,9 +88,11 @@ export const businesses = pgTable(
     accountId: uuid('account_id')
       .notNull()
       .references(() => users.id),
+    image: text('image').notNull(),
+    banner: text('banner').notNull(),
   },
   bs => ({
-    nitIdx: uniqueIndex('nit_idx').on(bs.address),
+    nitIdx: uniqueIndex('nit_idx').on(bs.nit),
   })
 );
 
