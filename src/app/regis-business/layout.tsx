@@ -1,9 +1,8 @@
 import Logo from '@/components/logo';
 import { Metadata } from 'next';
-import Link from 'next/link';
 
 export const metadata: Metadata = {
-  title: 'Regístrarse',
+  title: 'Regístra tu negocio',
 };
 
 function LoginLayout({ children }: { children: React.ReactNode }) {

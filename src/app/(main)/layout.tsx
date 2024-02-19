@@ -6,6 +6,7 @@ import { SessionProvider } from 'next-auth/react';
 import styles from '../page.module.css';
 import { cn } from '@/core/client-utils';
 import AsideNav from '../_page-components/aside-nav';
+import Link from 'next/link';
 
 export default async function Home({
   children,
@@ -26,7 +27,9 @@ export default async function Home({
       >
         <div>
           <div className='flex justify-around items-center gap-5'>
-            <Logo className='text-4xl' />
+            <Link href='/' className='text-4xl'>
+              <Logo />
+            </Link>
             <SearchBar />
             <SessionProvider session={session}>
               <NavDrawer />

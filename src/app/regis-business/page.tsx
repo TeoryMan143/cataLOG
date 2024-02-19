@@ -3,10 +3,7 @@ import { Metadata } from 'next';
 import { cn } from '@/core/client-utils';
 import { workSans } from '@/core/fonts';
 import RegisterBusinessForm from './_register-business-form';
-
-export const metadata: Metadata = {
-  title: 'Iniciar Sesión',
-};
+import Link from 'next/link';
 
 function RegisterBusinessPage() {
   return (
@@ -25,7 +22,7 @@ function RegisterBusinessPage() {
         `
         )}
       >
-        Registra tu negocio
+        Regístra tu negocio
       </h2>
       <div
         className='
@@ -41,6 +38,17 @@ function RegisterBusinessPage() {
         />
       </div>
       <RegisterBusinessForm />
+      <Link
+        href='/business'
+        className='
+            text-center mt-2 text-gray-100 underline
+            hover:text-amber-100
+            lg:text-black
+            lg:hover:text-gray-600
+          '
+      >
+        Ir a mis negocios
+      </Link>
     </div>
   );
 }
