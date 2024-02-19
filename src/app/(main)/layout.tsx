@@ -23,19 +23,16 @@ export default async function Home({
       )}
     >
       <header
-        className={cn('bg-black text-white py-2 px-4', styles.headerArea)}
+        className={cn('bg-black text-white py-4 px-4', styles.headerArea)}
       >
-        <div>
-          <div className='flex justify-around items-center gap-5'>
-            <Link href='/' className='text-4xl'>
-              <Logo />
-            </Link>
-            <SearchBar />
-            <SessionProvider session={session}>
-              <NavDrawer />
-            </SessionProvider>
-          </div>
-          <p className='text-center'>Catálogo</p>
+        <div className='flex justify-around items-center gap-5'>
+          <Link href='/' className='text-4xl'>
+            <Logo />
+          </Link>
+          <SearchBar />
+          <SessionProvider session={session}>
+            <NavDrawer />
+          </SessionProvider>
         </div>
       </header>
       <main className={cn('overflow-auto', styles.mainArea)}>{children}</main>
