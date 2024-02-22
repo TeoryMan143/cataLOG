@@ -10,10 +10,17 @@ export const registerBusinessSchema = dbBusinessSchema
       .string()
       .regex(new RegExp(`^\\d{4,}(\\.\\d+)?-\\d$`), 'Ingresa un NIT valido'),
   });
-export const formBusinessSchema = registerBusinessSchema.omit({
+
+export const requestBusinessSchema = registerBusinessSchema.omit({
   accountId: true,
+});
+
+export const formBusinessSchema = requestBusinessSchema.omit({
+  image: true,
+  banner: true,
 });
 
 export type FormBusiness = z.infer<typeof formBusinessSchema>;
 export type RegisterBusiness = z.infer<typeof registerBusinessSchema>;
+export type RequestBusiness = z.infer<typeof requestBusinessSchema>;
 export type DBBusiness = z.infer<typeof dbBusinessSchema>;

@@ -11,8 +11,10 @@ import { Toaster, toast } from 'sonner';
 import { FormBusiness, formBusinessSchema } from '@/core/schemas/business';
 import { registerBusiness } from '@/core/lib/business';
 import { useRouter } from 'next/navigation';
-import UploadDropzone from '@/components/upload-dropzone';
 import UploadButton from '@/components/upload-button';
+import Image from 'next/image';
+import { REMOTE_IMG_URL } from '@/core/client-utils';
+import { deleteFileById } from '@/core/lib/files';
 
 function RegisterBusinessForm() {
   const {
@@ -25,20 +27,38 @@ function RegisterBusinessForm() {
   });
 
   const [serverError, setServerError] = useState<ActionError | null>(null);
+  const [iconImg, setIconImg] = useState<string | null>(null);
+  const [iconImgError, setIconImgError] = useState(false);
+  const [bannerImg, setBannerImg] = useState<string | null>(null);
+  const [bannerImgError, setBannerImgError] = useState(false);
 
   const router = useRouter();
 
   const onSubmit: SubmitHandler<FormBusiness> = async data => {
     const toastId = toast.loading('Registrando negocio...');
 
-    const res = await registerBusiness(data);
+    if (!iconImg) {
+      toast.error('Añade un icono', { id: toastId });
+      return setIconImgError(true);
+    }
+
+    if (!bannerImg) {
+      toast.error('Añade un banner', { id: toastId });
+      return setBannerImgError(true);
+    }
+
+    const res = await registerBusiness({
+      ...data,
+      image: iconImg,
+      banner: bannerImg,
+    });
 
     if (!res.success) {
       toast.error('Error del servidor', { id: toastId });
       return setServerError(res);
     }
 
-    toast.success('Rgistrado correctamente', { id: toastId });
+    toast.success('Registrado correctamente', { id: toastId });
     router.replace('/business');
   };
 
@@ -84,20 +104,65 @@ function RegisterBusinessForm() {
       />
 
       <div className='flex gap-2'>
-        <UploadButton
-          endpoint='businessImage'
-          content={{
-            button: 'Imagen',
-            allowedContent: 'Imagen (8MB)',
-          }}
-        />
-        <UploadButton
-          endpoint='businessBanner'
-          content={{
-            button: 'Banner',
-            allowedContent: 'Imagen (8MB)',
-          }}
-        />
+        <div className='space-y-2'>
+          {iconImg && (
+            <Image
+              className='size-[200px] object-cover'
+              src={REMOTE_IMG_URL + iconImg}
+              height={200}
+              width={200}
+              alt='Business icon'
+            ></Image>
+          )}
+          <UploadButton
+            endpoint='businessImage'
+            content={{
+              button: iconImg ? 'Cambiar Icono' : 'Icono',
+              allowedContent: 'Imagen (8MB)',
+            }}
+            onClientUploadComplete={async file => {
+              if (iconImg) {
+                await deleteFileById(iconImg);
+              }
+              setIconImg(file[0].key);
+            }}
+          />
+          {iconImgError && (
+            <div className='bg-red-200 text-red-600 mt-1 text-center max-w-72 p-0.5'>
+              <p>Añade un icono</p>
+            </div>
+          )}
+        </div>
+
+        <div className='space-y-2'>
+          {bannerImg && (
+            <Image
+              className='size-[200px] object-cover'
+              src={REMOTE_IMG_URL + bannerImg}
+              height={200}
+              width={200}
+              alt='Business banner'
+            ></Image>
+          )}
+          <UploadButton
+            endpoint='businessBanner'
+            content={{
+              button: bannerImg ? 'Cambiar banner' : 'Banner',
+              allowedContent: 'Imagen (8MB)',
+            }}
+            onClientUploadComplete={async file => {
+              if (bannerImg) {
+                await deleteFileById(bannerImg);
+              }
+              setBannerImg(file[0].key);
+            }}
+          />
+          {bannerImgError && (
+            <div className='bg-red-200 text-red-600 mt-1 text-center max-w-72 p-0.5'>
+              <p>Añade un banner</p>
+            </div>
+          )}
+        </div>
       </div>
 
       {serverError && (

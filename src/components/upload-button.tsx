@@ -8,8 +8,22 @@ function UploadButton({ appearance: ap, ...props }: Props) {
     <UploadthingButton
       appearance={{
         container: cn(``, ap?.container),
-        allowedContent: cn(``, ap?.allowedContent),
-        button: cn(``, ap?.allowedContent),
+        allowedContent: cn(
+          `text-amber-100 lg:text-gray-500`,
+          ap?.allowedContent
+        ),
+        button: cn(
+          `
+            bg-gray-600 transition
+            hover:bg-amber-500
+            focus-within:ring-amber-500
+            lg:bg-gray-500
+            active:scale-95
+            ut-uploading:animate-pulse
+            after:bg-amber-600
+          `,
+          ap?.button
+        ),
       }}
       {...props}
     />

@@ -4,9 +4,9 @@ import { DrizzleError, eq } from 'drizzle-orm';
 import { auth } from '../../../auth';
 import {
   DBBusiness,
-  FormBusiness,
+  RequestBusiness,
   RegisterBusiness,
-  formBusinessSchema,
+  requestBusinessSchema,
 } from '../schemas/business';
 import { ActionResponse } from './types';
 import { db } from '../db/config';
@@ -14,9 +14,9 @@ import { businesses } from '../db/tables';
 import { getUserByEmail } from './db/users';
 
 export async function registerBusiness(
-  req: FormBusiness
+  req: RequestBusiness
 ): Promise<ActionResponse<DBBusiness | undefined>> {
-  const result = formBusinessSchema.safeParse(req);
+  const result = requestBusinessSchema.safeParse(req);
 
   let zodErrors: string[] = [];
 
