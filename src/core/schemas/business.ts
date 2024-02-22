@@ -2,7 +2,9 @@ import { createInsertSchema } from 'drizzle-zod';
 import { businesses } from '../db/tables';
 import { z } from 'zod';
 
-export const dbBusinessSchema = createInsertSchema(businesses);
+export const dbBusinessSchema = createInsertSchema(businesses).extend({
+  id: z.string(),
+});
 export const registerBusinessSchema = dbBusinessSchema
   .omit({ id: true })
   .extend({

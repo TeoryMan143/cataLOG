@@ -3,6 +3,7 @@ import { getUserByEmail } from '@/core/lib/db/users';
 import { auth } from '@root/auth';
 import Link from 'next/link';
 import { RedirectType, redirect } from 'next/navigation';
+import BusinessListPre from './_page-components/business-list-pre';
 
 async function BusinessPage() {
   const session = await auth();
@@ -23,9 +24,13 @@ async function BusinessPage() {
     redirect('/regis-business', RedirectType.replace);
   }
 
+  const businesses = res.result;
+
   return (
     <div>
-      <p>{JSON.stringify(res.result)}</p>
+      {businesses.map(bis => (
+        <BusinessListPre key={bis.id} business={bis} />
+      ))}
       <Link href='/regis-business'>Registrar</Link>
     </div>
   );
