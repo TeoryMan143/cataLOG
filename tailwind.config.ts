@@ -1,4 +1,6 @@
 import { withUt } from 'uploadthing/tw';
+//@ts-ignore
+import animations from '@midudev/tailwind-animations';
 
 export default withUt({
   content: [
@@ -15,5 +17,5 @@ export default withUt({
       },
     },
   },
-  plugins: [],
+  plugins: [animations],
 });
