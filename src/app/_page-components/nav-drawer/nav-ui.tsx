@@ -1,3 +1,5 @@
+'use client';
+
 import { cn } from '@/core/client-utils';
 import { workSans } from '@/core/fonts';
 import { forwardRef } from 'react';

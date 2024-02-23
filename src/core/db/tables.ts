@@ -65,7 +65,7 @@ export const sessions = pgTable('session', {
 });
 
 export const verificationTokens = pgTable(
-  'verificationToken',
+  'verification_token',
   {
     identifier: text('identifier').notNull(),
     token: text('token').notNull(),
@@ -90,11 +90,30 @@ export const businesses = pgTable(
       .references(() => users.id),
     image: text('image').notNull(),
     banner: text('banner').notNull(),
+    socialId: uuid('social_id').references(() => businessSocial.id),
   },
   bs => ({
     nitIdx: uniqueIndex('nit_idx').on(bs.nit),
   })
 );
+
+export const businessSocial = pgTable('business_social', {
+  id: uuid('id')
+    .default(sql`uuid_generate_v4()`)
+    .primaryKey(),
+  instagram: text('instagram'),
+  facebook: text('facebook'),
+  whatsapp: text('whatsapp'),
+  webPage: text('web_page'),
+  businessId: uuid('business_id').notNull(),
+});
+
+export const businessSocialRelations = relations(businessSocial, ({ one }) => ({
+  business: one(businesses, {
+    fields: [businessSocial.businessId],
+    references: [businesses.id],
+  }),
+}));
 
 export const products = pgTable('product', {
   id: uuid('id')
