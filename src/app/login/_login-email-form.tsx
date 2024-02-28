@@ -10,6 +10,7 @@ import { Icon } from '@iconify/react';
 import { useState } from 'react';
 import { type SubmitHandler, useForm } from 'react-hook-form';
 import { Toaster, toast } from 'sonner';
+import { useSession } from 'next-auth/react';
 
 function LoginEmailForm() {
   const {
@@ -24,10 +25,16 @@ function LoginEmailForm() {
 
   const [credentialsError, setCredentialsError] = useState(false);
 
+  const { data: session } = useSession();
+
   const onSubmit: SubmitHandler<LoginCredentials> = async data => {
     const toastId = toast.loading('Verificando informacion...');
     try {
       const res = await loginUser(data);
+
+      if (session?.user) {
+        return toast.success('Se ha ingresado correctamente', { id: toastId });
+      }
 
       if (!res?.success && res?.errorType === 'auth') {
         toast.error('Email o contraseña incorrectos', { id: toastId });
@@ -40,8 +47,6 @@ function LoginEmailForm() {
       }
     } catch (error) {
       console.log('in imcsisas'); // La taberna knows
-    } finally {
-      toast.success('Se ha ingresado correctamente', { id: toastId });
     }
   };
 

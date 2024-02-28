@@ -29,7 +29,7 @@ export const users = pgTable(
     return {
       emailIdx: uniqueIndex('email_idx').on(users.email),
     };
-  }
+  },
 );
 
 export const accounts = pgTable(
@@ -53,7 +53,7 @@ export const accounts = pgTable(
     compoundKey: primaryKey({
       columns: [account.provider, account.providerAccountId],
     }),
-  })
+  }),
 );
 
 export const sessions = pgTable('session', {
@@ -73,7 +73,7 @@ export const verificationTokens = pgTable(
   },
   vt => ({
     compoundKey: primaryKey({ columns: [vt.identifier, vt.token] }),
-  })
+  }),
 );
 
 export const businesses = pgTable(
@@ -87,14 +87,14 @@ export const businesses = pgTable(
     address: text('address').notNull().unique(),
     accountId: uuid('account_id')
       .notNull()
-      .references(() => users.id),
+      .references(() => users.id, {onDelete: 'cascade'}),
     image: text('image').notNull(),
     banner: text('banner').notNull(),
     socialId: uuid('social_id').references(() => businessSocial.id),
   },
   bs => ({
     nitIdx: uniqueIndex('nit_idx').on(bs.nit),
-  })
+  }),
 );
 
 export const businessSocial = pgTable('business_social', {
@@ -122,14 +122,26 @@ export const products = pgTable('product', {
   displayName: text('display_name').notNull(),
   price: real('price').notNull(),
   description: text('description').notNull(),
+  avialableUnits: integer('avialable_units').notNull(),
   businessId: uuid('business_id')
     .notNull()
-    .references(() => users.id, { onDelete: 'cascade' }),
+    .references(() => businesses.id, { onDelete: 'cascade' }),
 });
 
 export const productsRelations = relations(products, ({ many }) => ({
   productsCategories: many(productsCategories),
+  images: many(productImages),
 }));
+
+export const productImages = pgTable('product_image', {
+  id: uuid('id')
+    .default(sql`uuid_generate_v4()`)
+    .primaryKey(),
+  image: text('image').notNull(),
+  productId: uuid('product_id')
+    .notNull()
+    .references(() => products.id, { onDelete: 'cascade' }),
+});
 
 export const categories = pgTable('category', {
   id: uuid('id')
@@ -154,7 +166,7 @@ export const productsCategories = pgTable(
   },
   pc => ({
     compoundKey: primaryKey({ columns: [pc.categoryId, pc.productId] }),
-  })
+  }),
 );
 
 export const productsCategoriesRelations = relations(
@@ -168,5 +180,5 @@ export const productsCategoriesRelations = relations(
       fields: [productsCategories.categoryId],
       references: [categories.id],
     }),
-  })
+  }),
 );

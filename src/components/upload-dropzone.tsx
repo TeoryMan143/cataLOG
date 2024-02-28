@@ -9,7 +9,7 @@ function UploadDropzone({ appearance: ap, ...props }: Props) {
       appearance={{
         container: cn(``, ap?.container),
         allowedContent: cn(``, ap?.allowedContent),
-        button: cn(``, ap?.allowedContent),
+        button: cn(``, ap?.button),
         label: cn(``, ap?.label),
         uploadIcon: cn(``, ap?.uploadIcon),
       }}

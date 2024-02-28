@@ -3,12 +3,16 @@ import LoginEmailForm from './_login-email-form';
 import { Metadata } from 'next';
 import { cn } from '@/core/client-utils';
 import { workSans } from '@/core/fonts';
+import { SessionProvider } from 'next-auth/react';
+import { auth } from '@root/auth';
 
 export const metadata: Metadata = {
   title: 'Iniciar Sesión',
 };
 
-function Login() {
+async function Login() {
+  const session = await auth();
+
   return (
     <div className='flex flex-col gap-6 items-center'>
       <h2
@@ -35,7 +39,9 @@ function Login() {
           '
         />
       </div>
-      <LoginEmailForm />
+      <SessionProvider session={session}>
+        <LoginEmailForm />
+      </SessionProvider>
     </div>
   );
 }
