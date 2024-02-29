@@ -3,7 +3,8 @@
 import { cn } from '@/core/client-utils';
 import { forwardRef, useMemo, useState } from 'react';
 import { FieldError } from 'react-hook-form';
-import { Icon as SvgIcon } from '@iconify/react';
+import { EyeIcon } from './icons/eye';
+import { EyeOffIcon } from './icons/eye-off';
 
 interface Props extends React.ComponentPropsWithRef<'input'> {
   icon?: React.ReactNode;
@@ -28,7 +29,7 @@ const showType = ({
 
 const Input = forwardRef<HTMLInputElement, Props>(function Input(
   { className, icon: Icon, error, type, ...props },
-  ref
+  ref,
 ) {
   const [showPassword, setShowPassword] = useState(false);
 
@@ -39,7 +40,7 @@ const Input = forwardRef<HTMLInputElement, Props>(function Input(
         type: type ?? 'text',
         show: showPassword,
       }),
-    [showPassword, type]
+    [showPassword, type],
   );
 
   return (
@@ -50,7 +51,7 @@ const Input = forwardRef<HTMLInputElement, Props>(function Input(
             'absolute left-5 top-1/2 -translate-y-1/2 text-2xl text-white z-10',
             {
               'text-red-600': error,
-            }
+            },
           )}
         >
           {Icon}
@@ -63,7 +64,7 @@ const Input = forwardRef<HTMLInputElement, Props>(function Input(
               placeholder:italic placeholder:text-slate-800 placeholder:tracking-widest placeholder:text-sm
               focus:backdrop-blur-none focus:bg-gray-500
             `,
-            className
+            className,
           )}
           ref={ref}
           type={show}
@@ -79,11 +80,7 @@ const Input = forwardRef<HTMLInputElement, Props>(function Input(
               group-hover:opacity-100 group-hover:-translate-x-8
             '
           >
-            {!showPassword ? (
-              <SvgIcon icon='mdi:eye-outline' />
-            ) : (
-              <SvgIcon icon='mdi:eye-off-outline' />
-            )}
+            {!showPassword ? <EyeIcon /> : <EyeOffIcon />}
           </button>
         )}
       </div>
