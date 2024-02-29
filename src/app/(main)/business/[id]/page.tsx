@@ -3,11 +3,11 @@ import { RedirectType, redirect } from 'next/navigation';
 import Image from 'next/image';
 import { REMOTE_IMG_URL, cn } from '@/core/client-utils';
 import { workSans } from '@/core/fonts';
-import SocialButton from './_page-components/social-button';
 import SocialLinks from './_page-components/social-links';
 import Link from 'next/link';
 import { PlusRoundedIcon } from '@/components/icons/plus-rounded';
 import { EditIcon } from '@/components/icons/edit';
+import AllProducts from './_page-components/products/all-products';
 
 type Props = {
   params: {
@@ -15,7 +15,7 @@ type Props = {
   };
 };
 
-async function BisnessIdPage({ params: { id } }: Props) {
+async function BusinessPage({ params: { id } }: Props) {
   if (!id) {
     redirect('/business', RedirectType.replace);
   }
@@ -35,7 +35,7 @@ async function BisnessIdPage({ params: { id } }: Props) {
           className='h-60 w-full object-cover rounded-lg'
           src={REMOTE_IMG_URL + banner}
           alt={`Banner ${name}`}
-          height={200}
+          height={240}
           width={1000}
         />
         <div className='flex gap-7 p-3'>
@@ -76,7 +76,18 @@ async function BisnessIdPage({ params: { id } }: Props) {
           </div>
         </div>
       </header>
+      <section className='mt-2'>
+        <h3
+          className={cn(
+            'py-3 bg-black rounded-sm text-white text-2xl text-center tracking-widest',
+            workSans.className,
+          )}
+        >
+          Catálogo
+        </h3>
+        <AllProducts businessId={id} />
+      </section>
     </div>
   );
 }
-export default BisnessIdPage;
+export default BusinessPage;

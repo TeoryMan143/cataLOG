@@ -4,10 +4,15 @@ import {
   type DBProduct,
   RequestProduct,
   requestProductSchema,
+  DBProductImage,
 } from '@/core/schemas/product';
 import { auth } from '@root/auth';
 import { db } from '../db/config';
-import { products, productsCategories } from '../db/tables';
+import {
+  productImages as productImagesTable,
+  products,
+  productsCategories,
+} from '../db/tables';
 import { DrizzleError } from 'drizzle-orm';
 import { type ActionResponse } from './types';
 import { type DBProductCategory } from '../schemas/categories';
@@ -16,6 +21,7 @@ export async function registerProduct(req: RequestProduct): Promise<
   ActionResponse<{
     product: DBProduct;
     productCategories?: DBProductCategory[];
+    productImages?: DBProductImage[];
   }>
 > {
   const result = requestProductSchema.safeParse(req);
@@ -44,7 +50,7 @@ export async function registerProduct(req: RequestProduct): Promise<
       errors: ['Must be signed in to register a product'],
     };
 
-  const { categories, ...product } = result.data;
+  const { categories, images, ...product } = result.data;
 
   try {
     const newProduct = await db.insert(products).values(product).returning();
@@ -59,15 +65,25 @@ export async function registerProduct(req: RequestProduct): Promise<
             })),
           )
           .returning();
+    const productImages = await db
+      .insert(productImagesTable)
+      .values(
+        images.map(img => ({
+          image: img,
+          productId: newProduct[0].id,
+        })),
+      )
+      .returning();
     return {
       success: true,
       result: {
         product: newProduct[0],
         productCategories,
+        productImages,
       },
     };
   } catch (error) {
-    console.error(error)
+    console.error(error);
     if (!(error instanceof DrizzleError))
       return { success: false, errorType: 'insertion', errors: ['pass'] };
     return {

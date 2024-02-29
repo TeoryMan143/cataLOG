@@ -1,5 +1,5 @@
-import { createInsertSchema } from 'drizzle-zod';
-import { products } from '../db/tables';
+import { createInsertSchema, createSelectSchema } from 'drizzle-zod';
+import { productImages, products } from '../db/tables';
 import { z } from 'zod';
 
 export const dbProductSchema = createInsertSchema(products).extend({
@@ -34,3 +34,7 @@ export type FormProduct = z.infer<typeof formProductSchema>;
 export type RegisterProduct = z.infer<typeof registerProductSchema>;
 export type RequestProduct = z.infer<typeof requestProductSchema>;
 export type DBProduct = z.infer<typeof dbProductSchema>;
+
+export const productImageSchema = createSelectSchema(productImages);
+
+export type DBProductImage = z.infer<typeof productImageSchema>;
