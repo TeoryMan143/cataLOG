@@ -1,11 +1,11 @@
-import { REMOTE_IMG_URL } from '@/core/client-utils';
+import { REMOTE_IMG_URL, cn, formatToCOP } from '@/core/client-utils';
 import { getProductImages } from '@/core/lib/db/porducts';
 import { DBProduct } from '@/core/schemas/product';
 import Image from 'next/image';
 import Link from 'next/link';
 
 async function ProductPrev({
-  product: { id },
+  product: { id, displayName, price, avialableUnits },
   businessId,
 }: {
   product: DBProduct;
@@ -23,20 +23,32 @@ async function ProductPrev({
 
   const mainImage = images[0].image;
 
+  const avialable = avialableUnits > 0;
+
   return (
     <Link
-      className='bg-[#F4F1EE] border-2 border-[#C8C1C1] rounded-md'
+      className='inline-block p-4 space-y-3'
       href={`/business/${businessId}/product/${id}`}
     >
       <Image
-        className='size-[250px] object-cover rounded-sm'
-        height={250}
-        width={250}
+        className='size-[200px] object-cover rounded-sm'
+        height={200}
+        width={200}
         src={REMOTE_IMG_URL + mainImage}
         alt='Portada producto'
       />
       <div>
-        
+        <p className='text-xl text-black text-center'>{displayName}</p>
+        <p className='text-lg text-center'>
+          <span>{formatToCOP(price)}</span>{' '}
+          <span
+            className={cn('text-green-400', {
+              'text-red-500': !avialable,
+            })}
+          >
+            {avialable ? 'Disponible' : 'No disponible'}
+          </span>
+        </p>
       </div>
     </Link>
   );
