@@ -6,11 +6,12 @@ import { type LoginCredentials, loginCredentials } from '@/core/schemas/user';
 import { loginUser } from '@/core/lib/auth';
 import type { ActionError, ActionResponse } from '@/core/lib/types';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Icon } from '@iconify/react';
 import { useState } from 'react';
 import { type SubmitHandler, useForm } from 'react-hook-form';
 import { Toaster, toast } from 'sonner';
 import { useSession } from 'next-auth/react';
+import { EmailIcon } from '@/components/icons/mail';
+import PasswordFillIcon from '@/components/icons/password-fill';
 
 function LoginEmailForm() {
   const {
@@ -58,7 +59,7 @@ function LoginEmailForm() {
           lg:border lg:focus:bg-amber-100 lg:bg-gray-300
         '
         placeholder='Correo electrónico'
-        icon={<Icon icon='uiw:mail' className='text-xl lg:text-black' />}
+        icon={<EmailIcon className='text-xl lg:text-black' />}
         {...register('email')}
         error={errors.email}
       />
@@ -68,9 +69,7 @@ function LoginEmailForm() {
             lg:border lg:focus:bg-amber-100 lg:bg-gray-300
           '
         placeholder='Contraseña'
-        icon={
-          <Icon icon='fluent:password-20-filled' className='lg:text-black' />
-        }
+        icon={<PasswordFillIcon className='lg:text-black' />}
         type='password'
         {...register('password')}
         error={errors.password}

@@ -1,17 +1,21 @@
 'use client';
 
 import { SubmitHandler, useForm } from 'react-hook-form';
-import { Icon } from '@iconify/react';
 import Input from '@/components/input';
 import Button from '@/components/button';
 import { type FormUserSchema, formUserSchema } from '@/core/schemas/user';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { ResgisterInputs } from '../_types';
 import { resgisterUser } from '@/core/lib/auth';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import type { ActionError } from '@/core/lib/types';
 import { useRouter } from 'next/navigation';
 import { Toaster, toast } from 'sonner';
+import { UserCircleIcon } from '@/components/icons/user-circle';
+import { EmailIcon } from '@/components/icons/mail';
+import PhoneIcon from '@/components/icons/phone';
+import PasswordRegularIcon from '@/components/icons/password-regular';
+import PasswordFillIcon from '@/components/icons/password-fill';
 
 function RegisterEmailForm() {
   const {
@@ -28,48 +32,44 @@ function RegisterEmailForm() {
 
   const [serverError, setServerError] = useState<ActionError | null>(null);
 
-  const inputs: ResgisterInputs[] = [
-    {
-      name: 'name',
-      icon: <Icon icon='ph:user-circle-fill' className='lg:text-black' />,
-      placeholder: 'Nombre completo',
-      error: errors.name,
-    },
-    {
-      name: 'email',
-      icon: <Icon icon='uiw:mail' className='text-xl lg:text-black' />,
-      placeholder: 'Correo electrónico',
-      error: errors.email,
-    },
-    {
-      name: 'number',
-      icon: (
-        <Icon
-          icon='material-symbols:phone-android-outline-rounded'
-          className='lg:text-black'
-        />
-      ),
-      placeholder: 'Número de teléfono',
-      error: errors.number,
-      type: 'number',
-    },
-    {
-      name: 'password',
-      icon: (
-        <Icon icon='fluent:password-20-regular' className='lg:text-black' />
-      ),
-      placeholder: 'Contraseña',
-      error: errors.password,
-      type: 'password',
-    },
-    {
-      name: 'confirmPassword',
-      icon: <Icon icon='fluent:password-20-filled' className='lg:text-black' />,
-      placeholder: 'Confirmar contraseña',
-      error: errors.confirmPassword,
-      type: 'password',
-    },
-  ];
+  const inputs: ResgisterInputs[] = useMemo(
+    () => [
+      {
+        name: 'name',
+        icon: <UserCircleIcon className='lg:text-black' />,
+        placeholder: 'Nombre completo',
+        error: errors.name,
+      },
+      {
+        name: 'email',
+        icon: <EmailIcon className='text-xl lg:text-black' />,
+        placeholder: 'Correo electrónico',
+        error: errors.email,
+      },
+      {
+        name: 'number',
+        icon: <PhoneIcon className='lg:text-black' />,
+        placeholder: 'Número de teléfono',
+        error: errors.number,
+        type: 'number',
+      },
+      {
+        name: 'password',
+        icon: <PasswordRegularIcon className='lg:text-black' />,
+        placeholder: 'Contraseña',
+        error: errors.password,
+        type: 'password',
+      },
+      {
+        name: 'confirmPassword',
+        icon: <PasswordFillIcon className='lg:text-black' />,
+        placeholder: 'Confirmar contraseña',
+        error: errors.confirmPassword,
+        type: 'password',
+      },
+    ],
+    [errors],
+  );
 
   const onSubmit: SubmitHandler<FormUserSchema> = async data => {
     const toastId = toast.loading('Registrando informacion...');

@@ -4,7 +4,6 @@ import Button from '@/components/button';
 import Input from '@/components/input';
 import type { ActionError, ActionResponse } from '@/core/lib/types';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Icon } from '@iconify/react';
 import { useState } from 'react';
 import { type SubmitHandler, useForm } from 'react-hook-form';
 import { Toaster, toast } from 'sonner';
@@ -15,6 +14,9 @@ import UploadButton from '@/components/upload-button';
 import Image from 'next/image';
 import { REMOTE_IMG_URL } from '@/core/client-utils';
 import { deleteFileById } from '@/core/lib/files';
+import { UserCircleIcon } from '@/components/icons/user-circle';
+import HashTagIcon from '@/components/icons/number';
+import MarkerIcon from '@/components/icons/marker';
 
 function RegisterBusinessForm() {
   const {
@@ -73,7 +75,7 @@ function RegisterBusinessForm() {
               lg:border lg:focus:bg-amber-100 lg:bg-gray-300
             '
         placeholder='Nombre de la empresa'
-        icon={<Icon icon='ph:user-circle-fill' className='lg:text-black' />}
+        icon={<UserCircleIcon className='lg:text-black' />}
         {...register('name')}
         error={errors.name}
       />
@@ -83,7 +85,7 @@ function RegisterBusinessForm() {
               lg:border lg:focus:bg-amber-100 lg:bg-gray-300
             '
         placeholder='NIT'
-        icon={<Icon icon='f7:number' className='lg:text-black' />}
+        icon={<HashTagIcon className='lg:text-black' />}
         {...register('nit')}
         error={errors.nit}
       />
@@ -93,12 +95,7 @@ function RegisterBusinessForm() {
               lg:border lg:focus:bg-amber-100 lg:bg-gray-300
             '
         placeholder='Dirección'
-        icon={
-          <Icon
-            icon='mdi:map-marker-radius-outline'
-            className='lg:text-black'
-          />
-        }
+        icon={<MarkerIcon className='lg:text-black' />}
         {...register('address')}
         error={errors.address}
       />
