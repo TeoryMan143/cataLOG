@@ -13,45 +13,23 @@ import {
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/popover';
 import Button from '@/components/button';
 import { DBCategory } from '@/core/schemas/categories';
-import { categories } from '@/core/db/tables';
 import { Checkbox } from '@/components/checkbox';
 import { getCategories } from '@/core/lib/db/categories';
 import { Toaster, toast } from 'sonner';
 import { XIcon } from '@/components/icons/x-icon';
 
-const frameworks = [
-  {
-    value: 'next.js',
-    label: 'Next.js',
-  },
-  {
-    value: 'sveltekit',
-    label: 'SvelteKit',
-  },
-  {
-    value: 'nuxt.js',
-    label: 'Nuxt.js',
-  },
-  {
-    value: 'remix',
-    label: 'Remix',
-  },
-  {
-    value: 'astro',
-    label: 'Astro',
-  },
-];
-
 export function ComboboxCategories({
   onCategoriesChange,
+  initialSelected,
 }: {
   onCategoriesChange?: (categories: DBCategory[]) => void;
+  initialSelected?: DBCategory[];
 }) {
   const [open, setOpen] = React.useState(false);
   const [categories, setCategories] = React.useState<DBCategory[]>([]);
   const [selectedCategories, setSelectedCategories] = React.useState<
     DBCategory[]
-  >([]);
+  >(initialSelected ?? []);
 
   React.useEffect(() => {
     const run = async () => {
