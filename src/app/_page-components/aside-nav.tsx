@@ -17,7 +17,7 @@ function AsideNav() {
         styles.asideArea,
         {
           'w-min': !active,
-        }
+        },
       )}
     >
       <button

@@ -10,7 +10,7 @@ function UploadButton({ appearance: ap, ...props }: Props) {
         container: cn(``, ap?.container),
         allowedContent: cn(
           `text-amber-100 lg:text-gray-500`,
-          ap?.allowedContent
+          ap?.allowedContent,
         ),
         button: cn(
           `
@@ -22,7 +22,7 @@ function UploadButton({ appearance: ap, ...props }: Props) {
             ut-uploading:animate-pulse
             after:bg-amber-600
           `,
-          ap?.button
+          ap?.button,
         ),
       }}
       {...props}

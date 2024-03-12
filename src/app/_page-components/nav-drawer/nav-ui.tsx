@@ -14,7 +14,7 @@ type Props = React.ComponentPropsWithRef<'div'> & {
 
 const NavUi = forwardRef<HTMLDivElement, Props>(function NavUi(
   { active, fixed },
-  ref
+  ref,
 ) {
   const { data: session } = useSession();
 
@@ -35,7 +35,7 @@ const NavUi = forwardRef<HTMLDivElement, Props>(function NavUi(
         },
         {
           'lg:w-min flex-1 justify-center': fixed && !active,
-        }
+        },
       )}
     >
       <div

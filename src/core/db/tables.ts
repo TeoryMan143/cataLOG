@@ -87,7 +87,7 @@ export const businesses = pgTable(
     address: text('address').notNull().unique(),
     accountId: uuid('account_id')
       .notNull()
-      .references(() => users.id, {onDelete: 'cascade'}),
+      .references(() => users.id, { onDelete: 'cascade' }),
     image: text('image').notNull(),
     banner: text('banner').notNull(),
     socialId: uuid('social_id').references(() => businessSocial.id),

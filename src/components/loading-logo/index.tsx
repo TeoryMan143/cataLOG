@@ -11,7 +11,7 @@ function LaodingLogo() {
         className={cn(
           workSans.className,
           styles.animation,
-          'text-center text-lg text-white'
+          'text-center text-lg text-white',
         )}
       >
         Cargando

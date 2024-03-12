@@ -10,7 +10,7 @@ interface Props extends React.ComponentProps<'button'> {
 const RegisterButton = forwardRef<HTMLButtonElement, Props>(
   function RegisterButton(
     { className, variant, children, ...props }: Props,
-    ref
+    ref,
   ) {
     return (
       <button
@@ -21,12 +21,12 @@ const RegisterButton = forwardRef<HTMLButtonElement, Props>(
           {
             'bg-black text-white': variant === 'dark',
           },
-          className
+          className,
         )}
       >
         {children}
       </button>
     );
-  }
+  },
 );
 export default RegisterButton;

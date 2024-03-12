@@ -12,7 +12,7 @@ function NavLink({ className, children, icon, ...props }: Props) {
       className={cn(
         `flex text-center gap-2 text-white py-3 px-1 items-center relative`,
         className,
-        style.underLineAnim
+        style.underLineAnim,
       )}
       {...props}
     >

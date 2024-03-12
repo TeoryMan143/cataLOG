@@ -12,7 +12,7 @@ function RegisterPage() {
           `
           font-bold text-5xl text-white mb-10 text-center
           lg:text-black lg:text-6xl lg:mb-16
-        `
+        `,
         )}
       >
         ¡Regístrate a cataLOG!

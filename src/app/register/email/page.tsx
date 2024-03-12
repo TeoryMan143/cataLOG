@@ -11,7 +11,7 @@ function EmailPage() {
           `
           font-bold text-[1.7rem] text-white text-center
           lg:text-black lg:px-10
-          `
+          `,
         )}
       >
         Completa los siguientes datos para obtener tu cuenta cataLOG

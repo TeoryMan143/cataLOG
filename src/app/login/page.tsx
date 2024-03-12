@@ -21,7 +21,7 @@ async function Login() {
           `
           font-bold text-5xl text-white mb-10 text-center
           lg:text-black lg:text-6xl lg:mb-8
-        `
+        `,
         )}
       >
         Ingresa a catalog

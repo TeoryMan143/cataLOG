@@ -14,7 +14,7 @@ import { businesses } from '../db/tables';
 import { getUserByEmail } from './db/users';
 
 export async function registerBusiness(
-  req: RequestBusiness
+  req: RequestBusiness,
 ): Promise<ActionResponse<DBBusiness | undefined>> {
   const result = requestBusinessSchema.safeParse(req);
 
@@ -77,7 +77,7 @@ export async function registerBusiness(
 }
 
 export async function getAcountBusinesses(
-  accountId: string
+  accountId: string,
 ): Promise<ActionResponse<DBBusiness[]>> {
   try {
     const resBusinesses = await db.query.businesses.findMany({

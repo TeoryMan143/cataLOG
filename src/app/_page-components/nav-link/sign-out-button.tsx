@@ -9,7 +9,7 @@ function SignOutButton({ active }: { active?: boolean }) {
     <button
       className={cn(
         `flex text-center gap-2 text-white py-3 px-1 items-center relative`,
-        style.underLineAnim
+        style.underLineAnim,
       )}
       onClick={() => out()}
     >

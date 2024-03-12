@@ -31,7 +31,7 @@ function RegisterBusinessPage() {
           `
             font-bold text-5xl text-white mb-5 text-center mt-36
             lg:text-black lg:text-6xl lg:mb-8
-          `
+          `,
         )}
       >
         Regístra tu negocio

@@ -16,7 +16,7 @@ function EmailButton({ className, variant, children, ...props }: Props) {
         {
           'bg-black text-white': variant === 'dark',
         },
-        className
+        className,
       )}
     >
       {children}

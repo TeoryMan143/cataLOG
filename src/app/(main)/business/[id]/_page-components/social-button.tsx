@@ -13,7 +13,7 @@ function SocialButton({
         href={href}
         className={cn(
           'p-2 bg-gray-200 rounded-lg flex items-center gap-1',
-          className
+          className,
         )}
       >
         {children}
