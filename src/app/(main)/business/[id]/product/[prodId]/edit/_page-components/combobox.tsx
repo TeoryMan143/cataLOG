@@ -17,17 +17,20 @@ import { Checkbox } from '@/components/checkbox';
 import { getCategories } from '@/core/lib/db/categories';
 import { Toaster, toast } from 'sonner';
 import { XIcon } from '@/components/icons/x-icon';
+import clone from 'just-clone';
 
 export function ComboboxCategories({
   onCategoriesChange,
+  initialSelected,
 }: {
   onCategoriesChange?: (categories: DBCategory[]) => void;
+  initialSelected: DBCategory[];
 }) {
   const [open, setOpen] = React.useState(false);
   const [categories, setCategories] = React.useState<DBCategory[]>([]);
   const [selectedCategories, setSelectedCategories] = React.useState<
     DBCategory[]
-  >([]);
+  >(clone(initialSelected));
 
   React.useEffect(() => {
     const run = async () => {
@@ -94,26 +97,30 @@ export function ComboboxCategories({
             <CommandInput placeholder='Selecciona categorías ...' />
             <CommandEmpty>No se encontro la categoría</CommandEmpty>
             <CommandGroup className='overflow-auto'>
-              {categories.map(category => (
-                <CommandItem key={category.id}>
-                  <label
-                    htmlFor={category.id}
-                    className='flex items-center gap-2 font-medium leading-none py-2'
-                  >
-                    <Checkbox
-                      checked={selectedCategories.includes(category)}
-                      onCheckedChange={chk => {
-                        if (!chk) {
-                          return deleteCategory(category);
-                        }
-                        setSelectedCategories(prev => [...prev, category]);
-                      }}
-                      id={category.id}
-                    />
-                    {category.name}
-                  </label>
-                </CommandItem>
-              ))}
+              {categories.map(category => {
+                return (
+                  <CommandItem key={category.id}>
+                    <label
+                      htmlFor={category.id}
+                      className='flex items-center gap-2 font-medium leading-none py-2'
+                    >
+                      <Checkbox
+                        checked={selectedCategories.some(
+                          sCat => sCat.id === category.id,
+                        )}
+                        onCheckedChange={chk => {
+                          if (!chk && selectedCategories.includes(category)) {
+                            return deleteCategory(category);
+                          }
+                          setSelectedCategories(prev => [...prev, category]);
+                        }}
+                        id={category.id}
+                      />
+                      {category.name}
+                    </label>
+                  </CommandItem>
+                );
+              })}
             </CommandGroup>
           </Command>
         </PopoverContent>

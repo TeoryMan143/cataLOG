@@ -1,39 +1,64 @@
 'use client';
 
-import { ComboboxCategories } from '@/app/(main)/business/[id]/add-product/_page-components/combobox';
+import { ComboboxCategories } from './combobox';
 import { DollarIcon } from '@/components/icons/dollar';
 import { UserCircleIcon } from '@/components/icons/user-circle';
 import Input from '@/components/input';
 import Textarea from '@/components/textarea';
-import { cn } from '@/core/client-utils';
+import { cn, extractDifference } from '@/core/client-utils';
 import { workSans } from '@/core/fonts';
 import Button from '@/components/button';
 import { CTagIcon } from '@/components/icons/c-tag';
 import { SubmitHandler, useForm } from 'react-hook-form';
-import { type FormProduct, formProductSchema } from '@/core/schemas/product';
+import {
+  type FormProduct,
+  formProductSchema,
+  DBProduct,
+  RequestProduct,
+} from '@/core/schemas/product';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import UpDropzone from './up-dropzone';
 import { type DBCategory } from '@/core/schemas/categories';
 import UpImage from './up-image';
 import { deleteFileById } from '@/core/lib/files';
 import { Toaster, toast } from 'sonner';
-import { registerProduct } from '@/core/lib/products';
+import { editProduct } from '@/core/lib/products';
 import { type ActionError } from '@/core/lib/types';
 import { useRouter } from 'next/navigation';
 
-function AddProductForm({ businessId }: { businessId: string }) {
+function EditProductForm({
+  businessId,
+  product,
+  productCategories,
+  productImages,
+}: {
+  businessId: string;
+  product: DBProduct;
+  productCategories: DBCategory[];
+  productImages: string[];
+}) {
+  const router = useRouter();
+
   const {
     register,
     handleSubmit,
     formState: { isSubmitting, errors },
   } = useForm<FormProduct>({
     resolver: zodResolver(formProductSchema),
+    defaultValues: {
+      price: product.price,
+      avialableUnits: product.avialableUnits,
+      displayName: product.displayName,
+      description: product.description,
+    },
   });
 
-  const [images, setImages] = useState<string[]>([]);
+  const [images, setImages] = useState<string[]>(productImages);
   const [serverError, setServerError] = useState<ActionError | null>(null);
-  const [categories, setCategories] = useState<string[]>([]);
+  const [categories, setCategories] = useState<string[]>(() => {
+    return productCategories.map(c => c.id);
+  });
 
   const handleCategoriesChange = useCallback(
     (cats: DBCategory[]) => {
@@ -42,20 +67,27 @@ function AddProductForm({ businessId }: { businessId: string }) {
     [setCategories],
   );
 
-  const router = useRouter();
-
-  const submitProduct: SubmitHandler<FormProduct> = async data => {
+  const submitEditProduct: SubmitHandler<FormProduct> = async data => {
     const toastId = toast.loading('Cargando producto');
 
     if (images.length < 1) {
       return toast.error('Agrega al menos una imagen', { id: toastId });
     }
 
-    const res = await registerProduct({
+    const originalProduct = {
+      ...product,
+    };
+
+    const newProductData = {
       ...data,
-      categories,
-      businessId,
+    };
+
+    const productDiff = extractDifference(originalProduct, newProductData);
+
+    const res = await editProduct(product.id, {
+      ...productDiff,
       images,
+      categories,
     });
 
     if (!res.success) return setServerError(res);
@@ -65,7 +97,7 @@ function AddProductForm({ businessId }: { businessId: string }) {
   };
 
   return (
-    <form onSubmit={handleSubmit(submitProduct)}>
+    <form onSubmit={handleSubmit(submitEditProduct)}>
       <div
         className='
         flex gap-2 flex-col-reverse
@@ -112,7 +144,7 @@ function AddProductForm({ businessId }: { businessId: string }) {
           <h1
             className={cn('font-bold text-center text-4xl', workSans.className)}
           >
-            Añadir nuevo producto
+            Editar producto
           </h1>
           <div className='flex gap-2 flex-wrap justify-center'>
             <Input
@@ -140,7 +172,10 @@ function AddProductForm({ businessId }: { businessId: string }) {
             error={errors.description}
             {...register('description')}
           />
-          <ComboboxCategories onCategoriesChange={handleCategoriesChange} />
+          <ComboboxCategories
+            onCategoriesChange={handleCategoriesChange}
+            initialSelected={[...productCategories]}
+          />
           <div className='flex justify-center'>
             <Input
               className='
@@ -184,4 +219,4 @@ function AddProductForm({ businessId }: { businessId: string }) {
     </form>
   );
 }
-export default AddProductForm;
+export default EditProductForm;

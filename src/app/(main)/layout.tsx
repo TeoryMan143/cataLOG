@@ -19,7 +19,7 @@ export default async function Home({
     <div
       className={cn(
         'main-distribution relative h-[100dvh] max-w-[100dvw] overflow-hidden',
-        styles.mainDistribution
+        styles.mainDistribution,
       )}
     >
       <header
@@ -35,7 +35,11 @@ export default async function Home({
           </SessionProvider>
         </div>
       </header>
-      <main className={cn('overflow-auto', styles.mainArea)}>{children}</main>
+      <main
+        className={cn('overflow-y-auto overflow-x-visible', styles.mainArea)}
+      >
+        {children}
+      </main>
       <SessionProvider session={session}>
         <AsideNav />
       </SessionProvider>

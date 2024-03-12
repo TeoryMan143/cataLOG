@@ -9,7 +9,7 @@ import { AuthError } from 'next-auth';
 import { hashPassword } from '@/core/server-utils';
 
 export async function resgisterUser(
-  data: unknown
+  data: unknown,
 ): Promise<ActionResponse<User | undefined>> {
   const result = formUserSchema.safeParse(data);
 
@@ -51,7 +51,7 @@ export async function resgisterUser(
 }
 
 export async function loginUser(
-  data: Object
+  data: Object,
 ): Promise<ActionResponse | undefined> {
   try {
     await signIn('credentials', { ...data, redirectTo: '/' });

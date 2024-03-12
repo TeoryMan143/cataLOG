@@ -13,3 +13,20 @@ export function formatToCOP(price: number) {
     style: 'currency',
   }).format(price);
 }
+
+export function extractDifference<T extends { [key: string]: any }>(
+  orgObj: T,
+  newObj: T,
+) {
+  const difference: any = {};
+
+  Object.entries(orgObj).forEach(([key, value]) => {
+    const match = Object.keys(newObj).find(nKey => nKey === key);
+    if (!match) return;
+    if (value !== newObj[match]) {
+      difference[match] = newObj[match];
+    }
+  });
+
+  return difference;
+}
