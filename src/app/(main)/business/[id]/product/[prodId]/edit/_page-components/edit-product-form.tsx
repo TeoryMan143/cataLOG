@@ -55,6 +55,7 @@ function EditProductForm({
   });
 
   const [images, setImages] = useState<string[]>(productImages);
+  const [deleteImages, setDeleteImages] = useState<string[]>([]);
   const [serverError, setServerError] = useState<ActionError | null>(null);
   const [categories, setCategories] = useState<string[]>(() => {
     return productCategories.map(c => c.id);
@@ -88,6 +89,7 @@ function EditProductForm({
       ...productDiff,
       images,
       categories,
+      deleteImages,
     });
 
     if (!res.success) return setServerError(res);
@@ -112,11 +114,8 @@ function EditProductForm({
         >
           {images.map((image, i) => (
             <UpImage
-              onDeleteClick={async () => {
-                const res = await deleteFileById(image);
-                if (!res) {
-                  return toast.error('Error al eliminar la imagen');
-                }
+              onDeleteClick={img => {
+                setDeleteImages(prev => [...prev, img]);
                 setImages(prev => prev.toSpliced(i, 1));
               }}
               image={image}
@@ -206,7 +205,7 @@ function EditProductForm({
           disabled={isSubmitting}
           className='bg-black text-white rounded-2xl px-12 py-1 text-lg'
         >
-          Añadir
+          Editar
         </Button>
       </div>
       <Toaster

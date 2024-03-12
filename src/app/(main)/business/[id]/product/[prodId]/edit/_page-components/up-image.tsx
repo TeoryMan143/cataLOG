@@ -8,7 +8,7 @@ function UpImage({
 }: {
   image: string;
   i: number;
-  onDeleteClick?: () => void;
+  onDeleteClick?: (img: string) => void;
 }) {
   return (
     <div
@@ -31,7 +31,11 @@ function UpImage({
       ></div>
       <button
         type='button'
-        onClick={onDeleteClick}
+        onClick={() => {
+          if (onDeleteClick) {
+            onDeleteClick(image);
+          }
+        }}
         className='
           absolute left-2 bottom-2 text-gray-600 translate-y-10 transition-transform z-30 text-3xl
           hover:text-red-400 group-hover:translate-y-0

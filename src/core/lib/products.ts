@@ -5,6 +5,8 @@ import {
   RequestProduct,
   requestProductSchema,
   DBProductImage,
+  editProductSchema,
+  EditProduct,
 } from '@/core/schemas/product';
 import { auth } from '@root/auth';
 import { db } from '../db/config';
@@ -17,6 +19,7 @@ import { DrizzleError, and, eq } from 'drizzle-orm';
 import { type ActionResponse } from './types';
 import { type DBProductCategory } from '../schemas/categories';
 import { revalidatePath } from 'next/cache';
+import { deleteFileById } from './files';
 
 export async function registerProduct(req: RequestProduct): Promise<
   ActionResponse<{
@@ -97,7 +100,7 @@ export async function registerProduct(req: RequestProduct): Promise<
 
 export async function editProduct(
   productId: string,
-  req: Partial<RequestProduct>,
+  req: EditProduct,
 ): Promise<
   ActionResponse<{
     product: DBProduct;
@@ -105,7 +108,7 @@ export async function editProduct(
     productImages?: DBProductImage[];
   }>
 > {
-  const result = requestProductSchema.partial().safeParse(req);
+  const result = editProductSchema.safeParse(req);
 
   let zodErrors: string[] = [];
 
@@ -131,7 +134,8 @@ export async function editProduct(
       errors: ['Must be signed in to register a product'],
     };
 
-  const { categories, images, businessId, ...product } = result.data;
+  const { categories, images, businessId, deleteImages, ...product } =
+    result.data;
 
   if (!categories) {
     return {
@@ -183,6 +187,10 @@ export async function editProduct(
         return res[0];
       }),
     );
+
+    deleteImages?.forEach(async img => {
+      await deleteFileById(img);
+    });
 
     revalidatePath(`/product/${productId}`);
     revalidatePath(`/business/${businessId}/product/${productId}`);
