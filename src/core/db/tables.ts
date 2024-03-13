@@ -108,13 +108,6 @@ export const businessSocial = pgTable('business_social', {
   businessId: uuid('business_id').notNull(),
 });
 
-export const businessSocialRelations = relations(businessSocial, ({ one }) => ({
-  business: one(businesses, {
-    fields: [businessSocial.businessId],
-    references: [businesses.id],
-  }),
-}));
-
 export const products = pgTable('product', {
   id: uuid('id')
     .default(sql`uuid_generate_v4()`)
@@ -127,11 +120,6 @@ export const products = pgTable('product', {
     .notNull()
     .references(() => businesses.id, { onDelete: 'cascade' }),
 });
-
-export const productsRelations = relations(products, ({ many }) => ({
-  productsCategories: many(productsCategories),
-  images: many(productImages),
-}));
 
 export const productImages = pgTable('product_image', {
   id: uuid('id')
@@ -150,10 +138,6 @@ export const categories = pgTable('category', {
   name: text('name').notNull(),
 });
 
-export const categoriesRelations = relations(categories, ({ many }) => ({
-  productsCategories: many(productsCategories),
-}));
-
 export const productsCategories = pgTable(
   'product_categories',
   {
@@ -168,6 +152,24 @@ export const productsCategories = pgTable(
     compoundKey: primaryKey({ columns: [pc.categoryId, pc.productId] }),
   }),
 );
+
+//* Relations
+
+export const businessSocialRelations = relations(businessSocial, ({ one }) => ({
+  business: one(businesses, {
+    fields: [businessSocial.businessId],
+    references: [businesses.id],
+  }),
+}));
+
+export const categoriesRelations = relations(categories, ({ many }) => ({
+  productsCategories: many(productsCategories),
+}));
+
+export const productsRelations = relations(products, ({ many }) => ({
+  productsCategories: many(productsCategories),
+  images: many(productImages),
+}));
 
 export const productsCategoriesRelations = relations(
   productsCategories,
