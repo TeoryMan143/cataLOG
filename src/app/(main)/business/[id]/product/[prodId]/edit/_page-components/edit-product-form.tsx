@@ -90,12 +90,13 @@ function EditProductForm({
       images,
       categories,
       deleteImages,
+      businessId,
     });
 
     if (!res.success) return setServerError(res);
 
     toast.success('Producto registrado', { id: toastId });
-    router.push(`/business/${businessId}`);
+    router.push(`/business/${businessId}/product/${product.id}`);
   };
 
   return (

@@ -15,11 +15,12 @@ import {
   products,
   productsCategories,
 } from '../db/tables';
-import { DrizzleError, and, eq } from 'drizzle-orm';
+import { DrizzleError, eq } from 'drizzle-orm';
 import { type ActionResponse } from './types';
 import { type DBProductCategory } from '../schemas/categories';
 import { revalidatePath } from 'next/cache';
 import { deleteFileById } from './files';
+import isEmpty from 'just-is-empty';
 
 export async function registerProduct(req: RequestProduct): Promise<
   ActionResponse<{
@@ -114,7 +115,8 @@ export async function editProduct(
 
   if (!result.success) {
     result.error.issues.forEach(issue => {
-      zodErrors = [...zodErrors, issue.message];
+      issue.path;
+      zodErrors = [...zodErrors, `${issue.path} ${issue.message}`];
     });
 
     if (zodErrors.length > 0) {
@@ -154,11 +156,13 @@ export async function editProduct(
   }
 
   try {
-    const newProduct = await db
-      .update(products)
-      .set(product)
-      .where(eq(products.id, productId))
-      .returning();
+    const newProduct = isEmpty(product)
+      ? await db.select().from(products).where(eq(products.id, productId))
+      : await db
+          .update(products)
+          .set(product)
+          .where(eq(products.id, productId))
+          .returning();
 
     await db
       .delete(productsCategories)

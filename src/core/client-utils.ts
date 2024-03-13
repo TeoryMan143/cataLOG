@@ -28,5 +28,5 @@ export function extractDifference<T extends { [key: string]: any }>(
     }
   });
 
-  return difference;
+  return difference as Partial<T>;
 }
