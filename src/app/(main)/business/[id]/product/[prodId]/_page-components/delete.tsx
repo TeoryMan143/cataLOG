@@ -5,6 +5,7 @@ import { XIcon } from '@/components/icons/x-icon';
 import { Button } from '@/components/ui/button';
 import {
   Dialog,
+  DialogClose,
   DialogContent,
   DialogDescription,
   DialogHeader,
@@ -84,15 +85,17 @@ function DeleteProduct({ productId }: { productId: string }) {
               </>
             )}
           </Button>
-          <Button
-            className='
-            space-x-2 text-lg transition
-            active:scale-95
-            '
-            variant='outline'
-          >
-            <XIcon /> <span>Cancelar</span>
-          </Button>
+          <DialogClose asChild>
+            <Button
+              className='
+              space-x-2 text-lg transition
+              active:scale-95
+              '
+              variant='outline'
+            >
+              <XIcon /> <span>Cancelar</span>
+            </Button>
+          </DialogClose>
         </div>
       </DialogContent>
     </Dialog>
