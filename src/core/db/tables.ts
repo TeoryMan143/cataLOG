@@ -56,14 +56,12 @@ export const businesses = pgTable(
       .references(() => users.id, { onDelete: 'cascade' }),
     image: text('image').notNull(),
     banner: text('banner').notNull(),
-    socialId: uuid('social_id').references(() => businessSocial.id),
   },
   bs => ({
     nitIdx: uniqueIndex('nit_idx').on(bs.nit),
   }),
 );
 
-//TODO: Fix reference
 export const businessSocial = pgTable('business_social', {
   id: uuid('id')
     .default(sql`uuid_generate_v4()`)
@@ -72,7 +70,9 @@ export const businessSocial = pgTable('business_social', {
   facebook: text('facebook'),
   whatsapp: text('whatsapp'),
   webPage: text('web_page'),
-  businessId: uuid('business_id').notNull(),
+  businessId: uuid('business_id')
+    .notNull()
+    .references(() => businesses.id),
 });
 
 export const products = pgTable('product', {

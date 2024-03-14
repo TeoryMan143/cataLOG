@@ -16,10 +16,10 @@ export async function getBusinessById(id: string): Promise<DBBusiness | null> {
   }
 }
 
-export async function getBusinessSocials(id: string) {
+export async function getBusinessSocials(businessId: string) {
   try {
     const result = await db.query.businessSocial.findFirst({
-      where: eq(businessSocial.id, id),
+      where: eq(businessSocial.businessId, businessId),
     });
     if (!result) return null;
     return result;
