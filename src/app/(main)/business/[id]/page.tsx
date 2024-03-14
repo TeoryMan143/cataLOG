@@ -33,7 +33,7 @@ async function BusinessPage({ params: { id } }: Props) {
     redirect('/business', RedirectType.replace);
   }
 
-  const { banner, name, image, socialId } = business;
+  const { banner, name, image } = business;
 
   return (
     <div className='p-6'>
@@ -57,7 +57,7 @@ async function BusinessPage({ params: { id } }: Props) {
             <h3 className={cn('text-5xl font-bold', workSans.className)}>
               {name}
             </h3>
-            {socialId ? <SocialLinks id={socialId} /> : <p>Añadir</p>}
+            <SocialLinks id={id} />
             <div className='flex gap-4'>
               <Link
                 href={`/business/${id}/add-product`}

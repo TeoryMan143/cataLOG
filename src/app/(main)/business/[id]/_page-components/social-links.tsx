@@ -2,15 +2,13 @@ import { cn } from '@/core/client-utils';
 import SocialButton from './social-button';
 import { workSans } from '@/core/fonts';
 import { getBusinessSocials } from '@/core/lib/db/business';
-import { redirect } from 'next/navigation';
-import { RedirectType } from 'next/navigation';
 import GetIcon from './get-icon';
 
 async function SocialLinks({ id }: { id: string }) {
   const dbLinks = await getBusinessSocials(id);
 
   if (!dbLinks) {
-    redirect('/', RedirectType.replace);
+    return <p>Añadir</p>;
   }
 
   const { businessId, id: foo, ...links } = dbLinks;
