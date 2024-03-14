@@ -43,6 +43,7 @@ function LoginEmailForm() {
     }
 
     router.replace('/');
+    toast.success('Se inicío sesión correctamente', { id: toastId });
   };
 
   return (
