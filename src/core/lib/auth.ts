@@ -162,8 +162,6 @@ export const signOut = async () => {
       sessionCookie.value,
       sessionCookie.attributes,
     );
-
-    redirect('/');
   } catch (error: any) {
     return {
       error: error?.message,
