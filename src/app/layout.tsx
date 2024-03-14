@@ -6,6 +6,7 @@ import { NextSSRPlugin } from '@uploadthing/react/next-ssr-plugin';
 import { extractRouterConfig } from 'uploadthing/server';
 import { uploadRouter } from './api/uploadthing/core';
 import { SessionProvider, auth } from '@/core/auth';
+import { Toaster } from 'sonner';
 
 export const metadata: Metadata = {
   title: 'cataLOG',
@@ -22,6 +23,13 @@ export default async function RootLayout({
   return (
     <html lang='es'>
       <body className={cn(openSans.className, 'overflow-hidden')}>
+        <Toaster
+          toastOptions={{
+            classNames: {
+              title: 'lg:text-lg',
+            },
+          }}
+        />
         <NextSSRPlugin routerConfig={extractRouterConfig(uploadRouter)} />
         <SessionProvider sessionData={sessionData}>{children}</SessionProvider>
       </body>

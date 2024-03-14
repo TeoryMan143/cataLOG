@@ -59,7 +59,6 @@ export function ComboboxCategories({
 
   return (
     <>
-      <Toaster richColors />
       <Popover open={open} onOpenChange={setOpen}>
         <PopoverTrigger asChild>
           <Button

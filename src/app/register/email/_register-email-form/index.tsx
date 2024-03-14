@@ -141,13 +141,6 @@ function RegisterEmailForm() {
       >
         ¡Crear cuenta cataLOG!
       </Button>
-      <Toaster
-        toastOptions={{
-          classNames: {
-            title: 'lg:text-lg',
-          },
-        }}
-      />
     </form>
   );
 }

@@ -100,13 +100,6 @@ function LoginEmailForm() {
       >
         Iniciar sesión
       </Button>
-      <Toaster
-        toastOptions={{
-          classNames: {
-            title: 'lg:text-lg',
-          },
-        }}
-      />
     </form>
   );
 }

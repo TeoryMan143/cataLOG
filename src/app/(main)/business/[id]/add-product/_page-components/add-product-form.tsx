@@ -174,13 +174,6 @@ function AddProductForm({ businessId }: { businessId: string }) {
           Añadir
         </Button>
       </div>
-      <Toaster
-        toastOptions={{
-          classNames: {
-            title: 'lg:text-lg',
-          },
-        }}
-      />
     </form>
   );
 }
