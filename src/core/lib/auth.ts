@@ -16,6 +16,7 @@ import * as bcrypt from 'bcrypt';
 import { lucia } from '../auth/config';
 import { cookies } from 'next/headers';
 import { auth } from '../auth';
+import { redirect } from 'next/navigation';
 
 export async function resgisterUser(
   data: RegisterUserSchema,
@@ -161,6 +162,8 @@ export const signOut = async () => {
       sessionCookie.value,
       sessionCookie.attributes,
     );
+
+    redirect('/');
   } catch (error: any) {
     return {
       error: error?.message,
