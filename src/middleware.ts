@@ -1,7 +1,23 @@
-import NextAuth from 'next-auth';
-import { authConfig } from '../auth.config';
+import { NextRequest, NextResponse } from 'next/server';
+import { auth } from './core/auth';
 
-export default NextAuth(authConfig).auth;
+export async function middleware({ nextUrl }: NextRequest) {
+  const { user } = await auth();
+
+  const isLoggedIn = !!user;
+
+  const isOnLoginPage =
+    nextUrl.pathname.startsWith('/register') ||
+    nextUrl.pathname.startsWith('/login');
+
+  if (isOnLoginPage && isLoggedIn) {
+    return NextResponse.redirect(new URL('/', nextUrl));
+  }
+
+  if (!isLoggedIn && !isOnLoginPage) {
+    return NextResponse.redirect(new URL('/login', nextUrl));
+  }
+}
 
 export const config = {
   matcher: [

@@ -10,7 +10,6 @@ import {
   uniqueIndex,
   uuid,
 } from 'drizzle-orm/pg-core';
-import type { AdapterAccount } from '@auth/core/adapters';
 
 export const users = pgTable(
   'user',
@@ -32,49 +31,16 @@ export const users = pgTable(
   },
 );
 
-export const accounts = pgTable(
-  'account',
-  {
-    userId: uuid('userId')
-      .notNull()
-      .references(() => users.id, { onDelete: 'cascade' }),
-    type: text('type').$type<AdapterAccount['type']>().notNull(),
-    provider: text('provider').notNull(),
-    providerAccountId: text('providerAccountId').notNull(),
-    refresh_token: text('refresh_token'),
-    access_token: text('access_token'),
-    expires_at: integer('expires_at'),
-    token_type: text('token_type'),
-    scope: text('scope'),
-    id_token: text('id_token'),
-    session_state: text('session_state'),
-  },
-  account => ({
-    compoundKey: primaryKey({
-      columns: [account.provider, account.providerAccountId],
-    }),
-  }),
-);
-
 export const sessions = pgTable('session', {
-  sessionToken: text('sessionToken').notNull().primaryKey(),
-  userId: uuid('userId')
+  id: text('id').primaryKey(),
+  userId: uuid('user_id')
     .notNull()
-    .references(() => users.id, { onDelete: 'cascade' }),
-  expires: timestamp('expires', { mode: 'date' }).notNull(),
+    .references(() => users.id),
+  expiresAt: timestamp('expires_at', {
+    withTimezone: true,
+    mode: 'date',
+  }).notNull(),
 });
-
-export const verificationTokens = pgTable(
-  'verification_token',
-  {
-    identifier: text('identifier').notNull(),
-    token: text('token').notNull(),
-    expires: timestamp('expires', { mode: 'date' }).notNull(),
-  },
-  vt => ({
-    compoundKey: primaryKey({ columns: [vt.identifier, vt.token] }),
-  }),
-);
 
 export const businesses = pgTable(
   'business',
@@ -97,6 +63,7 @@ export const businesses = pgTable(
   }),
 );
 
+//TODO: Fix reference
 export const businessSocial = pgTable('business_social', {
   id: uuid('id')
     .default(sql`uuid_generate_v4()`)

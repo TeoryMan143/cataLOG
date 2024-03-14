@@ -4,7 +4,7 @@ import { cn } from '@/core/client-utils';
 import { workSans } from '@/core/fonts';
 import { forwardRef } from 'react';
 import NavLinks from '../nav-links';
-import { useSession } from 'next-auth/react';
+import { useSession } from '@/core/auth';
 import { UserCircleIcon } from '@/components/icons/user-circle';
 
 type Props = React.ComponentPropsWithRef<'div'> & {
@@ -16,11 +16,9 @@ const NavUi = forwardRef<HTMLDivElement, Props>(function NavUi(
   { active, fixed },
   ref,
 ) {
-  const { data: session } = useSession();
+  const { user } = useSession();
 
-  if (!session?.user) return <p>Error</p>;
-
-  const user = session.user;
+  if (!user) return <p>Error</p>;
 
   return (
     <div

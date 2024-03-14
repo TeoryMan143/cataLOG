@@ -1,6 +1,6 @@
 import { getAcountBusinesses } from '@/core/lib/business';
 import { getUserByEmail } from '@/core/lib/db/users';
-import { auth } from '@root/auth';
+import { auth } from '@/core/auth';
 import Link from 'next/link';
 import { RedirectType, redirect } from 'next/navigation';
 import BusinessListPre from './_page-components/business-list-pre';
@@ -9,20 +9,13 @@ import { Suspense } from 'react';
 import ListPrevEsk from './_page-components/list-prev-ske';
 
 async function BusinessPage() {
-  const session = await auth();
+  const { user } = await auth();
 
-  if (!session?.user) {
+  if (!user) {
     redirect('/login', RedirectType.replace);
   }
 
-  const { user } = session;
-
-  const dbUser = await getUserByEmail(user.email!);
-  if (!dbUser) {
-    redirect('/login', RedirectType.replace);
-  }
-
-  const res = await getAcountBusinesses(dbUser.id);
+  const res = await getAcountBusinesses(user.id);
   if (!res.success || res.result.length === 0) {
     redirect('/regis-business', RedirectType.replace);
   }

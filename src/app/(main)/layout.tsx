@@ -1,8 +1,6 @@
 import Logo from '@/components/logo';
 import SearchBar from '@/components/search-var';
 import NavDrawer from '../_page-components/nav-drawer';
-import { auth } from '../../../auth';
-import { SessionProvider } from 'next-auth/react';
 import styles from '../page.module.css';
 import { cn } from '@/core/client-utils';
 import AsideNav from '../_page-components/aside-nav';
@@ -13,8 +11,6 @@ export default async function Home({
 }: {
   children: React.ReactNode;
 }) {
-  const session = await auth();
-
   return (
     <div
       className={cn(
@@ -30,9 +26,7 @@ export default async function Home({
             <Logo />
           </Link>
           <SearchBar />
-          <SessionProvider session={session}>
-            <NavDrawer />
-          </SessionProvider>
+          <NavDrawer />
         </div>
       </header>
       <main
@@ -40,9 +34,7 @@ export default async function Home({
       >
         {children}
       </main>
-      <SessionProvider session={session}>
-        <AsideNav />
-      </SessionProvider>
+      <AsideNav />
     </div>
   );
 }

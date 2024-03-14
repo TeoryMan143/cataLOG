@@ -2,7 +2,7 @@
 
 import { db } from '@/core/db/config';
 import { products } from '@/core/db/tables';
-import { count, eq, sql } from 'drizzle-orm';
+import { count, eq } from 'drizzle-orm';
 
 export async function getProductCount(businessId: string) {
   try {

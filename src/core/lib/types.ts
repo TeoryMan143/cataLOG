@@ -7,6 +7,13 @@ export type ActionSuccess<T> = {
 
 export type ActionError = {
   success: false;
-  errors: string[];
-  errorType: 'validation' | 'insertion' | 'duplicated-email' | 'auth';
-};
+} & (
+  | {
+      errors: string[];
+      errorType: 'insertion' | 'duplicated-email' | 'auth';
+    }
+  | {
+      errors: { [x: string]: string }[];
+      errorType: 'validation';
+    }
+);

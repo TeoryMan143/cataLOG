@@ -8,7 +8,7 @@ import {
   editProductSchema,
   EditProduct,
 } from '@/core/schemas/product';
-import { auth } from '@root/auth';
+import { auth } from '@/core/auth';
 import { db } from '../db/config';
 import {
   productImages as productImagesTable,
@@ -31,11 +31,11 @@ export async function registerProduct(req: RequestProduct): Promise<
 > {
   const result = requestProductSchema.safeParse(req);
 
-  let zodErrors: string[] = [];
+  let zodErrors: { [x: string]: string }[] = [];
 
   if (!result.success) {
     result.error.issues.forEach(issue => {
-      zodErrors = [...zodErrors, issue.message];
+      zodErrors = [...zodErrors, { [issue.path[0]]: issue.message }];
     });
 
     if (zodErrors.length > 0) {
@@ -43,17 +43,23 @@ export async function registerProduct(req: RequestProduct): Promise<
     }
   }
 
-  if (!result.success)
-    return { success: false, errorType: 'validation', errors: ['pass'] };
+  if (!result.success) {
+    return {
+      success: false,
+      errorType: 'validation',
+      errors: [{ pass: 'pass' }],
+    };
+  }
 
-  const session = await auth();
+  const { user } = await auth();
 
-  if (!session?.user)
+  if (!user) {
     return {
       success: false,
       errorType: 'auth',
       errors: ['Must be signed in to register a product'],
     };
+  }
 
   const { categories, images, ...product } = result.data;
 
@@ -111,12 +117,12 @@ export async function editProduct(
 > {
   const result = editProductSchema.safeParse(req);
 
-  let zodErrors: string[] = [];
+  let zodErrors: { [x: string]: string }[] = [];
 
   if (!result.success) {
     result.error.issues.forEach(issue => {
       issue.path;
-      zodErrors = [...zodErrors, `${issue.path} ${issue.message}`];
+      zodErrors = [...zodErrors, { [issue.path[0]]: issue.message }];
     });
 
     if (zodErrors.length > 0) {
@@ -125,15 +131,19 @@ export async function editProduct(
   }
 
   if (!result.success)
-    return { success: false, errorType: 'validation', errors: ['pass'] };
+    return {
+      success: false,
+      errorType: 'validation',
+      errors: [{ pass: 'pass' }],
+    };
 
-  const session = await auth();
+  const { user } = await auth();
 
-  if (!session?.user)
+  if (!user)
     return {
       success: false,
       errorType: 'auth',
-      errors: ['Must be signed in to register a product'],
+      errors: ['Debes iniciar sesión para crear un negocio'],
     };
 
   const { categories, images, businessId, deleteImages, ...product } =
@@ -143,7 +153,7 @@ export async function editProduct(
     return {
       success: false,
       errorType: 'validation',
-      errors: ['Missing categories'],
+      errors: [{ categories: 'Missing categories' }],
     };
   }
 
@@ -151,7 +161,7 @@ export async function editProduct(
     return {
       success: false,
       errorType: 'validation',
-      errors: ['Missing images'],
+      errors: [{ categories: 'Missing images' }],
     };
   }
 

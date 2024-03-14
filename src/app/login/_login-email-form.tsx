@@ -9,9 +9,10 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useState } from 'react';
 import { type SubmitHandler, useForm } from 'react-hook-form';
 import { Toaster, toast } from 'sonner';
-import { useSession } from 'next-auth/react';
+import { useSession } from '@/core/auth';
 import { EmailIcon } from '@/components/icons/mail';
 import PasswordFillIcon from '@/components/icons/password-fill';
+import { useRouter } from 'next/navigation';
 
 function LoginEmailForm() {
   const {
@@ -23,32 +24,25 @@ function LoginEmailForm() {
   });
 
   const [serverError, setServerError] = useState<ActionError | null>(null);
-
   const [credentialsError, setCredentialsError] = useState(false);
 
-  const { data: session } = useSession();
+  const router = useRouter();
 
   const onSubmit: SubmitHandler<LoginCredentials> = async data => {
     const toastId = toast.loading('Verificando informacion...');
-    try {
-      const res = await loginUser(data);
+    const res = await loginUser(data);
 
-      if (session?.user) {
-        return toast.success('Se ha ingresado correctamente', { id: toastId });
-      }
-
-      if (!res?.success && res?.errorType === 'auth') {
-        toast.error('Email o contraseña incorrectos', { id: toastId });
-        return setCredentialsError(true);
-      }
-
-      if (!res?.success) {
-        toast.error('Error del servidor', { id: toastId });
-        return setServerError(res!);
-      }
-    } catch (error) {
-      console.log('in imcsisas'); // La taberna knows
+    if (!res.success && res.errorType === 'auth') {
+      toast.error('Email o contraseña incorrectos', { id: toastId });
+      return setCredentialsError(true);
     }
+
+    if (!res?.success) {
+      toast.error('Error del servidor', { id: toastId });
+      return setServerError(res!);
+    }
+
+    router.replace('/');
   };
 
   return (
@@ -80,7 +74,7 @@ function LoginEmailForm() {
           <p>Server error: {serverError.errorType}</p>
           <ul>
             {serverError.errors?.map(error => (
-              <li key={crypto.randomUUID()}>{error}</li>
+              <li key={crypto.randomUUID()}>{error.toString()}</li>
             ))}
           </ul>
         </div>

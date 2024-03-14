@@ -1,7 +1,7 @@
 'use server';
 
 import { DrizzleError, eq } from 'drizzle-orm';
-import { auth } from '../../../auth';
+import { auth } from '@/core/auth';
 import {
   DBBusiness,
   RequestBusiness,
@@ -11,18 +11,18 @@ import {
 import { ActionResponse } from './types';
 import { db } from '../db/config';
 import { businesses } from '../db/tables';
-import { getUserByEmail } from './db/users';
+import { getUserById } from './db/users';
 
 export async function registerBusiness(
   req: RequestBusiness,
 ): Promise<ActionResponse<DBBusiness | undefined>> {
   const result = requestBusinessSchema.safeParse(req);
 
-  let zodErrors: string[] = [];
+  let zodErrors: { [x: string]: string }[] = [];
 
   if (!result.success) {
     result.error.issues.forEach(issue => {
-      zodErrors = [...zodErrors, issue.message];
+      zodErrors = [...zodErrors, { [issue.path[0]]: issue.message }];
     });
 
     if (zodErrors.length > 0) {
@@ -31,32 +31,24 @@ export async function registerBusiness(
   }
 
   if (!result.success)
-    return { success: false, errorType: 'validation', errors: ['pass'] };
+    return {
+      success: false,
+      errorType: 'validation',
+      errors: [{ pass: 'pass' }],
+    };
 
-  const session = await auth();
+  const { user } = await auth();
 
-  if (!session?.user)
+  if (!user)
     return {
       success: false,
       errorType: 'auth',
-      errors: ['Must be signed in to create a business'],
+      errors: ['Debes iniciar sesión para crear un negocio'],
     };
-
-  const { user } = session;
-
-  const dbUser = await getUserByEmail(user.email!);
-
-  if (!dbUser) {
-    return {
-      success: false,
-      errorType: 'insertion',
-      errors: ['db', 'User not found'],
-    };
-  }
 
   const business: RegisterBusiness = {
     ...result.data,
-    accountId: dbUser.id,
+    accountId: user.id,
   };
 
   try {

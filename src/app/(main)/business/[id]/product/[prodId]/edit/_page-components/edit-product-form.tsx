@@ -195,7 +195,7 @@ function EditProductForm({
           <p>Server error: {serverError.errorType}</p>
           <ul>
             {serverError.errors?.map(error => (
-              <li key={crypto.randomUUID()}>{error}</li>
+              <li key={crypto.randomUUID()}>{error.toString()}</li>
             ))}
           </ul>
         </div>

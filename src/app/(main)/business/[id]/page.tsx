@@ -8,6 +8,7 @@ import Link from 'next/link';
 import { PlusRoundedIcon } from '@/components/icons/plus-rounded';
 import { EditIcon } from '@/components/icons/edit';
 import AllProducts from './_page-components/products/all-products';
+import { auth } from '@/core/auth';
 
 type Props = {
   params: {
@@ -23,6 +24,12 @@ async function BusinessPage({ params: { id } }: Props) {
   const business = await getBusinessById(id);
 
   if (!business) {
+    redirect('/business', RedirectType.replace);
+  }
+
+  const { user } = await auth();
+
+  if (user?.id !== business.accountId) {
     redirect('/business', RedirectType.replace);
   }
 
