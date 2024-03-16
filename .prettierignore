@@ -2,3 +2,4 @@ node_modules
 drizzle
 .vercel
 pnpm-lock.yaml
+.next
