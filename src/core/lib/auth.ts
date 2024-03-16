@@ -3,20 +3,20 @@
 import {
   RegisterUserSchema,
   User,
-  formUserSchema,
   loginCredentials,
   registerUserSchema,
 } from '@/core/schemas/user';
 import { ActionResponse } from './types';
 import { db } from '@/core/db/config';
-import { users } from '@/core/db/tables';
-import { hashPassword } from '@/core/server-utils';
+import { emailVerification, users } from '@/core/db/tables';
+import { hashPassword, sendEmail } from '@/core/server-utils';
 import { eq } from 'drizzle-orm';
 import * as bcrypt from 'bcrypt';
 import { lucia } from '../auth/config';
 import { cookies } from 'next/headers';
 import { auth } from '../auth';
-import { redirect } from 'next/navigation';
+import jwt from 'jsonwebtoken';
+import EmailVerify from '../../../emails/email-verify';
 
 export async function resgisterUser(
   data: RegisterUserSchema,
@@ -56,11 +56,59 @@ export async function resgisterUser(
     const password = userData.password;
     const hashedPass = await hashPassword(password);
     const newUserData = { ...userData, password: hashedPass };
-    const newUser = await db.insert(users).values(newUserData).returning();
-    return { success: true, result: newUser[0] };
+
+    const code = Math.random().toString(36).substring(2, 8);
+
+    const txRes = await db.transaction(async tx => {
+      const newUser = await tx.insert(users).values(newUserData).returning();
+      const { id: userId, email } = newUser[0];
+      await tx.insert(emailVerification).values({
+        code,
+        userId,
+        sentAt: new Date(),
+      });
+
+      const token = jwt.sign({ email, userId, code }, process.env.JWT_SECRET!, {
+        expiresIn: '5m',
+      });
+
+      const url = `${process.env.NEXT_PUBLIC_BASE_URL}/api/verify-email?token=${token}`;
+
+      const emailData = await sendEmail({
+        to: [email],
+        subject: 'Verifica tu cuenta de cataLOG',
+        react: EmailVerify({ url }),
+      });
+
+      if (emailData.error) {
+        console.error(emailData.error);
+        tx.rollback();
+        return { emailSuccess: false };
+      }
+
+      return { emailSuccess: true, newUser: newUser[0] };
+    });
+
+    if (!txRes.emailSuccess) {
+      return {
+        success: false,
+        errorType: 'email-verification',
+        errors: ['Email error'],
+      };
+    }
+
+    if (!txRes.newUser) {
+      return {
+        success: false,
+        errorType: 'insertion',
+        errors: ['Error creating user'],
+      };
+    }
+
+    return { success: true, result: txRes.newUser };
   } catch (e: any) {
     console.error(e);
-    if (e.constraint === 'users_email_unique') {
+    if (e.constraint === 'email_idx') {
       return {
         success: false,
         errorType: 'duplicated-email',
@@ -120,6 +168,46 @@ export async function loginUser(
       };
     }
 
+    if (!user.emailVerified) {
+      const code = Math.random().toString(36).substring(2, 8);
+
+      await db.insert(emailVerification).values({
+        code,
+        userId: user.id,
+        sentAt: new Date(),
+      });
+
+      const token = jwt.sign(
+        { email, userId: user.id, code },
+        process.env.JWT_SECRET!,
+        {
+          expiresIn: '5m',
+        },
+      );
+
+      const url = `${process.env.NEXT_PUBLIC_BASE_URL}/api/verify-email?token=${token}`;
+
+      const emailData = await sendEmail({
+        to: [email],
+        subject: 'Verifica tu cuenta de cataLOG',
+        react: EmailVerify({ url }),
+      });
+
+      if (emailData.error) {
+        return {
+          success: false,
+          errorType: 'email-verification',
+          errors: ['Email error'],
+        };
+      }
+
+      return {
+        success: false,
+        errorType: 'email-verification',
+        errors: ['Correo no verificado'],
+      };
+    }
+
     const session = await lucia.createSession(user.id, {
       expiresIn: 60 * 60 * 24 * 30,
     });
@@ -168,6 +256,106 @@ export const signOut = async () => {
     };
   }
 };
+
+export async function resendVerifyEmail(
+  email: string,
+): Promise<ActionResponse> {
+  try {
+    const user = await db.query.users.findFirst({
+      where: table => eq(table.email, email),
+    });
+
+    if (!user) {
+      return {
+        success: false,
+        errorType: 'auth',
+        errors: ['User not found'],
+      };
+    }
+
+    if (user.emailVerified) {
+      return {
+        success: false,
+        errorType: 'auth',
+        errors: ['Email already verified'],
+      };
+    }
+
+    const existedCode = await db.query.emailVerification.findFirst({
+      where: eq(emailVerification.userId, user.id),
+    });
+
+    if (!existedCode) {
+      return {
+        success: false,
+        errorType: 'auth',
+        errors: ['User already verified'],
+      };
+    }
+
+    const sentAt = new Date(existedCode.sentAt);
+    const isOneMinuteHasPassed =
+      new Date().getTime() - sentAt.getTime() > 60000;
+
+    if (!isOneMinuteHasPassed) {
+      return {
+        success: false,
+        errorType: 'auth',
+        errors: [
+          'Email already sent, next email in ' +
+            (60 -
+              Math.floor((new Date().getTime() - sentAt.getTime()) / 1000)) +
+            ' seconds',
+        ],
+      };
+    }
+
+    const code = Math.random().toString(36).substring(2, 8);
+
+    await db
+      .update(emailVerification)
+      .set({
+        code,
+        sentAt: new Date(),
+      })
+      .where(eq(emailVerification.userId, user.id));
+
+    const token = jwt.sign(
+      { email, userId: user.id, code },
+      process.env.JWT_SECRET!,
+      {
+        expiresIn: '5m',
+      },
+    );
+
+    const url = `${process.env.NEXT_PUBLIC_BASE_URL}/api/verify-email?token=${token}`;
+
+    const emailData = await sendEmail({
+      to: [email],
+      subject: 'Verifica tu cuenta de cataLOG',
+      react: EmailVerify({ url }),
+    });
+
+    if (emailData.error) {
+      return {
+        success: false,
+        errorType: 'auth',
+        errors: ['Email could not be send'],
+      };
+    }
+
+    return {
+      success: true,
+      result: undefined,
+    };
+  } catch (error: any) {
+    return {
+      success: false,
+      errorType: 'auth',
+      errors: [error?.message],
+    };
+  }
+}
 
 export async function signInGoogle() {
   // await signIn('google');

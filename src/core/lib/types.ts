@@ -10,7 +10,11 @@ export type ActionError = {
 } & (
   | {
       errors: string[];
-      errorType: 'insertion' | 'duplicated-email' | 'auth';
+      errorType:
+        | 'insertion'
+        | 'duplicated-email'
+        | 'auth'
+        | 'email-verification';
     }
   | {
       errors: { [x: string]: string }[];

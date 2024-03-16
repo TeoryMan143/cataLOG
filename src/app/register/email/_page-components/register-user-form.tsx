@@ -5,43 +5,63 @@ import Input from '@/components/input';
 import Button from '@/components/button';
 import { type FormUserSchema, formUserSchema } from '@/core/schemas/user';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { resgisterUser } from '@/core/lib/auth';
-import { useState } from 'react';
+import { resendVerifyEmail, resgisterUser } from '@/core/lib/auth';
+import { useEffect, useState } from 'react';
 import type { ActionError } from '@/core/lib/types';
-import { useRouter } from 'next/navigation';
-import { Toaster, toast } from 'sonner';
+import { toast } from 'sonner';
 import { UserCircleIcon } from '@/components/icons/user-circle';
 import { EmailIcon } from '@/components/icons/mail';
 import PhoneIcon from '@/components/icons/phone';
 import PasswordRegularIcon from '@/components/icons/password-regular';
 import PasswordFillIcon from '@/components/icons/password-fill';
+import EmailVerifyDialog from '../../../_page-components/email-verify-dialog';
+import { useCountdown } from 'usehooks-ts';
 
 function RegisterEmailForm() {
   const {
     register,
     handleSubmit,
     setError,
-    reset,
     setValue,
+    getValues,
     formState: { errors, isSubmitting },
   } = useForm<FormUserSchema>({
     resolver: zodResolver(formUserSchema),
   });
 
-  const router = useRouter();
-
   const [serverError, setServerError] = useState<ActionError | null>(null);
+  const [openEmailVerify, setOpenEmailVerify] = useState(false);
+  const [verifyError, setVerifyError] = useState<string | null>(null);
+
+  const [count, { resetCountdown, startCountdown, stopCountdown }] =
+    useCountdown({
+      countStart: 60,
+      intervalMs: 1000,
+    });
+
+  useEffect(() => {
+    if (count === 0) {
+      stopCountdown();
+      resetCountdown();
+    }
+  }, [count, stopCountdown, resetCountdown]);
+
+  const handleResend = async () => {
+    const res = await resendVerifyEmail(getValues('email'));
+    if (!res.success) {
+      setVerifyError(res.errorType === 'validation' ? null : res.errors[0]);
+      toast.error('Error del servidor');
+      return setServerError(res);
+    }
+    startCountdown();
+  };
 
   const onSubmit: SubmitHandler<FormUserSchema> = async data => {
     const toastId = toast.loading('Registrando informacion...');
 
     const res = await resgisterUser(data);
 
-    if (
-      !res.success &&
-      res.errorType === 'duplicated-email' &&
-      typeof res.errors[0] === 'string'
-    ) {
+    if (!res.success && res.errorType === 'duplicated-email') {
       toast.error('Email duplicado', { id: toastId });
       return setError('email', { message: res.errors[0] });
     }
@@ -52,13 +72,18 @@ function RegisterEmailForm() {
     }
 
     toast.success('Registrado correctamente', { id: toastId });
-
-    reset();
-    router.push('/login');
+    setOpenEmailVerify(true);
+    startCountdown();
   };
 
   return (
     <form className='flex flex-col gap-3' onSubmit={handleSubmit(onSubmit)}>
+      <EmailVerifyDialog
+        onResendClick={handleResend}
+        open={openEmailVerify}
+        count={count}
+        error={verifyError}
+      />
       <Input
         className='
           border-black 

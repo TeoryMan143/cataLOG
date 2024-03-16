@@ -1,6 +1,7 @@
 import { relations, sql } from 'drizzle-orm';
 import {
   bigint,
+  boolean,
   integer,
   pgTable,
   primaryKey,
@@ -21,7 +22,7 @@ export const users = pgTable(
     email: text('email').notNull(),
     password: text('password').notNull(),
     number: bigint('number', { mode: 'number' }).notNull(),
-    emailVerified: timestamp('emailVerified', { mode: 'date' }),
+    emailVerified: boolean('email_verified').default(false),
     image: text('image'),
   },
   users => {
@@ -35,8 +36,22 @@ export const sessions = pgTable('session', {
   id: text('id').primaryKey(),
   userId: uuid('user_id')
     .notNull()
-    .references(() => users.id),
+    .references(() => users.id, { onDelete: 'cascade' }),
   expiresAt: timestamp('expires_at', {
+    withTimezone: true,
+    mode: 'date',
+  }).notNull(),
+});
+
+export const emailVerification = pgTable('email_verification', {
+  id: uuid('id')
+    .default(sql`uuid_generate_v4()`)
+    .primaryKey(),
+  userId: uuid('user_id')
+    .notNull()
+    .references(() => users.id, { onDelete: 'cascade' }),
+  code: text('code').notNull(),
+  sentAt: timestamp('sent_at', {
     withTimezone: true,
     mode: 'date',
   }).notNull(),

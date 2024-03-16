@@ -9,6 +9,7 @@
     "lint": "next lint",
     "migration:gen": "drizzle-kit generate:pg",
     "migration:run": "drizzle-kit push:pg",
+    "email": "email dev",
     "format": "prettier . --write"
   },
   "dependencies": {
@@ -21,6 +22,7 @@
     "@radix-ui/react-dialog": "^1.0.5",
     "@radix-ui/react-popover": "^1.0.7",
     "@radix-ui/react-slot": "^1.0.2",
+    "@react-email/components": "0.0.15",
     "@uploadthing/react": "^6.2.4",
     "@vercel/postgres": "^0.5.1",
     "bcrypt": "^5.1.1",
@@ -31,6 +33,7 @@
     "drizzle-orm": "^0.29.3",
     "drizzle-zod": "^0.5.1",
     "embla-carousel-react": "^8.0.0",
+    "jsonwebtoken": "^9.0.2",
     "just-clone": "^6.2.0",
     "just-diff": "^6.0.2",
     "just-diff-apply": "^5.5.0",
@@ -41,15 +44,19 @@
     "oslo": "^1.1.3",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-email": "2.1.0",
     "react-hook-form": "^7.50.1",
+    "resend": "3.2.0",
     "sonner": "^1.4.0",
     "tailwind-merge": "^2.2.1",
     "tailwindcss-animate": "^1.0.7",
     "uploadthing": "^6.4.1",
+    "usehooks-ts": "^3.0.1",
     "zod": "^3.22.4"
   },
   "devDependencies": {
     "@types/bcrypt": "^5.0.2",
+    "@types/jsonwebtoken": "^9.0.6",
     "@types/node": "^20.11.17",
     "@types/react": "^18.2.55",
     "@types/react-dom": "^18.2.19",

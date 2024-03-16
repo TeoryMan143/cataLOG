@@ -3,6 +3,7 @@
 import { cn } from '@/core/client-utils';
 import { out } from './sign-out-action';
 import style from './style.module.css';
+import { toast } from 'sonner';
 
 function SignOutButton({ active }: { active?: boolean }) {
   return (
@@ -11,7 +12,11 @@ function SignOutButton({ active }: { active?: boolean }) {
         `flex text-center gap-2 text-white py-3 px-1 items-center relative`,
         style.underLineAnim,
       )}
-      onClick={() => out()}
+      onClick={async () => {
+        const toastId = toast.loading('Cerrando sessión');
+        await out();
+        toast.success('Sesión cerrada correctamente', { id: toastId });
+      }}
     >
       <svg
         className='text-xl'

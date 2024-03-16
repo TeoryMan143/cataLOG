@@ -1,4 +1,4 @@
-import RegisterEmailForm from './_register-email-form';
+import RegisterEmailForm from './_page-components/register-user-form';
 import { cn } from '@/core/client-utils';
 import { workSans } from '@/core/fonts';
 
