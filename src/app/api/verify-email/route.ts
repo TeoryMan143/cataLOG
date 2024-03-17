@@ -80,5 +80,8 @@ export async function GET(req: NextRequest) {
         },
       );
     }
+    return Response.redirect(
+      new URL('/login', process.env.NEXT_PUBLIC_BASE_URL!),
+    );
   }
 }
