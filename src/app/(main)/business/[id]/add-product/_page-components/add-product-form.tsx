@@ -17,7 +17,7 @@ import UpDropzone from './up-dropzone';
 import { type DBCategory } from '@/core/schemas/categories';
 import UpImage from './up-image';
 import { deleteFileById } from '@/core/lib/files';
-import { Toaster, toast } from 'sonner';
+import { toast } from 'sonner';
 import { registerProduct } from '@/core/lib/products';
 import { type ActionError } from '@/core/lib/types';
 import { useRouter } from 'next/navigation';

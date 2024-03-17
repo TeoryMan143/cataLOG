@@ -15,7 +15,7 @@ import Button from '@/components/button';
 import { DBCategory } from '@/core/schemas/categories';
 import { Checkbox } from '@/components/checkbox';
 import { getCategories } from '@/core/lib/db/categories';
-import { Toaster, toast } from 'sonner';
+import { toast } from 'sonner';
 import { XIcon } from '@/components/icons/x-icon';
 import clone from 'just-clone';
 
