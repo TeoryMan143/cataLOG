@@ -1,27 +1,46 @@
 'use server';
 
 import bcrypt from 'bcrypt';
-import { Resend } from 'resend';
+import nodemailer from 'nodemailer';
+import { render } from '@react-email/components';
 
-const resend = new Resend(process.env.RESEND_API_KEY);
+const trans = nodemailer.createTransport({
+  host: 'smtp.gmail.com',
+  port: 465,
+  secure: true,
+  auth: {
+    user: process.env.GMAIL_USER,
+    pass: process.env.GMAIL_PASSWORD,
+  },
+});
 
 export async function hashPassword(password: string) {
   return bcrypt.hash(password, await bcrypt.genSalt());
 }
 
-export async function sendEmail(props: {
+export async function sendEmail({
+  to,
+  subject,
+  react,
+}: {
   to: string[];
   subject: string;
   react: any;
 }) {
   try {
-    const data = await resend.emails.send({
-      from: 'cataLOG <noreplycatalog@resend.dev>',
-      ...props,
+    await trans.sendMail({
+      from: `"Catalog No Reply" <${process.env.GMAIL_USER}>`,
+      to,
+      subject,
+      html: render(react),
     });
 
-    return data;
+    return {
+      success: true,
+    };
   } catch (error) {
-    return { error };
+    console.error(error);
+
+    return { error: true };
   }
 }

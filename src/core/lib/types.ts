@@ -14,10 +14,22 @@ export type ActionError = {
         | 'insertion'
         | 'duplicated-email'
         | 'auth'
-        | 'email-verification';
+        | 'email-verification'
+        | 'token-validation'
+        | 'unknown';
     }
   | {
       errors: { [x: string]: string }[];
       errorType: 'validation';
     }
 );
+
+export interface GoogleUser {
+  id: string;
+  email: string;
+  verified_email: boolean;
+  name: string;
+  given_name: string;
+  picture: string;
+  locale: string;
+}

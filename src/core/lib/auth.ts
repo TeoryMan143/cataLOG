@@ -6,17 +6,20 @@ import {
   loginCredentials,
   registerUserSchema,
 } from '@/core/schemas/user';
-import { ActionResponse } from './types';
+import { ActionResponse, GoogleUser } from './types';
 import { db } from '@/core/db/config';
-import { emailVerification, users } from '@/core/db/tables';
+import { emailVerification, oauthAccounts, users } from '@/core/db/tables';
 import { hashPassword, sendEmail } from '@/core/server-utils';
-import { eq } from 'drizzle-orm';
+import { DrizzleError, eq } from 'drizzle-orm';
 import * as bcrypt from 'bcrypt';
 import { lucia } from '../auth/config';
 import { cookies } from 'next/headers';
 import { auth } from '../auth';
-import jwt from 'jsonwebtoken';
+import jwt, { JsonWebTokenError } from 'jsonwebtoken';
 import EmailVerify from '../../../emails/email-verify';
+import { GoogleTokens, generateCodeVerifier, generateState } from 'arctic';
+import { google } from '../auth/oauth-providers';
+import { z } from 'zod';
 
 export async function resgisterUser(
   data: RegisterUserSchema,
@@ -357,6 +360,155 @@ export async function resendVerifyEmail(
   }
 }
 
-export async function signInGoogle() {
-  // await signIn('google');
+export async function createGoogleAuthorizationURL(): Promise<
+  ActionResponse<URL>
+> {
+  try {
+    const state = generateState();
+    const codeVerifier = generateCodeVerifier();
+
+    cookies().set('codeVerifier', codeVerifier, {
+      httpOnly: true,
+    });
+
+    cookies().set('state', state, {
+      httpOnly: true,
+    });
+
+    const authorizationURL = await google.createAuthorizationURL(
+      state,
+      codeVerifier,
+      {
+        scopes: ['email', 'profile'],
+      },
+    );
+
+    return {
+      success: true,
+      result: authorizationURL,
+    };
+  } catch (e) {
+    return {
+      success: false,
+      errorType: 'insertion',
+      errors: ['Unable to create authorization URL'],
+    };
+  }
+}
+
+const numberSchema = z
+  .string({ required_error: 'Campo requerido' })
+  .min(1, 'Ingresa un numero')
+  .regex(
+    new RegExp(`^3[0-9]{2}\\s?\\-?[0-9]{3}\\s?\\-?[0-9]{4}$`),
+    'Ingresa un numero valido',
+  )
+  .transform(v => +v);
+
+export async function signUpWithGoogle(
+  reqNumber: string,
+): Promise<ActionResponse<User>> {
+  const result = numberSchema.safeParse(reqNumber);
+
+  let zodErrors: { [x: string]: string }[] = [];
+
+  if (!result.success) {
+    result.error.issues.forEach(issue => {
+      zodErrors = [...zodErrors, { [issue.path[0]]: issue.message }];
+    });
+
+    if (zodErrors.length > 0) {
+      return { errors: zodErrors, errorType: 'validation', success: false };
+    }
+  }
+
+  if (!result.success) {
+    return {
+      success: false,
+      errorType: 'validation',
+      errors: [{ pass: 'pass' }],
+    };
+  }
+
+  const number = result.data;
+
+  try {
+    const token = cookies().get('google_token')?.value;
+
+    if (!token) {
+      return {
+        success: false,
+        errorType: 'token-validation',
+        errors: ['Token not found'],
+      };
+    }
+
+    const decoded = jwt.verify(token, process.env.JWT_SECRET!) as GoogleUser &
+      GoogleTokens & {
+        accessTokenExpiresAt: string;
+      };
+
+    const newUser = await db
+      .insert(users)
+      .values({
+        name: decoded.name,
+        email: decoded.email,
+        password: crypto.randomUUID(),
+        emailVerified: decoded.verified_email,
+        number,
+        image: decoded.picture,
+      })
+      .returning();
+
+    const { accessToken, accessTokenExpiresAt, refreshToken } = decoded;
+
+    await db.insert(oauthAccounts).values({
+      accessToken,
+      provider: 'google',
+      providerUserId: decoded.id,
+      userId: newUser[0].id,
+      refreshToken,
+      expiresAt: new Date(accessTokenExpiresAt),
+    });
+
+    const session = await lucia.createSession(newUser[0].id, {
+      expiresIn: 60 * 60 * 24 * 30,
+    });
+    const sessionCookie = lucia.createSessionCookie(session.id);
+
+    cookies().set(
+      sessionCookie.name,
+      sessionCookie.value,
+      sessionCookie.attributes,
+    );
+
+    cookies().delete('state');
+    cookies().delete('codeVerifier');
+    cookies().delete('google_token');
+
+    return {
+      success: true,
+      result: newUser[0],
+    };
+  } catch (e: any) {
+    if (e instanceof JsonWebTokenError) {
+      return {
+        success: false,
+        errorType: 'token-validation',
+        errors: [e.message],
+      };
+    }
+    if (e instanceof DrizzleError) {
+      return {
+        success: false,
+        errorType: 'insertion',
+        errors: [e.message],
+      };
+    }
+    return {
+      success: false,
+      errorType: 'unknown',
+      errors: [e.message],
+    };
+  }
 }

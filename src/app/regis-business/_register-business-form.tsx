@@ -6,7 +6,7 @@ import type { ActionError, ActionResponse } from '@/core/lib/types';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useState } from 'react';
 import { type SubmitHandler, useForm } from 'react-hook-form';
-import { Toaster, toast } from 'sonner';
+import { toast } from 'sonner';
 import { FormBusiness, formBusinessSchema } from '@/core/schemas/business';
 import { registerBusiness } from '@/core/lib/business';
 import { useRouter } from 'next/navigation';

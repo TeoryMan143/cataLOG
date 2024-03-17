@@ -6,22 +6,17 @@ import { emailVerification, users } from '@/core/db/tables';
 import { lucia } from '@/core/auth/config';
 import { cookies } from 'next/headers';
 
-export async function GET(req: NextRequest) {
+export async function GET({ nextUrl }: NextRequest) {
   try {
-    const url = new URL(req.url);
-
-    const searchParams = url.searchParams;
-
-    const token = searchParams.get('token');
+    const token = nextUrl.searchParams.get('token');
 
     if (!token) {
-      return Response.json(
-        {
-          error: 'No token',
-        },
-        {
-          status: 400,
-        },
+      return Response.redirect(
+        new URL(
+          '/api/error?type=token_validation&message=Token no encontrado',
+          process.env.NEXT_PUBLIC_BASE_URL!,
+        ),
+        404,
       );
     }
 
@@ -36,13 +31,12 @@ export async function GET(req: NextRequest) {
     });
 
     if (!verification) {
-      return Response.json(
-        {
-          error: 'Invalid token',
-        },
-        {
-          status: 400,
-        },
+      return Response.redirect(
+        new URL(
+          '/api/error?type=token_validation&message=Token invalido',
+          process.env.NEXT_PUBLIC_BASE_URL!,
+        ),
+        401,
       );
     }
 
@@ -70,18 +64,20 @@ export async function GET(req: NextRequest) {
     return Response.redirect(new URL(process.env.NEXT_PUBLIC_BASE_URL!), 302);
   } catch (e: any) {
     if (e instanceof JsonWebTokenError) {
-      return Response.json(
-        {
-          type: e.name,
-          error: e.message,
-        },
-        {
-          status: 400,
-        },
+      return Response.redirect(
+        new URL(
+          `/api/error?type=token_validation&message=${e.message}`,
+          process.env.NEXT_PUBLIC_BASE_URL!,
+        ),
+        400,
       );
     }
     return Response.redirect(
-      new URL('/login', process.env.NEXT_PUBLIC_BASE_URL!),
+      new URL(
+        `/api/error?type=desconocido&message=${e.message}`,
+        process.env.NEXT_PUBLIC_BASE_URL!,
+      ),
+      400,
     );
   }
 }

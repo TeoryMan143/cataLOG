@@ -57,6 +57,31 @@ export const emailVerification = pgTable('email_verification', {
   }).notNull(),
 });
 
+export const oauthAccounts = pgTable(
+  'oauth_account',
+  {
+    id: uuid('id')
+      .default(sql`uuid_generate_v4()`)
+      .primaryKey(),
+    userId: uuid('user_id')
+      .notNull()
+      .references(() => users.id),
+    provider: text('provider').notNull().$type<'google' | 'facebook'>(),
+    providerUserId: text('provider_user_id').notNull(),
+    accessToken: text('access_token').notNull(),
+    refreshToken: text('refresh_token'),
+    expiresAt: timestamp('expires_at', {
+      withTimezone: true,
+      mode: 'date',
+    }),
+  },
+  oauth => ({
+    providerUserIdIxd: uniqueIndex('provider_user_id_ixd').on(
+      oauth.providerUserId,
+    ),
+  }),
+);
+
 export const businesses = pgTable(
   'business',
   {
@@ -166,3 +191,10 @@ export const productsCategoriesRelations = relations(
     }),
   }),
 );
+
+export const oauthRelations = relations(oauthAccounts, ({ one }) => ({
+  user: one(users, {
+    fields: [oauthAccounts.userId],
+    references: [users.id],
+  }),
+}));
