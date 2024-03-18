@@ -42,7 +42,9 @@ const NavUi = forwardRef<HTMLDivElement, Props>(function NavUi(
         })}
       >
         <UserCircleIcon className='text-[9rem]' />
-        <p className={cn(`text-xl`, workSans.className)}>{user?.name}</p>
+        <p className={cn(`text-xl text-center`, workSans.className)}>
+          {user?.name}
+        </p>
       </div>
       <nav>
         <NavLinks active={active} />
