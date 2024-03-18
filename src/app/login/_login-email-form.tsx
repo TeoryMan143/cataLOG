@@ -14,6 +14,7 @@ import PasswordFillIcon from '@/components/icons/password-fill';
 import { useRouter } from 'next/navigation';
 import { useCountdown } from 'usehooks-ts';
 import EmailVerifyDialog from '../_page-components/email-verify-dialog';
+import GoogleButton from '../_page-components/_google-button';
 
 function LoginEmailForm() {
   const {
@@ -141,6 +142,7 @@ function LoginEmailForm() {
       >
         Iniciar sesión
       </Button>
+      <GoogleButton type='button' />
     </form>
   );
 }

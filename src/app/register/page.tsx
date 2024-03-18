@@ -1,7 +1,7 @@
-import EmailButton from './_email-button';
+import EmailButton from './_page-components/_email-button';
 import { cn } from '@/core/client-utils';
 import { workSans } from '@/core/fonts';
-import SocialButtons from './_social-buttons';
+import GoogleButton from '../_page-components/_google-button';
 
 function RegisterPage() {
   return (
@@ -45,7 +45,7 @@ function RegisterPage() {
           </svg>
           Continuar con email
         </EmailButton>
-        <SocialButtons />
+        <GoogleButton />
       </div>
     </div>
   );

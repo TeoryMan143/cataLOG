@@ -66,7 +66,7 @@ export const oauthAccounts = pgTable(
     userId: uuid('user_id')
       .notNull()
       .references(() => users.id),
-    provider: text('provider').notNull().$type<'google' | 'facebook'>(),
+    provider: text('provider').notNull().$type<'google'>(),
     providerUserId: text('provider_user_id').notNull(),
     accessToken: text('access_token').notNull(),
     refreshToken: text('refresh_token'),

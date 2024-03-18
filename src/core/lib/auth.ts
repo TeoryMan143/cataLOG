@@ -361,7 +361,7 @@ export async function resendVerifyEmail(
 }
 
 export async function createGoogleAuthorizationURL(): Promise<
-  ActionResponse<URL>
+  ActionResponse<string>
 > {
   try {
     const state = generateState();
@@ -385,7 +385,7 @@ export async function createGoogleAuthorizationURL(): Promise<
 
     return {
       success: true,
-      result: authorizationURL,
+      result: authorizationURL.toString(),
     };
   } catch (e) {
     return {
