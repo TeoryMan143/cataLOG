@@ -16,7 +16,7 @@ export async function GET({ nextUrl }: NextRequest) {
           '/api/error?type=token_validation&message=Token no encontrado',
           process.env.NEXT_PUBLIC_BASE_URL!,
         ),
-        404,
+        308,
       );
     }
 
@@ -36,7 +36,7 @@ export async function GET({ nextUrl }: NextRequest) {
           '/api/error?type=token_validation&message=Token invalido',
           process.env.NEXT_PUBLIC_BASE_URL!,
         ),
-        401,
+        308,
       );
     }
 
@@ -69,15 +69,15 @@ export async function GET({ nextUrl }: NextRequest) {
           `/api/error?type=token_validation&message=${e.message}`,
           process.env.NEXT_PUBLIC_BASE_URL!,
         ),
-        400,
+        308,
       );
     }
     return Response.redirect(
       new URL(
-        `/api/error?type=desconocido&message=${e.message}`,
+        `/api/error?type=desconocido&message=desconocido`,
         process.env.NEXT_PUBLIC_BASE_URL!,
       ),
-      400,
+      308,
     );
   }
 }
