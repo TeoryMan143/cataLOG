@@ -65,7 +65,7 @@ export const oauthAccounts = pgTable(
       .primaryKey(),
     userId: uuid('user_id')
       .notNull()
-      .references(() => users.id),
+      .references(() => users.id, { onDelete: 'cascade' }),
     provider: text('provider').notNull().$type<'google'>(),
     providerUserId: text('provider_user_id').notNull(),
     accessToken: text('access_token').notNull(),

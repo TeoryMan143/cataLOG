@@ -74,7 +74,7 @@ export async function GET({ nextUrl }: NextRequest) {
     }
     return Response.redirect(
       new URL(
-        `/api/error?type=desconocido&message=desconocido`,
+        `/api/error?type=desconocido&message=${e.message}`,
         process.env.NEXT_PUBLIC_BASE_URL!,
       ),
       308,
