@@ -161,6 +161,18 @@ export async function loginUser(
       };
     }
 
+    const oatuhAcc = await db.query.users.findFirst({
+      where: eq(oauthAccounts.userId, user.id),
+    });
+
+    if (oatuhAcc) {
+      return {
+        success: false,
+        errorType: 'auth',
+        errors: ['Correo o contraseña incorrectos'],
+      };
+    }
+
     const passMatch = await bcrypt.compare(password, user.password);
 
     if (!passMatch) {
