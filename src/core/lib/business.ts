@@ -11,7 +11,6 @@ import {
 import { ActionResponse } from './types';
 import { db } from '../db/config';
 import { businesses } from '../db/tables';
-import { getUserById } from './db/users';
 
 export async function registerBusiness(
   req: RequestBusiness,
@@ -58,8 +57,10 @@ export async function registerBusiness(
       .returning();
     return { success: true, result: newBusiness[0] };
   } catch (error) {
-    if (!(error instanceof DrizzleError))
+    console.log(error);
+    if (!(error instanceof DrizzleError)) {
       return { success: false, errorType: 'insertion', errors: ['pass'] };
+    }
     return {
       success: false,
       errorType: 'insertion',

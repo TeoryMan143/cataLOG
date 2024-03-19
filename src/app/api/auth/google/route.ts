@@ -56,18 +56,18 @@ export async function GET({ nextUrl: { searchParams } }: NextRequest) {
       where: eq(users.email, googleData.email),
     });
 
-    if (existUser) {
-      return Response.redirect(
-        new URL('/login?error=true', process.env.NEXT_PUBLIC_BASE_URL),
-      );
-    }
-
     const oauthAcc = await db.query.oauthAccounts.findFirst({
       where: eq(oauthAccounts.providerUserId, googleData.id),
       with: {
         user: true,
       },
     });
+
+    if (existUser && !oauthAcc) {
+      return Response.redirect(
+        new URL('/login?error=true', process.env.NEXT_PUBLIC_BASE_URL),
+      );
+    }
 
     if (!oauthAcc?.user) {
       const token = jwt.sign(
