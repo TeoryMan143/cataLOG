@@ -15,7 +15,7 @@ function Login() {
         className={cn(
           workSans.className,
           `
-          font-bold text-5xl text-white mb-10 text-center
+          font-bold text-5xl text-white mb-10 text-center mx-8
           lg:text-black lg:text-6xl lg:mb-8
         `,
         )}
