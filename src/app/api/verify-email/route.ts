@@ -7,9 +7,9 @@ import { lucia } from '@/core/auth/config';
 import { cookies } from 'next/headers';
 
 export async function GET({ nextUrl }: NextRequest) {
-  try {
-    const token = nextUrl.searchParams.get('token');
+  const token = nextUrl.searchParams.get('token');
 
+  try {
     if (!token) {
       return Response.redirect(
         new URL(
