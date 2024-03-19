@@ -1,6 +1,6 @@
 import { google } from '@/core/auth/oauth-providers';
 import { db } from '@/core/db/config';
-import { oauthAccounts } from '@/core/db/tables';
+import { oauthAccounts, users } from '@/core/db/tables';
 import { eq } from 'drizzle-orm';
 import { cookies } from 'next/headers';
 import { NextRequest } from 'next/server';
@@ -51,6 +51,16 @@ export async function GET({ nextUrl: { searchParams } }: NextRequest) {
     );
 
     const googleData = (await googleRes.json()) as GoogleUser;
+
+    const existUser = await db.query.users.findFirst({
+      where: eq(users.email, googleData.email),
+    });
+
+    if (existUser) {
+      return Response.redirect(
+        new URL('/login?error=true', process.env.NEXT_PUBLIC_BASE_URL),
+      );
+    }
 
     const oauthAcc = await db.query.oauthAccounts.findFirst({
       where: eq(oauthAccounts.providerUserId, googleData.id),

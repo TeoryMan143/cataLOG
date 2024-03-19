@@ -11,10 +11,11 @@ import { type SubmitHandler, useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import { EmailIcon } from '@/components/icons/mail';
 import PasswordFillIcon from '@/components/icons/password-fill';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { useCountdown } from 'usehooks-ts';
-import EmailVerifyDialog from '../_page-components/email-verify-dialog';
-import GoogleButton from '../_page-components/_google-button';
+import EmailVerifyDialog from '../../_page-components/email-verify-dialog';
+import GoogleButton from '../../_page-components/_google-button';
+import ExistEmail from './existing-email';
 
 function LoginEmailForm() {
   const {
@@ -27,6 +28,9 @@ function LoginEmailForm() {
   });
 
   const router = useRouter();
+  const searchParams = useSearchParams();
+
+  const existError = searchParams.get('error');
 
   const [serverError, setServerError] = useState<ActionError | null>(null);
   const [credentialsError, setCredentialsError] = useState(false);
@@ -89,6 +93,7 @@ function LoginEmailForm() {
         count={count}
         error={verifyError}
       />
+      <ExistEmail defaultOpen={!!existError} />
       <Input
         className='
           border-black 

@@ -1,5 +1,5 @@
 import Logo from '@/components/logo';
-import LoginEmailForm from './_login-email-form';
+import LoginEmailForm from './_page-components/_login-email-form';
 import { Metadata } from 'next';
 import { cn } from '@/core/client-utils';
 import { workSans } from '@/core/fonts';
