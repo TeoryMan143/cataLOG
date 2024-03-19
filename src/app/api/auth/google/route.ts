@@ -1,6 +1,6 @@
 import { google } from '@/core/auth/oauth-providers';
 import { db } from '@/core/db/config';
-import { oauthAccounts, users } from '@/core/db/tables';
+import { oauthAccounts } from '@/core/db/tables';
 import { eq } from 'drizzle-orm';
 import { cookies } from 'next/headers';
 import { NextRequest } from 'next/server';
