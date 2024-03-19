@@ -9,10 +9,10 @@ import { GoogleUser } from '@/core/lib/types';
 import { lucia } from '@/core/auth/config';
 
 export async function GET({ nextUrl: { searchParams } }: NextRequest) {
-  try {
-    const code = searchParams.get('code');
-    const state = searchParams.get('state');
+  const code = searchParams.get('code');
+  const state = searchParams.get('state');
 
+  try {
     if (!code || !state) {
       return Response.redirect(
         new URL(
