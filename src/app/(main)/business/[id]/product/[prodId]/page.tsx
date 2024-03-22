@@ -8,6 +8,7 @@ import DeleteProduct from './_page-components/delete';
 import EditButton from './_page-components/edit-button';
 import Link from 'next/link';
 import { BackIcon } from '@/components/icons/back';
+import { units } from '../../_page-components/unit-selector/data';
 
 type Props = {
   params: {
@@ -22,10 +23,12 @@ async function AdminProductPage({ params: { prodId, id: bissId } }: Props) {
 
   if (!product || !images) redirect('/business', RedirectType.replace);
 
-  const { avialableUnits, displayName, price, description, businessId } =
+  const { avialableUnits, displayName, price, description, businessId, unit } =
     product;
 
   if (bissId !== businessId) redirect('/', RedirectType.replace);
+
+  const unitLabel = units.find(u => u.value === unit)?.label;
 
   return (
     <div className='p-6'>
@@ -42,7 +45,8 @@ async function AdminProductPage({ params: { prodId, id: bissId } }: Props) {
         <div className='flex flex-col'>
           <ImagesCarousel images={images.map(img => img.image)} />
           <p className='mt-3 text-xl font-semibold'>
-            Unidades disponibles: {avialableUnits}
+            Cantidad disponible: {avialableUnits}
+            {unit}
           </p>
         </div>
         <div className='flex-1 flex flex-col gap-4'>
@@ -50,7 +54,9 @@ async function AdminProductPage({ params: { prodId, id: bissId } }: Props) {
             <h1 className={cn('text-5xl font-bold', workSans.className)}>
               {displayName}
             </h1>
-            <p className='text-lg mt-1'>{formatToCOP(price)} COP</p>
+            <p className='text-lg mt-1'>
+              {formatToCOP(price)} COP / {unitLabel}
+            </p>
           </div>
           <div className='space-y-3'>
             <p className='font-semibold mb-5'>Descripción del producto</p>

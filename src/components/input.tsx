@@ -9,6 +9,8 @@ import { EyeOffIcon } from './icons/eye-off';
 interface Props extends React.ComponentPropsWithRef<'input'> {
   icon?: React.ReactNode;
   error?: FieldError;
+  boxClassName?: string;
+  flexible?: boolean;
 }
 
 const showType = ({
@@ -28,7 +30,15 @@ const showType = ({
 };
 
 const Input = forwardRef<HTMLInputElement, Props>(function Input(
-  { className, icon: Icon, error, type, ...props },
+  {
+    className,
+    icon: Icon,
+    error,
+    type,
+    boxClassName,
+    flexible = false,
+    ...props
+  },
   ref,
 ) {
   const [showPassword, setShowPassword] = useState(false);
@@ -44,8 +54,15 @@ const Input = forwardRef<HTMLInputElement, Props>(function Input(
   );
 
   return (
-    <div>
-      <div className='relative w-72 bg-gray-300/55 flex group overflow-hidden'>
+    <div className={boxClassName}>
+      <div
+        className={cn(
+          'relative w-72 bg-gray-300/55 flex group overflow-hidden',
+          {
+            'w-auto': flexible,
+          },
+        )}
+      >
         <span
           className={cn(
             'absolute left-5 top-1/2 -translate-y-1/2 text-2xl text-white z-10',

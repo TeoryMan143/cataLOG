@@ -1,9 +1,11 @@
 import { createInsertSchema, createSelectSchema } from 'drizzle-zod';
 import { productImages, products } from '../db/tables';
 import { z } from 'zod';
+import { units } from '@/app/(main)/business/[id]/_page-components/unit-selector/data';
 
 export const dbProductSchema = createInsertSchema(products).extend({
   id: z.string(),
+  unit: z.enum(['u', 'g', 'lb', 'kg', 'ml', 'l', 'm']),
 });
 export const requestProductSchema = dbProductSchema
   .omit({
@@ -42,14 +44,16 @@ export const registerProductSchema = requestProductSchema.omit({
   categories: true,
   images: true,
 });
+
 export const formProductSchema = registerProductSchema.omit({
   businessId: true,
+  unit: true,
 });
 
 export type FormProduct = z.infer<typeof formProductSchema>;
 export type RegisterProduct = z.infer<typeof registerProductSchema>;
 export type RequestProduct = z.infer<typeof requestProductSchema>;
-export type EditProduct = z.infer<typeof editProductSchema>
+export type EditProduct = z.infer<typeof editProductSchema>;
 export type DBProduct = z.infer<typeof dbProductSchema>;
 
 export const productImageSchema = createSelectSchema(productImages);

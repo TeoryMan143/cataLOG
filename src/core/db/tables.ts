@@ -1,3 +1,4 @@
+import { UnitValue } from '@/app/(main)/business/[id]/_page-components/unit-selector/data';
 import { relations, sql } from 'drizzle-orm';
 import {
   bigint,
@@ -121,6 +122,7 @@ export const products = pgTable('product', {
     .primaryKey(),
   displayName: text('display_name').notNull(),
   price: real('price').notNull(),
+  unit: text('unit').notNull().$type<UnitValue>(),
   description: text('description').notNull(),
   avialableUnits: integer('avialable_units').notNull(),
   businessId: uuid('business_id')

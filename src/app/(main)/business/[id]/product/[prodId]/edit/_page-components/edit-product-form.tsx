@@ -14,7 +14,6 @@ import {
   type FormProduct,
   formProductSchema,
   DBProduct,
-  RequestProduct,
 } from '@/core/schemas/product';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useCallback, useEffect, useState } from 'react';
@@ -25,6 +24,8 @@ import { toast } from 'sonner';
 import { editProduct } from '@/core/lib/products';
 import { type ActionError } from '@/core/lib/types';
 import { useRouter } from 'next/navigation';
+import { UnitSelector } from '../../../../_page-components/unit-selector';
+import { UnitValue } from '../../../../_page-components/unit-selector/data';
 
 function EditProductForm({
   businessId,
@@ -59,12 +60,20 @@ function EditProductForm({
   const [categories, setCategories] = useState<string[]>(() => {
     return productCategories.map(c => c.id);
   });
+  const [unit, setUnit] = useState(product.unit);
 
   const handleCategoriesChange = useCallback(
     (cats: DBCategory[]) => {
       setCategories(cats.map(cat => cat.id));
     },
     [setCategories],
+  );
+
+  const handleUnitChange = useCallback(
+    (gUnit: UnitValue) => {
+      setUnit(gUnit);
+    },
+    [setUnit],
   );
 
   const submitEditProduct: SubmitHandler<FormProduct> = async data => {
@@ -90,6 +99,7 @@ function EditProductForm({
       categories,
       deleteImages,
       businessId,
+      unit,
     });
 
     if (!res.success) return setServerError(res);
@@ -145,37 +155,48 @@ function EditProductForm({
           >
             Editar producto
           </h1>
-          <div className='flex gap-2 flex-wrap justify-center'>
+          <div className='flex gap-2 flex-wrap justify-center lg:flex-nowrap'>
             <Input
               className='
                 border-black bg-gray-300 border focus:bg-amber-100 
               '
+              boxClassName='grow'
               icon={<UserCircleIcon className='text-black' />}
               placeholder='Nombre de producto'
               error={errors.displayName}
+              flexible
               {...register('displayName')}
             />
-            <Input
-              className='
-                border-black bg-gray-300 border focus:bg-amber-100 
-              '
-              icon={<DollarIcon className='text-black' />}
-              placeholder='Precio'
-              type='number'
-              error={errors.price}
-              {...register('price', { valueAsNumber: true })}
-            />
+            <div className='flex grow'>
+              <Input
+                className='
+                  border-black bg-gray-300 border focus:bg-amber-100 border-r-transparent
+                '
+                boxClassName='grow'
+                icon={<DollarIcon className='text-black' />}
+                placeholder='Precio'
+                type='number'
+                error={errors.price}
+                flexible
+                {...register('price', { valueAsNumber: true })}
+              />
+              <UnitSelector
+                onUnitChange={handleUnitChange}
+                initialValue={product.unit}
+              />
+            </div>
           </div>
           <Textarea
             className='focus:bg-amber-100'
             error={errors.description}
+            placeholder='Descripción'
             {...register('description')}
           />
           <ComboboxCategories
             onCategoriesChange={handleCategoriesChange}
             initialSelected={[...productCategories]}
           />
-          <div className='flex justify-center'>
+          <div className='flex justify-center items-center gap-2'>
             <Input
               className='
                   border-black bg-gray-300 border focus:bg-amber-100 
@@ -185,6 +206,7 @@ function EditProductForm({
               error={errors.avialableUnits}
               {...register('avialableUnits', { valueAsNumber: true })}
             />
+            <p>{unit}</p>
           </div>
         </div>
       </div>

@@ -5,6 +5,7 @@
     "className",
     "ngClass",
     "classes",
-    "container"
+    "container",
+    "boxClassName"
   ]
 }
