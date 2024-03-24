@@ -84,7 +84,7 @@ dependencies:
     specifier: 3.4.1
     version: 3.4.1
   just-map-values:
-    specifier: ^3.2.0
+    specifier: 3.2.0
     version: 3.2.0
   lucia:
     specifier: 3.1.1
@@ -143,7 +143,7 @@ devDependencies:
     specifier: 20.11.17
     version: 20.11.17
   '@types/nodemailer':
-    specifier: ^6.4.14
+    specifier: 6.4.14
     version: 6.4.14
   '@types/react':
     specifier: 18.2.55
