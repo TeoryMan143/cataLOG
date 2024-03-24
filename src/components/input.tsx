@@ -80,6 +80,7 @@ const Input = forwardRef<HTMLInputElement, Props>(function Input(
               ml-16 py-2 text-center backdrop-blur-sm text-black flex-1 bg-transparent w-full
               placeholder:italic placeholder:text-slate-800 placeholder:tracking-widest placeholder:text-sm
               focus:backdrop-blur-none focus:bg-gray-500
+              lg:focus:bg-gray-300
             `,
             className,
           )}

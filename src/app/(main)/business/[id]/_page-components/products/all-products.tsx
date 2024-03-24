@@ -17,7 +17,7 @@ async function AllProducts({ businessId }: { businessId: string }) {
       {products.map(prod => (
         <li
           className='
-            bg-[#F4F1EE] border-2 border-[#C8C1C1] rounded-md
+            bg-[#F4F1EE] border-2 border-[#C8C1C1] rounded-md transition-colors
             hover:bg-amber-100
           '
           key={prod.id}

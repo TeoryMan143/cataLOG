@@ -31,7 +31,7 @@
     "clsx": "2.1.0",
     "cmdk": "0.2.1",
     "dotenv": "16.4.2",
-    "drizzle-orm": "0.29.3",
+    "drizzle-orm": "0.30.4",
     "drizzle-zod": "0.5.1",
     "embla-carousel-react": "8.0.0",
     "jsonwebtoken": "9.0.2",
@@ -39,6 +39,7 @@
     "just-diff": "6.0.2",
     "just-diff-apply": "5.5.0",
     "just-is-empty": "3.4.1",
+    "just-map-values": "3.2.0",
     "lucia": "3.1.1",
     "lucide-react": "0.338.0",
     "next": "14.1.3",
@@ -59,7 +60,7 @@
     "@types/bcrypt": "5.0.2",
     "@types/jsonwebtoken": "9.0.6",
     "@types/node": "20.11.17",
-    "@types/nodemailer": "^6.4.14",
+    "@types/nodemailer": "6.4.14",
     "@types/react": "18.2.55",
     "@types/react-dom": "18.2.19",
     "autoprefixer": "10.4.17",
@@ -69,7 +70,7 @@
     "postcss": "8.4.35",
     "prettier": "3.2.5",
     "tailwindcss": "3.4.1",
-    "typescript": "5.3.3",
+    "typescript": "5.4.3",
     "vitest": "1.3.0"
   }
 }
