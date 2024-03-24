@@ -70,7 +70,7 @@ async function BusinessPage({ params: { id } }: Props) {
                 <PlusRoundedIcon /> Añadir producto
               </Link>
               <Link
-                href='/add-product'
+                href={`/business/${id}/edit`}
                 className='
                   flex items-center gap-1 font-medium text-lg p-2 border-2 border-black transition
                   hover:bg-amber-100
@@ -86,7 +86,7 @@ async function BusinessPage({ params: { id } }: Props) {
       <section className='mt-2'>
         <h3
           className={cn(
-            'py-3 bg-black rounded-sm text-white text-2xl text-center tracking-widest',
+            'py-3 bg-black rounded-sm text-white text-2xl text-center tracking-[1rem]',
             workSans.className,
           )}
         >

@@ -5,6 +5,7 @@ import { z } from 'zod';
 export const dbBusinessSchema = createInsertSchema(businesses).extend({
   id: z.string(),
 });
+
 export const registerBusinessSchema = dbBusinessSchema
   .omit({ id: true })
   .extend({
@@ -17,6 +18,10 @@ export const requestBusinessSchema = registerBusinessSchema.omit({
   accountId: true,
 });
 
+export const editBusinessSchema = requestBusinessSchema.extend({
+  id: z.string(),
+});
+
 export const formBusinessSchema = requestBusinessSchema.omit({
   image: true,
   banner: true,
@@ -26,3 +31,4 @@ export type FormBusiness = z.infer<typeof formBusinessSchema>;
 export type RegisterBusiness = z.infer<typeof registerBusinessSchema>;
 export type RequestBusiness = z.infer<typeof requestBusinessSchema>;
 export type DBBusiness = z.infer<typeof dbBusinessSchema>;
+export type EditBusiness = z.infer<typeof editBusinessSchema>;

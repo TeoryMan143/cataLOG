@@ -1,5 +1,3 @@
-import Logo from '@/components/logo';
-import { Metadata } from 'next';
 import { cn } from '@/core/client-utils';
 import { workSans } from '@/core/fonts';
 import RegisterBusinessForm from './_register-business-form';

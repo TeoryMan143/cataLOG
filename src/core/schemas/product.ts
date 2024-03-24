@@ -1,7 +1,6 @@
 import { createInsertSchema, createSelectSchema } from 'drizzle-zod';
 import { productImages, products } from '../db/tables';
 import { z } from 'zod';
-import { units } from '@/app/(main)/business/[id]/_page-components/unit-selector/data';
 
 export const dbProductSchema = createInsertSchema(products).extend({
   id: z.string(),

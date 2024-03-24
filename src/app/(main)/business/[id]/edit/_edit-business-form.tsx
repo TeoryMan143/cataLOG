@@ -7,9 +7,13 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useState } from 'react';
 import { type SubmitHandler, useForm } from 'react-hook-form';
 import { toast } from 'sonner';
-import { FormBusiness, formBusinessSchema } from '@/core/schemas/business';
-import { registerBusiness } from '@/core/lib/business';
-import { useRouter } from 'next/navigation';
+import {
+  DBBusiness,
+  FormBusiness,
+  formBusinessSchema,
+} from '@/core/schemas/business';
+import { editBusiness, registerBusiness } from '@/core/lib/business';
+import { useParams, useRouter } from 'next/navigation';
 import UploadButton from '@/components/upload-button';
 import Image from 'next/image';
 import { REMOTE_IMG_URL } from '@/core/client-utils';
@@ -18,25 +22,32 @@ import { UserCircleIcon } from '@/components/icons/user-circle';
 import HashTagIcon from '@/components/icons/number';
 import MarkerIcon from '@/components/icons/marker';
 
-function RegisterBusinessForm() {
+function EditBusinessForm({ businessData }: { businessData: DBBusiness }) {
   const {
     register,
     handleSubmit,
     formState: { isSubmitting, errors },
   } = useForm<FormBusiness>({
     resolver: zodResolver(formBusinessSchema),
+    defaultValues: {
+      address: businessData.address,
+      name: businessData.name,
+      nit: businessData.nit,
+    },
   });
 
   const [serverError, setServerError] = useState<ActionError | null>(null);
-  const [iconImg, setIconImg] = useState<string | null>(null);
+  const [iconImg, setIconImg] = useState(businessData.image);
   const [iconImgError, setIconImgError] = useState(false);
-  const [bannerImg, setBannerImg] = useState<string | null>(null);
+  const [bannerImg, setBannerImg] = useState(businessData.banner);
   const [bannerImgError, setBannerImgError] = useState(false);
 
   const router = useRouter();
 
   const onSubmit: SubmitHandler<FormBusiness> = async data => {
     const toastId = toast.loading('Registrando negocio...');
+
+    const businessId = businessData.id;
 
     if (!iconImg) {
       toast.error('Añade un icono', { id: toastId });
@@ -48,8 +59,9 @@ function RegisterBusinessForm() {
       return setBannerImgError(true);
     }
 
-    const res = await registerBusiness({
+    const res = await editBusiness({
       ...data,
+      id: businessId,
       image: iconImg,
       banner: bannerImg,
     });
@@ -187,4 +199,4 @@ function RegisterBusinessForm() {
     </form>
   );
 }
-export default RegisterBusinessForm;
+export default EditBusinessForm;
