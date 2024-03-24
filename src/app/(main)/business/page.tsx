@@ -1,5 +1,4 @@
 import { getAcountBusinesses } from '@/core/lib/business';
-import { getUserByEmail } from '@/core/lib/db/users';
 import { auth } from '@/core/auth';
 import Link from 'next/link';
 import { RedirectType, redirect } from 'next/navigation';
@@ -16,7 +15,8 @@ async function BusinessPage() {
   }
 
   const res = await getAcountBusinesses(user.id);
-  if (!res.success || res.result.length === 0) {
+
+  if (!res.success || res.result?.length === 0) {
     redirect('/regis-business', RedirectType.replace);
   }
 

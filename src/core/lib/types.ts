@@ -2,7 +2,7 @@ export type ActionResponse<T = undefined> = ActionSuccess<T> | ActionError;
 
 export type ActionSuccess<T> = {
   success: true;
-  result?: T;
+  result: T;
 };
 
 export type ActionError = {

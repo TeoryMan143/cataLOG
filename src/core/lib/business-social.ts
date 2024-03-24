@@ -80,6 +80,7 @@ export async function uploadSocials(
       revalidatePath(`/business/${business.id}`);
       return {
         success: true,
+        result: undefined,
       };
     }
 
@@ -92,6 +93,7 @@ export async function uploadSocials(
       revalidatePath(`/business/${business.id}`);
       return {
         success: true,
+        result: undefined,
       };
     }
 
@@ -102,6 +104,7 @@ export async function uploadSocials(
     revalidatePath(`/business/${business.id}`);
     return {
       success: true,
+      result: undefined,
     };
   } catch (e: any) {
     if (e instanceof DrizzleError) {
