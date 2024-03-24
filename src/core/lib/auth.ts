@@ -361,6 +361,7 @@ export async function resendVerifyEmail(
 
     return {
       success: true,
+      result: undefined,
     };
   } catch (error: any) {
     return {
