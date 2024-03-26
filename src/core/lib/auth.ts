@@ -161,7 +161,7 @@ export async function loginUser(
       };
     }
 
-    const oatuhAcc = await db.query.users.findFirst({
+    const oatuhAcc = await db.query.oauthAccounts.findFirst({
       where: eq(oauthAccounts.userId, user.id),
     });
 
