@@ -3,9 +3,9 @@
 import { REMOTE_IMG_URL, cn, formatToCOP } from '@/core/client-utils';
 import { getProductImages } from '@/core/lib/db/porducts';
 import { DBProduct } from '@/core/schemas/product';
+import { useQuery } from '@tanstack/react-query';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useEffect, useState } from 'react';
 
 function ProductPrev({
   product: { id, displayName, price, avialableUnits, businessId },
@@ -14,22 +14,22 @@ function ProductPrev({
   product: DBProduct;
   admin?: boolean;
 }) {
-  const [mainImage, setMainImage] = useState<string | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(false);
-
-  useEffect(() => {
-    const run = async () => {
+  const {
+    data: mainImage,
+    error,
+    isPending: loading,
+  } = useQuery({
+    queryKey: ['pro-imgs', id],
+    queryFn: async () => {
       const images = await getProductImages(id);
 
-      if (!images) return setError(true);
+      if (!images) {
+        throw new Error('No images found');
+      }
 
-      setMainImage(images[0].image);
-      setLoading(false);
-    };
-
-    run();
-  }, [id]);
+      return images[0].image;
+    },
+  });
 
   const avialable = avialableUnits > 0;
 
