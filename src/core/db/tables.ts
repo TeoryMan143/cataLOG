@@ -7,6 +7,7 @@ import {
   pgTable,
   primaryKey,
   real,
+  smallint,
   text,
   timestamp,
   uniqueIndex,
@@ -128,7 +129,24 @@ export const products = pgTable('product', {
   businessId: uuid('business_id')
     .notNull()
     .references(() => businesses.id, { onDelete: 'cascade' }),
+  rating: real('rating').notNull().default(0),
 });
+
+export const productsRating = pgTable(
+  'product_rating',
+  {
+    productId: uuid('product_id')
+      .notNull()
+      .references(() => products.id, { onDelete: 'cascade' }),
+    userId: uuid('user_id')
+      .notNull()
+      .references(() => users.id, { onDelete: 'cascade' }),
+    rate: smallint('rate').notNull(),
+  },
+  pr => ({
+    compoundKey: primaryKey({ columns: [pr.productId, pr.userId] }),
+  }),
+);
 
 export const productImages = pgTable('product_image', {
   id: uuid('id')
@@ -176,8 +194,9 @@ export const categoriesRelations = relations(categories, ({ many }) => ({
 }));
 
 export const productsRelations = relations(products, ({ many }) => ({
-  productsCategories: many(productsCategories),
+  categories: many(productsCategories),
   images: many(productImages),
+  ratings: many(productsRating),
 }));
 
 export const productsCategoriesRelations = relations(
@@ -198,5 +217,20 @@ export const oauthRelations = relations(oauthAccounts, ({ one }) => ({
   user: one(users, {
     fields: [oauthAccounts.userId],
     references: [users.id],
+  }),
+}));
+
+export const usersRelations = relations(users, ({ many, one }) => ({
+  ratings: many(productsRating),
+}));
+
+export const productsRatingRelations = relations(productsRating, ({ one }) => ({
+  product: one(products, {
+    references: [products.id],
+    fields: [productsRating.productId],
+  }),
+  user: one(users, {
+    references: [users.id],
+    fields: [productsRating.userId],
   }),
 }));

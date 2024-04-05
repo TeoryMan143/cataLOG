@@ -7,6 +7,7 @@ import { extractRouterConfig } from 'uploadthing/server';
 import { uploadRouter } from './api/uploadthing/core';
 import { SessionProvider, auth } from '@/core/auth';
 import { Toaster } from 'sonner';
+import QueryProvider from './_page-components/query-client';
 
 export const metadata: Metadata = {
   title: 'cataLOG',
@@ -31,7 +32,11 @@ export default async function RootLayout({
           }}
         />
         <NextSSRPlugin routerConfig={extractRouterConfig(uploadRouter)} />
-        <SessionProvider sessionData={sessionData}>{children}</SessionProvider>
+        <QueryProvider>
+          <SessionProvider sessionData={sessionData}>
+            {children}
+          </SessionProvider>
+        </QueryProvider>
       </body>
     </html>
   );

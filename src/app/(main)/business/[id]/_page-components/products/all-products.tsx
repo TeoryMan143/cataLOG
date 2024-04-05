@@ -1,5 +1,5 @@
 import { getBusinessProducts } from '@/core/lib/db/porducts';
-import ProductPrev from './product-prev';
+import ProductPrev from '../../../../../../components/product-prev';
 
 async function AllProducts({ businessId }: { businessId: string }) {
   const products = await getBusinessProducts(businessId);
@@ -15,14 +15,8 @@ async function AllProducts({ businessId }: { businessId: string }) {
   return (
     <ul className='flex gap-3 flex-wrap p-5'>
       {products.map(prod => (
-        <li
-          className='
-            bg-[#F4F1EE] border-2 border-[#C8C1C1] rounded-md transition-colors
-            hover:bg-amber-100
-          '
-          key={prod.id}
-        >
-          <ProductPrev product={prod} businessId={businessId} />
+        <li key={prod.id}>
+          <ProductPrev product={prod} admin />
         </li>
       ))}
     </ul>

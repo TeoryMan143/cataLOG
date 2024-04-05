@@ -15,12 +15,13 @@ import {
   products,
   productsCategories,
 } from '../db/tables';
-import { DrizzleError, eq } from 'drizzle-orm';
+import { DrizzleError, SQL, desc, eq } from 'drizzle-orm';
 import { type ActionResponse } from './types';
 import { type DBProductCategory } from '../schemas/categories';
 import { revalidatePath } from 'next/cache';
 import { deleteFileById } from './files';
 import isEmpty from 'just-is-empty';
+import { PgColumn } from 'drizzle-orm/pg-core';
 
 export async function registerProduct(req: RequestProduct): Promise<
   ActionResponse<{
@@ -233,6 +234,33 @@ export async function editProduct(
       success: false,
       errorType: 'insertion',
       errors: ['db', error.name, error.message],
+    };
+  }
+}
+
+export async function getProductsListByRating({
+  offset,
+  limit = 10,
+}: {
+  offset?: number;
+  limit?: number;
+}): Promise<ActionResponse<DBProduct[]>> {
+  try {
+    const pageProducts = await db
+      .select()
+      .from(products)
+      .orderBy(desc(products.rating))
+      .limit(limit)
+      .offset(offset ?? 0);
+    return {
+      success: true,
+      result: pageProducts,
+    };
+  } catch (e: any) {
+    return {
+      success: false,
+      errorType: 'unknown',
+      errors: [e.message],
     };
   }
 }

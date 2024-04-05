@@ -2,7 +2,7 @@ import { createInsertSchema, createSelectSchema } from 'drizzle-zod';
 import { productImages, products } from '../db/tables';
 import { z } from 'zod';
 
-export const dbProductSchema = createInsertSchema(products).extend({
+export const dbProductSchema = createSelectSchema(products).extend({
   id: z.string(),
   unit: z.enum(['u', 'g', 'lb', 'kg', 'ml', 'l', 'm']),
 });
