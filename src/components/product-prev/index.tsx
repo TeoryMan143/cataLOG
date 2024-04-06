@@ -37,7 +37,7 @@ function ProductPrev({
     <div
       className='
         bg-[#F4F1EE] border-2 border-[#C8C1C1] rounded-md transition-colors max-h-72 max-w-52 overflow-hidden h-full flex items-center
-        lg:max-h-80 lg:max-w-72
+        lg:max-h-80 lg:max-w-none
         hover:bg-amber-100
       '
     >
@@ -50,7 +50,7 @@ function ProductPrev({
             Hubo un error obteniendo los productos
           </p>
         ) : loading ? (
-          <div className='flex justify-center items-center size-[130px]'>
+          <div className='flex justify-center items-center size-[130px] lg:size-[200px]'>
             <svg
               xmlns='http://www.w3.org/2000/svg'
               width='1em'

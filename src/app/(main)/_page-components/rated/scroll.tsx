@@ -13,7 +13,7 @@ function RatedScroll({ initProducts }: { initProducts: DBProduct[] }) {
     threshold: 1,
   });
 
-  const INIT_PAGE_PARAM = 5;
+  const INIT_PAGE_PARAM = 10;
 
   const { data, isFetchingNextPage, fetchNextPage, hasNextPage } =
     useInfiniteQuery({
@@ -53,13 +53,13 @@ function RatedScroll({ initProducts }: { initProducts: DBProduct[] }) {
       {products.map((p, i) => {
         if (i === products.length - 1) {
           return (
-            <li key={p.id} className='min-w-40' ref={ref}>
+            <li key={p.id} className='min-w-40 lg:min-w-60' ref={ref}>
               <ProductPrev product={p} />
             </li>
           );
         }
         return (
-          <li key={p.id} className='min-w-40'>
+          <li key={p.id} className='min-w-40 lg:min-w-60'>
             <ProductPrev product={p} />
           </li>
         );
@@ -67,7 +67,7 @@ function RatedScroll({ initProducts }: { initProducts: DBProduct[] }) {
       {isFetchingNextPage &&
         hasNextPage &&
         Array.from({ length: 5 }).map((_, i) => (
-          <li className='min-w-40' key={i}>
+          <li className='min-w-40 lg:min-w-60' key={i}>
             <ProductPrevSk />
           </li>
         ))}

@@ -20,11 +20,19 @@ async function RatedProducts() {
       <h3
         className={cn(
           workSans.className,
-          'tracking-[3px] mb-3 flex items-center justify-center gap-2',
+          `
+            tracking-[3px] mb-3 flex items-center justify-center gap-2
+            lg:text-2xl
+          `,
         )}
       >
-        <StarsIcon className='relative bottom-[2px] text-lg' /> PRODUCTOS
-        DESTACADOS
+        <StarsIcon
+          className='
+          relative bottom-[2px] text-lg
+          lg:text-3xl
+        '
+        />{' '}
+        PRODUCTOS DESTACADOS
       </h3>
       <RatedScroll initProducts={initProductsRes.result} />
     </div>
