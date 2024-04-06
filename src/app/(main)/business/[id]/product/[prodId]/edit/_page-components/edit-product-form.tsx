@@ -26,6 +26,7 @@ import { type ActionError } from '@/core/lib/types';
 import { useRouter } from 'next/navigation';
 import { UnitSelector } from '../../../../_page-components/unit-selector';
 import { UnitValue } from '../../../../_page-components/unit-selector/data';
+import NavDrawer from '@/app/_page-components/nav-drawer';
 
 function EditProductForm({
   businessId,

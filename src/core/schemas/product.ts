@@ -9,6 +9,7 @@ export const dbProductSchema = createSelectSchema(products).extend({
 export const requestProductSchema = dbProductSchema
   .omit({
     id: true,
+    rating: true,
   })
   .extend({
     categories: z.string().array().optional(),
