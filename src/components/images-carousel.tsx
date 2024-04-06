@@ -10,12 +10,17 @@ import Image from 'next/image';
 
 function ImagesCarousel({ images }: { images: string[] }) {
   return (
-    <Carousel className='bg-[#F4F1EE] border-2 border-[#C8C1C1] rounded-md p-5 max-w-[410px] relative group'>
+    <Carousel
+      className='
+      bg-[#F4F1EE] border-2 border-[#C8C1C1] rounded-md p-5 relative group max-w-[310px]
+      lg:max-w-[410px]
+    '
+    >
       <CarouselContent className='flex items-center'>
         {images.map(image => (
           <CarouselItem key={image}>
             <Image
-              className='size-[400px] object-cover rounded-sm'
+              className='size-200 lg:size-[400px] object-cover rounded-sm'
               height={400}
               width={400}
               src={REMOTE_IMG_URL + image}
