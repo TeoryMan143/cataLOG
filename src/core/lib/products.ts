@@ -249,7 +249,7 @@ export async function getProductsListByRating({
     const pageProducts = await db
       .select()
       .from(products)
-      .orderBy(desc(products.rating))
+      .orderBy(desc(products.rating), desc(products.id))
       .limit(limit)
       .offset(offset ?? 0);
     return {

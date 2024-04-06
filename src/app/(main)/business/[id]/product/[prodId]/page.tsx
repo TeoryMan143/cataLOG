@@ -1,14 +1,13 @@
 import { getProductById, getProductImages } from '@/core/lib/db/porducts';
 import { RedirectType, redirect } from 'next/navigation';
-import ImagesCarousel from './_page-components/images-carousel';
-import { cn, formatToCOP } from '@/core/client-utils';
+import ImagesCarousel from '../../../../../../components/images-carousel';
+import { UNITS, cn, formatToCOP } from '@/core/client-utils';
 import { workSans } from '@/core/fonts';
-import Categories from './_page-components/categories';
+import Categories from '../../../../../../components/categories';
 import DeleteProduct from './_page-components/delete';
 import EditButton from './_page-components/edit-button';
 import Link from 'next/link';
 import { BackIcon } from '@/components/icons/back';
-import { units } from '../../_page-components/unit-selector/data';
 
 type Props = {
   params: {
@@ -28,7 +27,7 @@ async function AdminProductPage({ params: { prodId, id: bissId } }: Props) {
 
   if (bissId !== businessId) redirect('/', RedirectType.replace);
 
-  const unitLabel = units.find(u => u.value === unit)?.label;
+  const unitLabel = UNITS.find(u => u.value === unit)?.label;
 
   return (
     <div className='p-6'>

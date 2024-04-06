@@ -43,7 +43,7 @@ function ProductPrev({
     >
       <Link
         className='inline-block p-4 space-y-2'
-        href={admin ? `/business/${businessId}/product/${id}` : `v/p=${id}`}
+        href={admin ? `/business/${businessId}/product/${id}` : `v?p=${id}`}
       >
         {error ? (
           <p className='bg-red-200 text-red-600 mt-1 text-center max-w-80 p-0.5'>
