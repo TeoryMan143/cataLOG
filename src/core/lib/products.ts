@@ -15,7 +15,7 @@ import {
   products,
   productsCategories,
 } from '../db/tables';
-import { DrizzleError, SQL, desc, eq } from 'drizzle-orm';
+import { DrizzleError, SQL, desc, eq, gte } from 'drizzle-orm';
 import { type ActionResponse } from './types';
 import { type DBProductCategory } from '../schemas/categories';
 import { revalidatePath } from 'next/cache';
@@ -249,6 +249,7 @@ export async function getProductsListByRating({
     const pageProducts = await db
       .select()
       .from(products)
+      .where(gte(products.rating, 4))
       .orderBy(desc(products.rating), desc(products.id))
       .limit(limit)
       .offset(offset ?? 0);
