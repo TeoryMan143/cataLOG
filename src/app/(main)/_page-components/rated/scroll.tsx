@@ -5,7 +5,7 @@ import ProductPrevSk from '@/components/product-prev/skeleton';
 import { getProductsListByRating } from '@/core/lib/products';
 import { DBProduct } from '@/core/schemas/product';
 import { useInfiniteQuery } from '@tanstack/react-query';
-import { useMemo } from 'react';
+import { useEffect, useMemo } from 'react';
 import { useIntersectionObserver } from 'usehooks-ts';
 
 function RatedScroll({ initProducts }: { initProducts: DBProduct[] }) {
@@ -46,7 +46,11 @@ function RatedScroll({ initProducts }: { initProducts: DBProduct[] }) {
 
   const products = useMemo(() => data.pages.flatMap(p => p), [data.pages]);
 
-  if (isIntersecting) fetchNextPage();
+  useEffect(() => {
+    if (isIntersecting && hasNextPage) {
+      fetchNextPage();
+    }
+  }, [isIntersecting, hasNextPage, fetchNextPage]);
 
   return (
     <ul className='overflow-x-auto flex max-w-[100dvw] gap-2 p-1'>
