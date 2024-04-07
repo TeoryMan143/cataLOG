@@ -132,6 +132,35 @@ export const products = pgTable('product', {
   rating: real('rating').notNull().default(0),
 });
 
+export const cart = pgTable(
+  'cart',
+  {
+    accountId: uuid('account_id')
+      .notNull()
+      .references(() => users.id, { onDelete: 'cascade' }),
+    itemId: uuid('item_id')
+      .notNull()
+      .references(() => cartItems.id, { onDelete: 'cascade' }),
+  },
+  c => ({
+    compoundKey: primaryKey({ columns: [c.accountId, c.itemId] }),
+  }),
+);
+
+export const cartItems = pgTable('cart_item', {
+  id: uuid('id')
+    .default(sql`uuid_generate_v4()`)
+    .primaryKey(),
+  displayName: text('display_name').notNull(),
+  price: real('price').notNull(),
+  totalPrice: real('total_price').notNull(),
+  amount: integer('amount').notNull(),
+  unit: text('unit').notNull().$type<UnitValue>(),
+  productId: uuid('product_id').references(() => products.id, {
+    onDelete: 'set null',
+  }),
+});
+
 export const productsRating = pgTable(
   'product_rating',
   {
@@ -197,6 +226,25 @@ export const productsRelations = relations(products, ({ many }) => ({
   categories: many(productsCategories),
   images: many(productImages),
   ratings: many(productsRating),
+}));
+
+export const cartRelations = relations(cart, ({ one }) => ({
+  item: one(cartItems, {
+    fields: [cart.itemId],
+    references: [cartItems.id],
+  }),
+  account: one(users, {
+    fields: [cart.accountId],
+    references: [users.id],
+  }),
+}));
+
+export const cartItemsRelations = relations(cartItems, ({ many, one }) => ({
+  product: one(products, {
+    fields: [cartItems.productId],
+    references: [products.id],
+  }),
+  cart: many(cart),
 }));
 
 export const productImagesRelations = relations(productImages, ({ one }) => ({
