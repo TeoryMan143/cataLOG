@@ -44,6 +44,21 @@ export async function getProductById(productId: string) {
   }
 }
 
+export async function getProductByIdWithImages(productId: string) {
+  try {
+    const product = await db.query.products.findFirst({
+      where: eq(products.id, productId),
+      with: {
+        images: true,
+      },
+    });
+    return product;
+  } catch (error) {
+    console.error(error);
+    return null;
+  }
+}
+
 export async function deleteProductById(productId: string) {
   try {
     const success = await db

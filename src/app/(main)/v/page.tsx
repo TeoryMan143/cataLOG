@@ -5,7 +5,7 @@ import ProductRating from '@/components/product-rating';
 import { Button } from '@/components/ui/button';
 import { UNITS, cn, formatToCOP } from '@/core/client-utils';
 import { workSans } from '@/core/fonts';
-import { getProductById, getProductImages } from '@/core/lib/db/products';
+import { getProductByIdWithImages } from '@/core/lib/db/products';
 import { RedirectType, redirect } from 'next/navigation';
 type Props = {
   searchParams: {
@@ -16,8 +16,8 @@ type Props = {
 async function ViewProductPage({ searchParams: { p: prodId } }: Props) {
   if (!prodId) redirect('/404');
 
-  const product = await getProductById(prodId);
-  const images = await getProductImages(prodId);
+  const product = await getProductByIdWithImages(prodId);
+  const images = product?.images;
 
   if (!product || !images) redirect('/', RedirectType.replace);
 
