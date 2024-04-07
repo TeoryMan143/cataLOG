@@ -1,4 +1,4 @@
-import { getBusinessProducts } from '@/core/lib/db/porducts';
+import { getBusinessProducts } from '@/core/lib/db/products';
 import ProductPrev from '../../../../../../components/product-prev';
 
 async function AllProducts({ businessId }: { businessId: string }) {

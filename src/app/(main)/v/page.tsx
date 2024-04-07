@@ -5,7 +5,7 @@ import ProductRating from '@/components/product-rating';
 import { Button } from '@/components/ui/button';
 import { UNITS, cn, formatToCOP } from '@/core/client-utils';
 import { workSans } from '@/core/fonts';
-import { getProductById, getProductImages } from '@/core/lib/db/porducts';
+import { getProductById, getProductImages } from '@/core/lib/db/products';
 import { RedirectType, redirect } from 'next/navigation';
 type Props = {
   searchParams: {

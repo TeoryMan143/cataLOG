@@ -1,4 +1,4 @@
-import { getProductById, getProductImages } from '@/core/lib/db/porducts';
+import { getProductById, getProductImages } from '@/core/lib/db/products';
 import { RedirectType, redirect } from 'next/navigation';
 import ImagesCarousel from '../../../../../../components/images-carousel';
 import { UNITS, cn, formatToCOP } from '@/core/client-utils';

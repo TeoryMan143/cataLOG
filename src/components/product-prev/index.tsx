@@ -1,7 +1,7 @@
 'use client';
 
 import { REMOTE_IMG_URL, cn, formatToCOP } from '@/core/client-utils';
-import { getProductImages } from '@/core/lib/db/porducts';
+import { getProductImages } from '@/core/lib/db/products';
 import { DBProduct } from '@/core/schemas/product';
 import { useQuery } from '@tanstack/react-query';
 import Image from 'next/image';

@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import EditProductForm from './_page-components/edit-product-form';
 import { BackIcon } from '@/components/icons/back';
-import { getProductById, getProductImages } from '@/core/lib/db/porducts';
+import { getProductById, getProductImages } from '@/core/lib/db/products';
 import { redirect } from 'next/navigation';
 import { getProductCategories } from '@/core/lib/db/categories';
 
