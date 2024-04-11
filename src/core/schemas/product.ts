@@ -1,4 +1,4 @@
-import { createInsertSchema, createSelectSchema } from 'drizzle-zod';
+import { createSelectSchema } from 'drizzle-zod';
 import { productImages, products } from '../db/tables';
 import { z } from 'zod';
 

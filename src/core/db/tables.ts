@@ -153,7 +153,6 @@ export const cartItems = pgTable('cart_item', {
     .primaryKey(),
   displayName: text('display_name').notNull(),
   price: real('price').notNull(),
-  totalPrice: real('total_price').notNull(),
   amount: integer('amount').notNull(),
   unit: text('unit').notNull().$type<UnitValue>(),
   productId: uuid('product_id').references(() => products.id, {
@@ -226,6 +225,7 @@ export const productsRelations = relations(products, ({ many }) => ({
   categories: many(productsCategories),
   images: many(productImages),
   ratings: many(productsRating),
+  items: many(cartItems)
 }));
 
 export const cartRelations = relations(cart, ({ one }) => ({
