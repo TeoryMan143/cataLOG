@@ -8,6 +8,7 @@ import { uploadRouter } from './api/uploadthing/core';
 import { SessionProvider, auth } from '@/core/auth';
 import { Toaster } from 'sonner';
 import QueryProvider from './_page-components/query-client';
+import { CartStoreProvider } from '@/core/stores/shoping-cart/context';
 
 export const metadata: Metadata = {
   title: 'cataLOG',
@@ -34,7 +35,7 @@ export default async function RootLayout({
         <NextSSRPlugin routerConfig={extractRouterConfig(uploadRouter)} />
         <QueryProvider>
           <SessionProvider sessionData={sessionData}>
-            {children}
+            <CartStoreProvider>{children}</CartStoreProvider>
           </SessionProvider>
         </QueryProvider>
       </body>

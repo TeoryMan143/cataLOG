@@ -1,12 +1,13 @@
+import CartControl from '@/components/cart-control';
 import Categories from '@/components/categories';
-import CartAddIcon from '@/components/icons/cart-add';
 import ImagesCarousel from '@/components/images-carousel';
 import ProductRating from '@/components/product-rating';
-import { Button } from '@/components/ui/button';
 import { UNITS, cn, formatToCOP } from '@/core/client-utils';
 import { workSans } from '@/core/fonts';
+import { getProductItem } from '@/core/lib/db/cart';
 import { getProductByIdWithImages } from '@/core/lib/db/products';
 import { RedirectType, redirect } from 'next/navigation';
+
 type Props = {
   searchParams: {
     p: string | null;
@@ -25,6 +26,8 @@ async function ViewProductPage({ searchParams: { p: prodId } }: Props) {
     product;
 
   const unitLabel = UNITS.find(u => u.value === unit)?.label;
+
+  const item = await getProductItem(prodId);
 
   return (
     <div className='p-6'>
@@ -77,9 +80,11 @@ async function ViewProductPage({ searchParams: { p: prodId } }: Props) {
         lg:justify-start
       '
       >
-        <Button className='gap-1 text-lg'>
-          <CartAddIcon /> Añadir al carrito
-        </Button>
+        <CartControl
+          productId={prodId}
+          availableUnits={avialableUnits}
+          itemAmount={item?.amount}
+        />
       </div>
     </div>
   );

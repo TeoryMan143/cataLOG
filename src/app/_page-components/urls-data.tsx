@@ -1,6 +1,6 @@
 const urls = [
   {
-    id: crypto.randomUUID(),
+    id: 'home',
     href: '/',
     text: 'Inicio',
     icon: (
@@ -18,7 +18,7 @@ const urls = [
     ),
   },
   {
-    id: crypto.randomUUID(),
+    id: 'cart',
     href: '/cart',
     text: 'Ver carrito',
     icon: (
@@ -37,7 +37,7 @@ const urls = [
     ),
   },
   {
-    id: crypto.randomUUID(),
+    id: 'history',
     href: '/history',
     text: 'Historial de compras',
     icon: (
@@ -64,7 +64,7 @@ const urls = [
     ),
   },
   {
-    id: crypto.randomUUID(),
+    id: 'bussines',
     href: '/business',
     text: 'Mis negocios',
     icon: (

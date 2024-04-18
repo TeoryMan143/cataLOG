@@ -225,7 +225,7 @@ export const productsRelations = relations(products, ({ many }) => ({
   categories: many(productsCategories),
   images: many(productImages),
   ratings: many(productsRating),
-  items: many(cartItems)
+  items: many(cartItems),
 }));
 
 export const cartRelations = relations(cart, ({ one }) => ({
@@ -239,12 +239,11 @@ export const cartRelations = relations(cart, ({ one }) => ({
   }),
 }));
 
-export const cartItemsRelations = relations(cartItems, ({ many, one }) => ({
+export const cartItemsRelations = relations(cartItems, ({ one }) => ({
   product: one(products, {
     fields: [cartItems.productId],
     references: [products.id],
   }),
-  cart: many(cart),
 }));
 
 export const productImagesRelations = relations(productImages, ({ one }) => ({
