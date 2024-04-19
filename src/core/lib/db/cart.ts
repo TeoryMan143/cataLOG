@@ -5,12 +5,13 @@ import { db } from '@/core/db/config';
 import { cart, cartItems, users } from '@/core/db/tables';
 import { DBCartItem } from '@/core/schemas/cart';
 import { and, eq } from 'drizzle-orm';
+import { redirect } from 'next/navigation';
 
 export async function getUserCartItems(): Promise<DBCartItem[] | null> {
   const { user } = await auth();
 
   if (!user) {
-    throw new Error('Must be signed in to access the cart');
+    redirect('/login');
   }
 
   try {

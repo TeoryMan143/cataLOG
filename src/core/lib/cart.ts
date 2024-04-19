@@ -6,6 +6,7 @@ import { cart, cartItems, products } from '../db/tables';
 import { ActionResponse } from './types';
 import { DBCartItem } from '../schemas/cart';
 import { auth } from '../auth';
+import { revalidatePath } from 'next/cache';
 
 type AddCartItemsParams = { amount: number; productId: string };
 
@@ -81,6 +82,8 @@ export async function addCartItem({
       .where(eq(cartItems.id, item.id))
       .returning();
 
+    revalidatePath('/cart');
+
     return {
       success: true,
       result: newItemData[0],
@@ -118,6 +121,8 @@ export async function removeCartItem(
     }
 
     await db.delete(cartItems).where(eq(cartItems.id, item.id));
+
+    revalidatePath('/cart');
 
     return {
       success: true,
