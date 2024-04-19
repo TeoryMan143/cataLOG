@@ -16,19 +16,37 @@ function CartItemClient({ item, image }: { item: DBCartItem; image: string }) {
           router.push(`/v?p=${item.productId}`);
         }
       }}
-      className='flex rounded-md overflow-hidden bg-white'
+      className='
+        flex rounded-md overflow-hidden bg-white cursor-pointer 
+        hover:shadow-md
+      '
     >
       <div className='bg-[#F4F1EE] grid place-content-center p-1'>
         <Image
-          className='size-24 object-cover rounded-sm'
+          className='
+            size-24 object-cover rounded-sm
+            lg:size-56
+          '
           src={image ? REMOTE_IMG_URL + image : '/product-default.png'}
           alt={item.displayName}
-          height={96}
-          width={96}
+          height={224}
+          width={224}
         />
       </div>
-      <div className='space-y-2 p-3 flex-1 text-xs'>
-        <h3 className='font-bold text-lg truncate'>{item.displayName}</h3>
+      <div
+        className='
+          space-y-2 p-3 flex-1 text-xs 
+          lg:text-lg
+        '
+      >
+        <h3
+          className='
+            font-bold text-lg truncate
+            lg:text-3xl
+          '
+        >
+          {item.displayName}
+        </h3>
         <p>
           Cantidad: {item.amount} {item.unit}
         </p>

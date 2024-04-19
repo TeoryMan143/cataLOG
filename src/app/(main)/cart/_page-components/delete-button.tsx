@@ -9,10 +9,11 @@ function DeleteButton({ productId }: { productId: string }) {
 
   return (
     <Button
-      onClick={async () => {
+      onClick={async e => {
+        e.stopPropagation();
         await reduceItem(productId);
       }}
-      className='text-xl hover:text-red-600'
+      className='text-xl hover:text-red-600 lg:text-4xl'
       variant='ghost'
     >
       <DeleteIcon />
