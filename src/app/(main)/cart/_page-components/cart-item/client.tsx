@@ -50,7 +50,7 @@ function CartItemClient({ item, image }: { item: DBCartItem; image: string }) {
         <p>
           Cantidad: {item.amount} {item.unit}
         </p>
-        <p>Precio: {formatToCOP(item.price)}</p>
+        <p>Precio total: {formatToCOP(item.price * item.amount)}</p>
       </div>
       <div className='grid place-content-center'>
         {item.productId && <DeleteButton productId={item.productId} />}
