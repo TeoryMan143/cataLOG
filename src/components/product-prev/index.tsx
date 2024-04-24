@@ -37,13 +37,13 @@ function ProductPrev({
     <div
       className='
         bg-[#F4F1EE] border-2 border-[#C8C1C1] rounded-md transition-colors max-h-72 max-w-52 overflow-hidden h-full flex items-center
-        lg:max-h-80 lg:max-w-none
+        lg:max-h-80 lg:max-w-64
         hover:bg-amber-100
       '
     >
       <Link
         className='inline-block p-4 space-y-2'
-        href={admin ? `/business/${businessId}/product/${id}` : `v?p=${id}`}
+        href={admin ? `/business/${businessId}/product/${id}` : `/v?p=${id}`}
       >
         {error ? (
           <p className='bg-red-200 text-red-600 mt-1 text-center max-w-80 p-0.5'>
