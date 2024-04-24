@@ -5,7 +5,7 @@ import { getBusinessSocials } from '@/core/lib/db/business';
 import GetIcon from './get-icon';
 
 const getLink = (key: string, name: string) => {
-  const netKeys: { [x: string]: string | undefined } = {
+  const netKeys: Record<string, string | undefined> = {
     instagram: `https://www.instagram.com/${name}`,
     facebook: `https://www.facebook.com/${name}`,
     whatsapp: undefined,
@@ -18,9 +18,7 @@ async function SocialLinks({ id }: { id: string }) {
   const dbLinks = await getBusinessSocials(id);
 
   if (!dbLinks) {
-    return <p>
-      Sin redes sociales
-    </p>;
+    return <p>Sin redes sociales</p>;
   }
 
   const { businessId, id: foo, ...links } = dbLinks;
@@ -38,7 +36,6 @@ async function SocialLinks({ id }: { id: string }) {
           );
         }
       })}
-
     </ul>
   );
 }
