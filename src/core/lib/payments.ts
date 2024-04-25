@@ -5,8 +5,9 @@ import { ActionResponse } from './types';
 import { mercadoConfig } from '../payment/config';
 import { getUserCartItems } from './db/cart';
 import { Items } from 'mercadopago/dist/clients/commonTypes';
+import { redirect } from 'next/navigation';
 
-export async function checkout(): Promise<ActionResponse<any>> {
+export async function checkout(): Promise<ActionResponse> {
   const cartItems = await getUserCartItems();
 
   if (!cartItems) {
@@ -24,6 +25,7 @@ export async function checkout(): Promise<ActionResponse<any>> {
       quantity: amount,
       unit_price: price,
       currency_id: 'COP',
+      description: displayName,
     }),
   );
 
@@ -32,17 +34,19 @@ export async function checkout(): Promise<ActionResponse<any>> {
   const payment = await pref.create({
     body: {
       items,
-      notification_url: 'http://localhost:3000/api/webhook',
+      notification_url:
+        'https://228d-181-118-157-130.ngrok-free.app/api/payment/webhook',
     },
     requestOptions: {
       idempotencyKey: process.env.MERCADO_PAGO_IDEMPOTENCY_KEY,
     },
   });
 
-  console.log(payment);
+  if (!payment.init_point) {
+    redirect(
+      "/api/error?type=PaymentError&message=The payment couldn't be processed",
+    );
+  }
 
-  return {
-    success: true,
-    result: 'Sisas',
-  };
+  redirect(payment.init_point);
 }
