@@ -1,4 +1,3 @@
-import { auth } from '@/core/auth';
 import { cn } from '@/core/client-utils';
 import { workSans } from '@/core/fonts';
 import { getUserCartItems } from '@/core/lib/db/cart';

@@ -208,6 +208,56 @@ export const productsCategories = pgTable(
   }),
 );
 
+export const payment = pgTable('payment', {
+  id: uuid('id')
+    .default(sql`uuid_generate_v4()`)
+    .primaryKey(),
+  userId: uuid('user_id').references(() => users.id, { onDelete: 'set null' }),
+  businessId: uuid('business_id').references(() => businesses.id, {
+    onDelete: 'set null',
+  }),
+  createdAt: timestamp('created_at', {
+    withTimezone: true,
+    mode: 'date',
+  }).defaultNow(),
+  mercadoId: text('mercado_id').notNull(),
+});
+
+export const paymentItems = pgTable(
+  'payment_item',
+  {
+    itemId: uuid('item_id')
+      .notNull()
+      .references(() => cartItems.id),
+    paymentId: uuid('payment_id')
+      .notNull()
+      .references(() => payment.id),
+  },
+  pi => ({
+    compoundKey: primaryKey({ columns: [pi.itemId, pi.paymentId] }),
+  }),
+);
+
+export const order = pgTable('order', {
+  id: uuid('id')
+    .default(sql`uuid_generate_v4()`)
+    .primaryKey(),
+  userId: uuid('user_id').references(() => users.id, { onDelete: 'set null' }),
+  businessId: uuid('business_id').references(() => businesses.id, {
+    onDelete: 'set null',
+  }),
+  paymentId: uuid('payment_id')
+    .notNull()
+    .references(() => payment.id),
+  status: text('status')
+    .$type<'pending' | 'sent' | 'arrived'>()
+    .default('pending'),
+  sentAt: timestamp('sent_at', {
+    withTimezone: true,
+    mode: 'date',
+  }),
+});
+
 //* Relations
 
 export const businessSocialRelations = relations(businessSocial, ({ one }) => ({
