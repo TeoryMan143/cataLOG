@@ -8,6 +8,7 @@ function GoogleNumberPage() {
   const hasGoogleToken = cookies().has('google_token');
 
   if (!hasGoogleToken) {
+    console.log('Check token', hasGoogleToken)
     redirect('/login', RedirectType.replace);
   }
 
