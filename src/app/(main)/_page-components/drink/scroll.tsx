@@ -1,0 +1,85 @@
+'use client';
+
+import ProductPrev from '@/components/product-prev';
+import ProductPrevSk from '@/components/product-prev/skeleton';
+import {
+  getProductsListByCategory,
+  getProductsListByRating,
+} from '@/core/lib/products';
+import { DBProduct } from '@/core/schemas/product';
+import { useInfiniteQuery } from '@tanstack/react-query';
+import { useEffect, useMemo } from 'react';
+import { useIntersectionObserver } from 'usehooks-ts';
+
+function DrinkScroll({ initProducts }: { initProducts: DBProduct[] }) {
+  const { ref, isIntersecting } = useIntersectionObserver({
+    threshold: 1,
+  });
+
+  const INIT_PAGE_PARAM = 10;
+
+  const { data, isFetchingNextPage, fetchNextPage, hasNextPage } =
+    useInfiniteQuery({
+      queryKey: ['q-drink-products'],
+      queryFn: async ({ pageParam }) => {
+        const res = await getProductsListByCategory({
+          limit: INIT_PAGE_PARAM,
+          offset: pageParam,
+          categoryId: '531e9eb5-d96f-4f94-ac3d-c19862f0001e',
+        });
+
+        if (!res.success) {
+          throw new Error(res.errors[0] as string);
+        }
+
+        return res.result;
+      },
+      initialPageParam: INIT_PAGE_PARAM,
+      getNextPageParam: (lastPage, pages) => {
+        if (lastPage.length === 0) {
+          return;
+        }
+        const next = pages.flatMap(p => p).length;
+        return next;
+      },
+      initialData: {
+        pages: [initProducts],
+        pageParams: [0],
+      },
+    });
+
+  const products = useMemo(() => data.pages.flatMap(p => p), [data.pages]);
+
+  useEffect(() => {
+    if (isIntersecting && hasNextPage) {
+      fetchNextPage();
+    }
+  }, [isIntersecting, hasNextPage, fetchNextPage]);
+
+  return (
+    <ul className='overflow-x-auto flex max-w-[100dvw] gap-2 p-1'>
+      {products.map((p, i) => {
+        if (i === products.length - 1) {
+          return (
+            <li key={p.id} className='min-w-40 lg:min-w-60' ref={ref}>
+              <ProductPrev product={p} />
+            </li>
+          );
+        }
+        return (
+          <li key={p.id} className='min-w-40 lg:min-w-60'>
+            <ProductPrev product={p} />
+          </li>
+        );
+      })}
+      {isFetchingNextPage &&
+        hasNextPage &&
+        Array.from({ length: 5 }).map((_, i) => (
+          <li className='min-w-40 lg:min-w-60' key={i}>
+            <ProductPrevSk />
+          </li>
+        ))}
+    </ul>
+  );
+}
+export default DrinkScroll;

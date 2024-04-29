@@ -293,3 +293,47 @@ export async function getProductsListByPrice({
     };
   }
 }
+
+export async function getProductsListByCategory({
+  offset,
+  limit = 10,
+  categoryId,
+}: {
+  offset?: number;
+  limit?: number;
+  categoryId: string;
+}): Promise<ActionResponse<DBProduct[]>> {
+  try {
+    const pageProducts = await db
+      .select({
+        id: products.id,
+        businessId: products.businessId,
+        displayName: products.displayName,
+        price: products.price,
+        unit: products.unit,
+        description: products.description,
+        avialableUnits: products.avialableUnits,
+        rating: products.rating,
+      })
+      .from(products)
+      .orderBy(asc(products.price))
+      .limit(limit)
+      .offset(offset ?? 0)
+      .innerJoin(
+        productsCategories,
+        eq(productsCategories.productId, products.id),
+      )
+      .where(eq(productsCategories.categoryId, categoryId));
+
+    return {
+      success: true,
+      result: pageProducts,
+    };
+  } catch (e: any) {
+    return {
+      success: false,
+      errorType: 'unknown',
+      errors: [e.message],
+    };
+  }
+}
