@@ -15,6 +15,8 @@ export async function middleware({ nextUrl }: NextRequest) {
   }
 
   if (!isLoggedIn && !isOnLoginPage) {
+    console.log('is in page', isOnLoginPage);
+    console.log('is logged in', isLoggedIn);
     return NextResponse.redirect(new URL('/login', nextUrl));
   }
 }
