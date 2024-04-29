@@ -8,7 +8,8 @@ export async function middleware({ nextUrl }: NextRequest) {
 
   const isOnLoginPage =
     nextUrl.pathname.startsWith('/register') ||
-    nextUrl.pathname.startsWith('/login');
+    nextUrl.pathname.startsWith('/login') ||
+    nextUrl.pathname.startsWith('/register/google-number');
 
   console.log('is in page', isOnLoginPage);
   console.log('is logged in', isLoggedIn);
