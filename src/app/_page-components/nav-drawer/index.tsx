@@ -27,7 +27,7 @@ function NavDrawer() {
       </button>
       <NavUi active={active} />
       <div
-        className={cn('w-[100dvw] h-[100dvh] absolute hidden bottom-0', {
+        className={cn('w-[100dvw] h-[100dvh] absolute hidden bottom-0 z-20', {
           block: active,
         })}
         onClick={() => setActive(false)}
