@@ -14,10 +14,12 @@ export async function middleware({ nextUrl }: NextRequest) {
   console.log('is logged in', isLoggedIn);
 
   if (isOnLoginPage && isLoggedIn) {
+    console.log('Red /');
     return NextResponse.redirect(new URL('/', nextUrl));
   }
 
   if (!isLoggedIn && !isOnLoginPage) {
+    console.log('Red /log');
     return NextResponse.redirect(new URL('/login', nextUrl));
   }
 }
