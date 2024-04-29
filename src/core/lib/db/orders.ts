@@ -46,6 +46,7 @@ export async function getUserOrders() {
         productId: cartItems.productId,
         businessId: orders.businessId,
         itemId: paymentItems.itemId,
+        address: orders.address,
       })
       .from(orders)
       .innerJoin(payments, eq(orders.paymentId, payments.id))
