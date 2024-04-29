@@ -10,13 +10,14 @@ export async function middleware({ nextUrl }: NextRequest) {
     nextUrl.pathname.startsWith('/register') ||
     nextUrl.pathname.startsWith('/login');
 
+  console.log('is in page', isOnLoginPage);
+  console.log('is logged in', isLoggedIn);
+
   if (isOnLoginPage && isLoggedIn) {
     return NextResponse.redirect(new URL('/', nextUrl));
   }
 
   if (!isLoggedIn && !isOnLoginPage) {
-    console.log('is in page', isOnLoginPage);
-    console.log('is logged in', isLoggedIn);
     return NextResponse.redirect(new URL('/login', nextUrl));
   }
 }
