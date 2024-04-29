@@ -1,12 +1,21 @@
 import Logo from '@/components/logo';
 import { Metadata } from 'next';
+import { cookies } from 'next/headers';
 import Link from 'next/link';
+import { redirect } from 'next/navigation';
 
 export const metadata: Metadata = {
   title: 'Regístrarse',
 };
 
 function LoginLayout({ children }: { children: React.ReactNode }) {
+
+  const hasGoogleToken = cookies().has('google_token')
+
+  if (hasGoogleToken) {
+    redirect('/register/google-number')
+  }
+
   return (
     <div className='lg:flex'>
       <div

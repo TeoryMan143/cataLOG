@@ -29,7 +29,7 @@ function CheckoutButton({ itemsCount }: { itemsCount: number }) {
               }
             }}
             className='
-          absolute bottom-3 left-1/2 -translate-x-1/2 w-[80dvw]
+          absolute bottom-3 left-1/2 -translate-x-1/2 w-[80dvw] -z-10
           lg:translate-x-0 lg:right-3 lg:w-auto lg:px-6
         '
           >
