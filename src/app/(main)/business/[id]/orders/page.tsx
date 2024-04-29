@@ -2,13 +2,12 @@ import { getBusinessOrders } from '@/core/lib/db/orders';
 import Order from './_page-components/order';
 
 type Props = {
-  children: React.ReactNode;
   params: {
     id: string;
   };
 };
 
-async function OrdersPage({ children, params: { id } }: Props) {
+async function OrdersPage({ params: { id } }: Props) {
   const orders = await getBusinessOrders(id);
 
   if (!orders) {
