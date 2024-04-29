@@ -1,5 +1,5 @@
 import { db } from '@/core/db/config';
-import { businessSocial, businesses } from '@/core/db/tables';
+import { businessSocial, businesses, products } from '@/core/db/tables';
 import { DBBusiness } from '@/core/schemas/business';
 import { eq } from 'drizzle-orm';
 
@@ -23,6 +23,27 @@ export async function getBusinessSocials(businessId: string) {
     });
     if (!result) return null;
     return result;
+  } catch (e) {
+    console.error(e);
+    return null;
+  }
+}
+
+export async function getBusinessByProduct(
+  productId: string,
+): Promise<DBBusiness | null> {
+  try {
+    const result = await db.query.products.findFirst({
+      columns: {
+        id: true,
+      },
+      where: eq(products.id, productId),
+      with: {
+        business: true,
+      },
+    });
+    if (!result) return null;
+    return result.business;
   } catch (e) {
     console.error(e);
     return null;

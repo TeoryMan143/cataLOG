@@ -6,6 +6,7 @@ import { DBProduct } from '@/core/schemas/product';
 import { useQuery } from '@tanstack/react-query';
 import Image from 'next/image';
 import Link from 'next/link';
+import ProductImageLoader from '../product-image-loader';
 
 function ProductPrev({
   product: { id, displayName, price, avialableUnits, businessId },
@@ -14,23 +15,6 @@ function ProductPrev({
   product: DBProduct;
   admin?: boolean;
 }) {
-  const {
-    data: mainImage,
-    error,
-    isPending: loading,
-  } = useQuery({
-    queryKey: ['pro-imgs', id],
-    queryFn: async () => {
-      const images = await getProductImages(id);
-
-      if (!images) {
-        throw new Error('No images found');
-      }
-
-      return images[0].image;
-    },
-  });
-
   const avialable = avialableUnits > 0;
 
   return (
@@ -45,38 +29,7 @@ function ProductPrev({
         className='inline-block p-4 space-y-2'
         href={admin ? `/business/${businessId}/product/${id}` : `/v?p=${id}`}
       >
-        {error ? (
-          <p className='bg-red-200 text-red-600 mt-1 text-center max-w-80 p-0.5'>
-            Hubo un error obteniendo los productos
-          </p>
-        ) : loading ? (
-          <div className='flex justify-center items-center size-[130px] lg:size-[200px]'>
-            <svg
-              xmlns='http://www.w3.org/2000/svg'
-              width='1em'
-              height='1em'
-              viewBox='0 0 24 24'
-              className='animate-spin-clockwise text-4xl'
-            >
-              <path
-                fill='none'
-                stroke='currentColor'
-                strokeLinecap='round'
-                strokeLinejoin='round'
-                strokeWidth='2'
-                d='M12 3a9 9 0 1 0 9 9'
-              />
-            </svg>
-          </div>
-        ) : (
-          <Image
-            className='size-[130px] lg:size-[200px] object-cover rounded-sm'
-            src={REMOTE_IMG_URL + mainImage}
-            alt='Portada producto'
-            height={130}
-            width={130}
-          />
-        )}
+        <ProductImageLoader productId={id} />
         <div>
           <p
             className='

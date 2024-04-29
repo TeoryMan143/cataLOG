@@ -1,6 +1,7 @@
 import CartControl from '@/components/cart-control';
 import Categories from '@/components/categories';
 import ImagesCarousel from '@/components/images-carousel';
+import ProductBusinessLink from '@/components/product-business-link';
 import ProductRating from '@/components/product-rating';
 import { Button } from '@/components/ui/button';
 import { REMOTE_IMG_URL, UNITS, cn, formatToCOP } from '@/core/client-utils';
@@ -26,23 +27,12 @@ async function ViewProductPage({ searchParams: { p: prodId } }: Props) {
 
   if (!product || !images) redirect('/', RedirectType.replace);
 
-  const {
-    avialableUnits,
-    displayName,
-    price,
-    description,
-    unit,
-    rating,
-    businessId,
-  } = product;
+  const { avialableUnits, displayName, price, description, unit, rating } =
+    product;
 
   const unitLabel = UNITS.find(u => u.value === unit)?.label;
 
   const item = await getProductItem(prodId);
-
-  const business = await getBusinessById(businessId);
-
-  if (!business) redirect('/', RedirectType.replace);
 
   return (
     <div className='p-6'>
@@ -62,20 +52,7 @@ async function ViewProductPage({ searchParams: { p: prodId } }: Props) {
             {displayName}
           </h1>
           <ImagesCarousel images={images.map(img => img.image)} />
-          <Link
-            className='text-slate-800 hover:text-black'
-            href={`/b/${businessId}`}
-          >
-            <div className='flex gap-2 my-2 items-center'>
-              <p>Producto de: {business.name}</p>
-              <Image
-                src={REMOTE_IMG_URL + business.image}
-                alt='Business'
-                height={40}
-                width={40}
-              />
-            </div>
-          </Link>
+          <ProductBusinessLink productId={prodId} />
           <p className='mt-3 text-xl font-semibold'>
             Cantidad disponible: {avialableUnits}
             {unit}

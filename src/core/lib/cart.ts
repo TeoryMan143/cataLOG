@@ -1,6 +1,6 @@
 'use server';
 
-import { DrizzleError, eq } from 'drizzle-orm';
+import { DrizzleError, and, eq } from 'drizzle-orm';
 import { db } from '../db/config';
 import { cart, cartItems, products } from '../db/tables';
 import { ActionResponse } from './types';
@@ -25,10 +25,6 @@ export async function addCartItem({
   }
 
   try {
-    const item = await db.query.cartItems.findFirst({
-      where: eq(cartItems.productId, productId),
-    });
-
     const product = await db.query.products.findFirst({
       where: eq(products.id, productId),
     });
@@ -41,6 +37,14 @@ export async function addCartItem({
       };
     }
 
+    const [cartData] = await db
+      .select()
+      .from(cart)
+      .innerJoin(cartItems, eq(cart.itemId, cartItems.id))
+      .where(
+        and(eq(cart.accountId, user.id), eq(cartItems.productId, productId)),
+      );
+
     if (amount > product.avialableUnits) {
       return {
         success: false,
@@ -49,7 +53,7 @@ export async function addCartItem({
       };
     }
 
-    if (!item) {
+    if (!cartData?.cart_item) {
       const newItem = await db.transaction(async tr => {
         const itemRet = await tr
           .insert(cartItems)
@@ -75,6 +79,8 @@ export async function addCartItem({
         result: newItem,
       };
     }
+
+    const { cart_item: item } = cartData;
 
     const newItemData = await db
       .update(cartItems)

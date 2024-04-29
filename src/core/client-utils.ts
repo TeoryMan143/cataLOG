@@ -63,3 +63,15 @@ export const UNITS = [
 ] as const;
 
 export type UnitValue = (typeof UNITS)[number]['value'];
+
+export const getStatus = (key: string) => {
+  const status: Record<string, string> = {
+    pending: 'Pendiente',
+    sent: 'Enviado',
+    arrived: 'Recibido',
+  };
+
+  return status[key];
+};
+
+export type OrderStatus = 'pending' | 'sent' | 'arrived';

@@ -6,8 +6,26 @@ import { mercadoConfig } from '../payment/config';
 import { getUserCartItems } from './db/cart';
 import { Items } from 'mercadopago/dist/clients/commonTypes';
 import { redirect } from 'next/navigation';
+import { auth } from '../auth';
 
-export async function checkout(): Promise<ActionResponse> {
+const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
+
+const WEBHOOK_URL =
+  process.env.VERCEL_ENV === 'development'
+    ? 'https://a988-161-18-85-171.ngrok-free.app'
+    : BASE_URL;
+
+export async function checkout(address: string): Promise<ActionResponse> {
+  const { user } = await auth();
+
+  if (!user) {
+    return {
+      success: false,
+      errorType: 'auth',
+      errors: ['Must be signed in to perform a purchase'],
+    };
+  }
+
   const cartItems = await getUserCartItems();
 
   if (!cartItems) {
@@ -34,8 +52,16 @@ export async function checkout(): Promise<ActionResponse> {
   const payment = await pref.create({
     body: {
       items,
-      notification_url:
-        'https://228d-181-118-157-130.ngrok-free.app/api/payment/webhook',
+      notification_url: `${WEBHOOK_URL}/api/payment/webhook`,
+      back_urls: {
+        success: `${BASE_URL}/pay/success`,
+        failure: `${BASE_URL}/pay/failure`,
+      },
+      metadata: {
+        items: cartItems.map(i => i.id),
+        userId: user.id,
+        address,
+      },
     },
     requestOptions: {
       idempotencyKey: process.env.MERCADO_PAGO_IDEMPOTENCY_KEY,

@@ -208,37 +208,44 @@ export const productsCategories = pgTable(
   }),
 );
 
-export const payment = pgTable('payment', {
-  id: uuid('id')
-    .default(sql`uuid_generate_v4()`)
-    .primaryKey(),
-  userId: uuid('user_id').references(() => users.id, { onDelete: 'set null' }),
-  businessId: uuid('business_id').references(() => businesses.id, {
-    onDelete: 'set null',
+export const payments = pgTable(
+  'payment',
+  {
+    id: uuid('id')
+      .default(sql`uuid_generate_v4()`)
+      .primaryKey(),
+    userId: uuid('user_id').references(() => users.id, {
+      onDelete: 'set null',
+    }),
+    createdAt: timestamp('created_at', {
+      withTimezone: true,
+      mode: 'date',
+    })
+      .notNull()
+      .defaultNow(),
+    mercadoId: text('mercado_id').notNull(),
+  },
+  py => ({
+    mercadoIdIdx: uniqueIndex('mercado_id_idx').on(py.mercadoId),
   }),
-  createdAt: timestamp('created_at', {
-    withTimezone: true,
-    mode: 'date',
-  }).defaultNow(),
-  mercadoId: text('mercado_id').notNull(),
-});
+);
 
 export const paymentItems = pgTable(
   'payment_item',
   {
     itemId: uuid('item_id')
       .notNull()
-      .references(() => cartItems.id),
+      .references(() => cartItems.id, { onDelete: 'cascade' }),
     paymentId: uuid('payment_id')
       .notNull()
-      .references(() => payment.id),
+      .references(() => payments.id, { onDelete: 'cascade' }),
   },
   pi => ({
     compoundKey: primaryKey({ columns: [pi.itemId, pi.paymentId] }),
   }),
 );
 
-export const order = pgTable('order', {
+export const orders = pgTable('order', {
   id: uuid('id')
     .default(sql`uuid_generate_v4()`)
     .primaryKey(),
@@ -248,17 +255,26 @@ export const order = pgTable('order', {
   }),
   paymentId: uuid('payment_id')
     .notNull()
-    .references(() => payment.id),
+    .references(() => payments.id, { onDelete: 'cascade' }),
   status: text('status')
     .$type<'pending' | 'sent' | 'arrived'>()
-    .default('pending'),
+    .default('pending')
+    .notNull(),
   sentAt: timestamp('sent_at', {
     withTimezone: true,
     mode: 'date',
-  }),
+  })
+    .notNull()
+    .defaultNow(),
+  delivery: boolean('delivery').notNull().default(true),
+  address: text('address').notNull(),
 });
 
 //* Relations
+
+export const businessesRelations = relations(businesses, ({ many }) => ({
+  orders: many(orders),
+}));
 
 export const businessSocialRelations = relations(businessSocial, ({ one }) => ({
   business: one(businesses, {
@@ -271,11 +287,15 @@ export const categoriesRelations = relations(categories, ({ many }) => ({
   productsCategories: many(productsCategories),
 }));
 
-export const productsRelations = relations(products, ({ many }) => ({
+export const productsRelations = relations(products, ({ many, one }) => ({
   categories: many(productsCategories),
   images: many(productImages),
   ratings: many(productsRating),
   items: many(cartItems),
+  business: one(businesses, {
+    fields: [products.businessId],
+    references: [businesses.id],
+  }),
 }));
 
 export const cartRelations = relations(cart, ({ one }) => ({
@@ -324,8 +344,10 @@ export const oauthRelations = relations(oauthAccounts, ({ one }) => ({
   }),
 }));
 
-export const usersRelations = relations(users, ({ many, one }) => ({
+export const usersRelations = relations(users, ({ many }) => ({
   ratings: many(productsRating),
+  payments: many(payments),
+  orders: many(orders),
 }));
 
 export const productsRatingRelations = relations(productsRating, ({ one }) => ({
@@ -336,5 +358,39 @@ export const productsRatingRelations = relations(productsRating, ({ one }) => ({
   user: one(users, {
     references: [users.id],
     fields: [productsRating.userId],
+  }),
+}));
+
+export const paymentsRelations = relations(payments, ({ many, one }) => ({
+  items: many(paymentItems),
+  user: one(users, {
+    fields: [payments.userId],
+    references: [users.id],
+  }),
+}));
+
+export const ordersRelations = relations(orders, ({ one }) => ({
+  user: one(users, {
+    fields: [orders.userId],
+    references: [users.id],
+  }),
+  business: one(businesses, {
+    fields: [orders.businessId],
+    references: [businesses.id],
+  }),
+  payment: one(payments, {
+    fields: [orders.paymentId],
+    references: [payments.id],
+  }),
+}));
+
+export const paymentItemsRelations = relations(paymentItems, ({ one }) => ({
+  item: one(cartItems, {
+    fields: [paymentItems.itemId],
+    references: [cartItems.id],
+  }),
+  payment: one(payments, {
+    fields: [paymentItems.paymentId],
+    references: [payments.id],
   }),
 }));

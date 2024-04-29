@@ -15,7 +15,7 @@ import {
   products,
   productsCategories,
 } from '../db/tables';
-import { DrizzleError, SQL, desc, eq, gte } from 'drizzle-orm';
+import { DrizzleError, SQL, asc, desc, eq, gte } from 'drizzle-orm';
 import { type ActionResponse } from './types';
 import { type DBProductCategory } from '../schemas/categories';
 import { revalidatePath } from 'next/cache';
@@ -253,6 +253,34 @@ export async function getProductsListByRating({
       .orderBy(desc(products.rating), desc(products.id))
       .limit(limit)
       .offset(offset ?? 0);
+    return {
+      success: true,
+      result: pageProducts,
+    };
+  } catch (e: any) {
+    return {
+      success: false,
+      errorType: 'unknown',
+      errors: [e.message],
+    };
+  }
+}
+
+export async function getProductsListByPrice({
+  offset,
+  limit = 10,
+}: {
+  offset?: number;
+  limit?: number;
+}): Promise<ActionResponse<DBProduct[]>> {
+  try {
+    const pageProducts = await db
+      .select()
+      .from(products)
+      .orderBy(asc(products.price))
+      .limit(limit)
+      .offset(offset ?? 0);
+
     return {
       success: true,
       result: pageProducts,

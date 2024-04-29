@@ -12,8 +12,8 @@ import {
   FormBusiness,
   formBusinessSchema,
 } from '@/core/schemas/business';
-import { editBusiness, registerBusiness } from '@/core/lib/business';
-import { useParams, useRouter } from 'next/navigation';
+import { editBusiness } from '@/core/lib/business';
+import { useRouter } from 'next/navigation';
 import UploadButton from '@/components/upload-button';
 import Image from 'next/image';
 import { REMOTE_IMG_URL } from '@/core/client-utils';
