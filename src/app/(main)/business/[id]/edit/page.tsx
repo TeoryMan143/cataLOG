@@ -22,7 +22,7 @@ async function EditBisPage({ params: { id } }: Props) {
   return (
     <div
       className='
-        flex flex-col gap-6 items-center justify-center relative overflow-y-auto py-12
+        flex flex-col gap-6 items-center justify-center relative overflow-y-auto py-12 h-full
         lg:px-32 lg:bg-white
       '
     >
@@ -33,9 +33,9 @@ async function EditBisPage({ params: { id } }: Props) {
           lg:text-gray-800 lg:top-3
           lg:hover:text-amber-500
         '
-        href='/'
+        href={`/business/${id}`}
       >
-        <BackIcon /> volver a cataLOG
+        <BackIcon /> volver a {businessData.name}
       </Link>
       <h2
         className={cn(

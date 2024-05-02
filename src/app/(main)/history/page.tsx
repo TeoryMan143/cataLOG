@@ -16,6 +16,11 @@ async function HistoryPage() {
       >
         Historial de compras
       </h1>
+      {!items && (
+        <p className='text-center text-xl'>
+          Cuando realices una compra, aparecerá aquí
+        </p>
+      )}
       <div
         className='
           flex flex-col gap-2 

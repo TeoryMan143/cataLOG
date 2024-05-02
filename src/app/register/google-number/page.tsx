@@ -7,10 +7,7 @@ import { RedirectType, redirect } from 'next/navigation';
 function GoogleNumberPage() {
   const hasGoogleToken = cookies().has('google_token');
 
-  console.log('Check token', hasGoogleToken);
-
   if (!hasGoogleToken) {
-    console.log('no token');
     redirect('/login', RedirectType.replace);
   }
 

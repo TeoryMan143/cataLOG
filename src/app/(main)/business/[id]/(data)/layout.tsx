@@ -3,12 +3,12 @@ import { RedirectType, redirect } from 'next/navigation';
 import Image from 'next/image';
 import { REMOTE_IMG_URL, cn } from '@/core/client-utils';
 import { workSans } from '@/core/fonts';
-import SocialLinks from './_page-components/social-links';
+import SocialLinks from '../_page-components/social-links';
 import Link from 'next/link';
 import { PlusRoundedIcon } from '@/components/icons/plus-rounded';
 import { EditIcon } from '@/components/icons/edit';
 import { auth } from '@/core/auth';
-import BusinessTabs from './_page-components/tabs';
+import BusinessTabs from '../_page-components/tabs';
 
 type Props = {
   children: React.ReactNode;

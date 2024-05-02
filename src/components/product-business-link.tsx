@@ -30,7 +30,7 @@ async function ProductBusinessLink({
     </div>
   ) : (
     <Link
-      className='text-slate-800 hover:text-black'
+      className='text-slate-800 hover:text-black hover:underline'
       href={`/b/${business.id}`}
     >
       <div className='flex gap-2 my-2 items-center'>

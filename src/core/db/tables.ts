@@ -266,6 +266,9 @@ export const orders = pgTable('order', {
   })
     .notNull()
     .defaultNow(),
+  itemId: uuid('item_id')
+    .notNull()
+    .references(() => cartItems.id, { onDelete: 'restrict' }),
   delivery: boolean('delivery').notNull().default(true),
   address: text('address').notNull(),
 });
@@ -369,7 +372,7 @@ export const paymentsRelations = relations(payments, ({ many, one }) => ({
   }),
 }));
 
-export const ordersRelations = relations(orders, ({ one }) => ({
+export const ordersRelations = relations(orders, ({ one, many }) => ({
   user: one(users, {
     fields: [orders.userId],
     references: [users.id],

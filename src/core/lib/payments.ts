@@ -12,8 +12,14 @@ const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 
 const WEBHOOK_URL =
   process.env.VERCEL_ENV === 'development'
-    ? 'https://a988-161-18-85-171.ngrok-free.app'
+    ? 'https://6e56-181-234-160-44.ngrok-free.app'
     : BASE_URL;
+
+export type PaymentMetadata = {
+  items: string[];
+  user_id: string;
+  address: string;
+};
 
 export async function checkout(address: string): Promise<ActionResponse> {
   const { user } = await auth();
@@ -59,9 +65,9 @@ export async function checkout(address: string): Promise<ActionResponse> {
       },
       metadata: {
         items: cartItems.map(i => i.id),
-        userId: user.id,
+        user_id: user.id,
         address,
-      },
+      } satisfies PaymentMetadata,
     },
     requestOptions: {
       idempotencyKey: process.env.MERCADO_PAGO_IDEMPOTENCY_KEY,

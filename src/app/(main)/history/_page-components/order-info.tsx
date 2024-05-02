@@ -1,6 +1,8 @@
+import ProductBusinessLink from '@/components/product-business-link';
 import ProductImageLoader from '@/components/product-image-loader';
 import { cn, formatToCOP, getStatus } from '@/core/client-utils';
 import { OrderData } from '@/core/lib/db/orders';
+import Link from 'next/link';
 
 function OrderInfo({
   orderData: {
@@ -24,7 +26,7 @@ function OrderInfo({
       className={cn(
         `
           p-3 flex gap-2 border-2 rounded-sm
-          lg:max-w-96
+          lg:max-w-[450px]
         `,
         {
           'border-amber-600': status === 'pending',
@@ -37,8 +39,14 @@ function OrderInfo({
         <ProductImageLoader productId={productId} />
       </div>
       <div className='flex flex-col'>
-        <h2 className='font-bold truncate'>{displayName}</h2>
+        <Link
+          className='font-bold truncate hover:underline'
+          href={`/v?p=${productId}`}
+        >
+          {displayName}
+        </Link>
         <div className='flex flex-col justify-center grow'>
+          <ProductBusinessLink productId={productId} />
           <p>
             {amount + unit} {formatToCOP(price * amount)} COP
           </p>

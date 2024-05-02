@@ -1,4 +1,4 @@
-import AllProducts from '../_page-components/products/all-products';
+import AllProducts from '../../_page-components/products/all-products';
 
 type Props = {
   params: {

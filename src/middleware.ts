@@ -8,8 +8,7 @@ export async function middleware({ nextUrl }: NextRequest) {
 
   const isOnLoginPage =
     nextUrl.pathname.startsWith('/register') ||
-    nextUrl.pathname.startsWith('/login') 
-
+    nextUrl.pathname.startsWith('/login');
 
   if (isOnLoginPage && isLoggedIn) {
     return NextResponse.redirect(new URL('/', nextUrl));

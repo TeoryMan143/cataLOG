@@ -27,14 +27,14 @@ export type OrderData = {
   address: string;
 };
 
-export async function getUserOrders() {
+export async function getUserOrders(): Promise<OrderData[] | null> {
   const { user } = await auth();
 
   if (!user) redirect('/login');
 
   try {
     const ordersData = await db
-      .selectDistinctOn([paymentItems.itemId], {
+      .select({
         orderId: orders.id,
         status: orders.status,
         sentAt: orders.sentAt,
@@ -45,13 +45,11 @@ export async function getUserOrders() {
         unit: cartItems.unit,
         productId: cartItems.productId,
         businessId: orders.businessId,
-        itemId: paymentItems.itemId,
+        itemId: cartItems.id,
         address: orders.address,
       })
-      .from(orders)
-      .innerJoin(payments, eq(orders.paymentId, payments.id))
-      .innerJoin(paymentItems, eq(paymentItems.paymentId, payments.id))
-      .innerJoin(cartItems, eq(paymentItems.itemId, cartItems.id))
+      .from(cartItems)
+      .innerJoin(orders, eq(orders.itemId, cartItems.id))
       .where(eq(orders.userId, user.id));
 
     return ordersData.length === 0 ? null : ordersData;
@@ -61,7 +59,9 @@ export async function getUserOrders() {
   }
 }
 
-export async function getBusinessOrders(businessId: string) {
+export async function getBusinessOrders(
+  businessId: string,
+): Promise<OrderData[] | null> {
   const { user } = await auth();
 
   if (!user) redirect('/login');

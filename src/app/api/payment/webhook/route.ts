@@ -10,6 +10,7 @@ import {
   payments,
 } from '@/core/db/tables';
 import { eq } from 'drizzle-orm';
+import type { PaymentMetadata } from '@/core/lib/payments';
 
 export async function POST(req: NextRequest) {
   const params = new URL(req.nextUrl).searchParams;
@@ -26,9 +27,11 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ success: false });
   }
 
-  const items = payment.metadata.items as string[];
-  const userId = payment.metadata.user_id as string;
-  const address = payment.metadata.address as string;
+  const {
+    items,
+    user_id: userId,
+    address,
+  } = payment.metadata as PaymentMetadata;
 
   try {
     const txRes = await db.transaction(async tx => {
@@ -38,7 +41,6 @@ export async function POST(req: NextRequest) {
         .returning();
 
       if (!newPayment) {
-        console.log('no p');
         tx.rollback();
       }
       await tx
@@ -69,19 +71,15 @@ export async function POST(req: NextRequest) {
 
         const businessId = itemData?.product?.business.id;
 
-        if (!businessId) {
-          tx.rollback();
-        }
+        if (!businessId) tx.rollback();
 
-        const order = await tx
-          .insert(orders)
-          .values({
-            paymentId: newPayment.id,
-            userId,
-            businessId,
-            address,
-          })
-          .returning();
+        await tx.insert(orders).values({
+          paymentId: newPayment.id,
+          userId,
+          businessId,
+          address,
+          itemId,
+        });
       }
 
       await tx.delete(cart).where(eq(cart.accountId, userId));
