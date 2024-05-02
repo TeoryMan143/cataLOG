@@ -208,6 +208,8 @@ export async function deleteBusiness(
 
     await db.delete(businesses).where(eq(businesses.id, id));
 
+    revalidatePath('/business');
+
     return {
       success: true,
       result: undefined,
