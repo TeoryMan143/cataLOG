@@ -5,6 +5,7 @@ import Link from 'next/link';
 import EditBusinessForm from './_edit-business-form';
 import { getBusinessById } from '@/core/lib/db/business';
 import { RedirectType, redirect } from 'next/navigation';
+import DeleteButton from './_delete-button';
 
 type Props = {
   params: {
@@ -49,6 +50,7 @@ async function EditBisPage({ params: { id } }: Props) {
         Edita la información de tu negocio
       </h2>
       <EditBusinessForm businessData={businessData} />
+      <DeleteButton id={id} name={businessData.name} />
       <Link
         href='/business'
         className='

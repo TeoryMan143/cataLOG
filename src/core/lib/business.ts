@@ -153,6 +153,77 @@ export async function editBusiness(
   }
 }
 
+export async function deleteBusiness(
+  id: string,
+  name: string,
+): Promise<ActionResponse> {
+  const { user } = await auth();
+
+  if (!user) {
+    return {
+      success: false,
+      errorType: 'auth',
+      errors: ['Must be signed in to delete a business'],
+    };
+  }
+
+  try {
+    const business = await db.query.businesses.findFirst({
+      where: eq(businesses.id, id),
+      columns: {
+        name: true,
+      },
+      with: {
+        account: {
+          columns: {
+            id: true,
+          },
+        },
+      },
+    });
+
+    if (!business) {
+      return {
+        success: false,
+        errorType: 'insertion',
+        errors: ['Business not found'],
+      };
+    }
+
+    if (business.account.id !== user.id) {
+      return {
+        success: false,
+        errorType: 'auth',
+        errors: ['You are not allowed to access this business'],
+      };
+    }
+
+    if (business.name !== name) {
+      return {
+        success: false,
+        errorType: 'insertion',
+        errors: ['Names mismatch'],
+      };
+    }
+
+    await db.delete(businesses).where(eq(businesses.id, id));
+
+    return {
+      success: true,
+      result: undefined,
+    };
+  } catch (error) {
+    if (!(error instanceof DrizzleError)) {
+      return { success: false, errorType: 'insertion', errors: ['pass'] };
+    }
+    return {
+      success: false,
+      errorType: 'insertion',
+      errors: ['db', error.name, error.message],
+    };
+  }
+}
+
 export async function getAcountBusinesses(
   accountId: string,
 ): Promise<ActionResponse<DBBusiness[]>> {

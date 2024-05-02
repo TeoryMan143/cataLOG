@@ -275,8 +275,12 @@ export const orders = pgTable('order', {
 
 //* Relations
 
-export const businessesRelations = relations(businesses, ({ many }) => ({
+export const businessesRelations = relations(businesses, ({ many, one }) => ({
   orders: many(orders),
+  account: one(users, {
+    fields: [businesses.accountId],
+    references: [users.id],
+  }),
 }));
 
 export const businessSocialRelations = relations(businessSocial, ({ one }) => ({
