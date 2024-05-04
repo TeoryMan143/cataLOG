@@ -25,7 +25,7 @@ const NavUi = forwardRef<HTMLDivElement, Props>(function NavUi(
       ref={ref}
       className={cn(
         `
-          w-72 h-dvh bg-black/80 absolute transition-all top-0 z-30 flex flex-col items-center gap-8 px-6 right-0 translate-x-full
+          w-72 h-dvh bg-black/80 absolute transition-all top-0 z-50 flex flex-col items-center gap-8 px-6 right-0 translate-x-full
           lg:bg-black lg:text-white
         `,
         {

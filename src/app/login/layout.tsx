@@ -9,11 +9,10 @@ export const metadata: Metadata = {
 };
 
 function LoginLayout({ children }: { children: React.ReactNode }) {
-
-  const hasGoogleToken = cookies().has('google_token')
+  const hasGoogleToken = cookies().has('google_token');
 
   if (hasGoogleToken) {
-    redirect('/register/google-number')
+    redirect('/register/google-number');
   }
 
   return (
@@ -29,9 +28,9 @@ function LoginLayout({ children }: { children: React.ReactNode }) {
       <div className='bg-black/60 w-[35dvw] h-[100dvh] absolute right-0 lg:hidden'></div>
       <main
         className='
-        h-[100dvh] grid place-content-center relative z-10
-        lg:flex-1
-      '
+          h-[100dvh] grid place-content-center relative z-10
+          lg:flex-1
+        '
       >
         {children}
         <Link

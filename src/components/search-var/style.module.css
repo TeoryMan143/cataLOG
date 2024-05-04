@@ -1,0 +1,9 @@
+.tabAfter::after {
+  content: '';
+  width: 50%;
+  background-color: #000;
+  position: absolute;
+  bottom: 0;
+  height: 2px;
+  border-end-end-radius: 10px;
+}

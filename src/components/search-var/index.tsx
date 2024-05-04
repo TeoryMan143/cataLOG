@@ -1,6 +1,30 @@
+'use client';
+
+import { usePathname, useRouter } from 'next/navigation';
+import { useEffect, useRef } from 'react';
+import { useDebounceValue } from 'usehooks-ts';
+import Options from './options';
+
 function SearchBar() {
+  const [debQuery, setQuery] = useDebounceValue('', 350);
+  const router = useRouter();
+  const path = usePathname();
+
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    if (path.startsWith('search')) {
+      router.push(`/search?q=${debQuery}`);
+    }
+  }, [debQuery, router, path]);
+
   return (
-    <div className='relative flex-1 text-black'>
+    <search
+      className='
+        relative flex-1 text-black group
+        lg:mx-48
+      '
+    >
       <svg
         xmlns='http://www.w3.org/2000/svg'
         width='1em'
@@ -16,20 +40,39 @@ function SearchBar() {
           />
         </g>
       </svg>
-      <input className='w-full py-[2px] px-7 rounded-lg' />
-      <svg
-        xmlns='http://www.w3.org/2000/svg'
-        width='1em'
-        height='1em'
-        viewBox='0 0 15 15'
-        className='absolute top-1/2 -translate-y-1/2 right-1'
+      <input
+        onKeyDownCapture={e => {
+          if (e.key === 'Enter') {
+            router.push(`/search?q=${debQuery}`);
+          }
+        }}
+        onChange={e => setQuery(e.target.value)}
+        className='w-full py-0.5 px-7 rounded-lg text-center peer'
+        ref={inputRef}
+      />
+      <Options q={debQuery} />
+      <button
+        onClick={() => {
+          if (inputRef.current) {
+            inputRef.current.blur();
+            inputRef.current.value = '';
+          }
+        }}
       >
-        <path
-          fill='currentColor'
-          d='M3.64 2.27L7.5 6.13l3.84-3.84A.92.92 0 0 1 12 2a1 1 0 0 1 1 1a.9.9 0 0 1-.27.66L8.84 7.5l3.89 3.89A.9.9 0 0 1 13 12a1 1 0 0 1-1 1a.92.92 0 0 1-.69-.27L7.5 8.87l-3.85 3.85A.92.92 0 0 1 3 13a1 1 0 0 1-1-1a.9.9 0 0 1 .27-.66L6.16 7.5L2.27 3.61A.9.9 0 0 1 2 3a1 1 0 0 1 1-1c.24.003.47.1.64.27'
-        />
-      </svg>
-    </div>
+        <svg
+          xmlns='http://www.w3.org/2000/svg'
+          width='1em'
+          height='1em'
+          viewBox='0 0 15 15'
+          className='absolute top-1/2 -translate-y-1/2 right-1'
+        >
+          <path
+            fill='currentColor'
+            d='M3.64 2.27L7.5 6.13l3.84-3.84A.92.92 0 0 1 12 2a1 1 0 0 1 1 1a.9.9 0 0 1-.27.66L8.84 7.5l3.89 3.89A.9.9 0 0 1 13 12a1 1 0 0 1-1 1a.92.92 0 0 1-.69-.27L7.5 8.87l-3.85 3.85A.92.92 0 0 1 3 13a1 1 0 0 1-1-1a.9.9 0 0 1 .27-.66L6.16 7.5L2.27 3.61A.9.9 0 0 1 2 3a1 1 0 0 1 1-1c.24.003.47.1.64.27'
+          />
+        </svg>
+      </button>
+    </search>
   );
 }
 export default SearchBar;

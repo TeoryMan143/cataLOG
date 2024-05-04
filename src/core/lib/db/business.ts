@@ -1,3 +1,5 @@
+'use server';
+
 import { db } from '@/core/db/config';
 import { businessSocial, businesses, products } from '@/core/db/tables';
 import { DBBusiness } from '@/core/schemas/business';
@@ -45,6 +47,20 @@ export async function getBusinessByProduct(
     if (!result) return null;
     return result.business;
   } catch (e) {
+    console.error(e);
+    return null;
+  }
+}
+
+export async function getBusinessImage(id: string) {
+  try {
+    const [bussImg] = await db
+      .select({ image: businesses.image })
+      .from(businesses)
+      .where(eq(businesses.id, id));
+
+    return bussImg.image;
+  } catch (e: any) {
     console.error(e);
     return null;
   }

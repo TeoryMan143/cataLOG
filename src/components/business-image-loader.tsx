@@ -1,15 +1,15 @@
 'use client';
 
 import { REMOTE_IMG_URL, cn } from '@/core/client-utils';
-import { getProductImages } from '@/core/lib/db/products';
+import { getBusinessImage } from '@/core/lib/db/business';
 import { useQuery } from '@tanstack/react-query';
 import Image from 'next/image';
 
-function ProductImageLoader({
-  productId,
+function BusinessImageLoader({
+  businessId,
   tiny = false,
 }: {
-  productId: string;
+  businessId: string;
   tiny?: boolean;
 }) {
   const {
@@ -17,21 +17,21 @@ function ProductImageLoader({
     error,
     isPending: loading,
   } = useQuery({
-    queryKey: ['pro-imgs', productId],
+    queryKey: ['buss-img', businessId],
     queryFn: async () => {
-      const images = await getProductImages(productId);
+      const image = await getBusinessImage(businessId);
 
-      if (!images) {
-        throw new Error('No images found');
+      if (!image) {
+        throw new Error('No image found');
       }
 
-      return images[0].image;
+      return image;
     },
   });
 
   return error ? (
     <p className='bg-red-200 text-red-600 mt-1 text-center max-w-80 p-0.5'>
-      Hubo un error obteniendo los productos
+      Hubo un error obteniendo la imagen
     </p>
   ) : loading ? (
     <div
@@ -62,13 +62,13 @@ function ProductImageLoader({
   ) : (
     <Image
       className={cn('size-[130px] lg:size-[200px] object-cover rounded-sm', {
-        'size-[70px] lg:size-[200px]': tiny,
+        'size-[70px]': tiny,
       })}
       src={REMOTE_IMG_URL + mainImage}
       alt='Portada producto'
-      height={200}
-      width={200}
+      height={tiny ? 70 : 200}
+      width={tiny ? 70 : 200}
     />
   );
 }
-export default ProductImageLoader;
+export default BusinessImageLoader;

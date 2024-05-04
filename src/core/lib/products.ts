@@ -15,7 +15,7 @@ import {
   products,
   productsCategories,
 } from '../db/tables';
-import { DrizzleError, SQL, asc, desc, eq, gte } from 'drizzle-orm';
+import { DrizzleError, asc, desc, eq, gte, like, or, sql } from 'drizzle-orm';
 import { type ActionResponse } from './types';
 import { type DBProductCategory } from '../schemas/categories';
 import { revalidatePath } from 'next/cache';
@@ -328,6 +328,37 @@ export async function getProductsListByCategory({
     return {
       success: true,
       result: pageProducts,
+    };
+  } catch (e: any) {
+    return {
+      success: false,
+      errorType: 'unknown',
+      errors: [e.message],
+    };
+  }
+}
+
+export async function getProductsFromQuery(
+  query: string,
+): Promise<ActionResponse<DBProduct[]>> {
+  try {
+    const prods = await db.query.products.findMany({
+      where: or(
+        like(
+          sql`LOWER(${products.displayName})` as any,
+          `%${query.toLowerCase()}%`,
+        ),
+        like(
+          sql`LOWER(${products.description})` as any,
+          `%${query.toLowerCase()}%`,
+        ),
+      ),
+      limit: 10,
+    });
+
+    return {
+      success: true,
+      result: prods,
     };
   } catch (e: any) {
     return {

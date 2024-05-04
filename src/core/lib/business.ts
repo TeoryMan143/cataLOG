@@ -1,6 +1,6 @@
 'use server';
 
-import { DrizzleError, eq } from 'drizzle-orm';
+import { DrizzleError, eq, like, sql } from 'drizzle-orm';
 import { auth } from '@/core/auth';
 import {
   DBBusiness,
@@ -241,6 +241,31 @@ export async function getAcountBusinesses(
       success: false,
       errorType: 'insertion',
       errors: ['db', error.name, error.message],
+    };
+  }
+}
+
+export async function getBusinessesFromQuery(
+  query: string,
+): Promise<ActionResponse<DBBusiness[]>> {
+  try {
+    const buss = await db.query.businesses.findMany({
+      where: like(
+        sql`LOWER(${businesses.name})` as any,
+        `%${query.toLowerCase()}%`,
+      ),
+      limit: 10,
+    });
+
+    return {
+      success: true,
+      result: buss,
+    };
+  } catch (e: any) {
+    return {
+      success: false,
+      errorType: 'unknown',
+      errors: [e.message],
     };
   }
 }
