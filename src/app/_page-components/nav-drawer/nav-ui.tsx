@@ -12,17 +12,13 @@ type Props = React.ComponentPropsWithRef<'div'> & {
   fixed?: boolean;
 };
 
-const NavUi = forwardRef<HTMLDivElement, Props>(function NavUi(
-  { active, fixed },
-  ref,
-) {
+function NavUi({ active, fixed }: Props) {
   const { user } = useSession();
 
   if (!user) return <p>Error</p>;
 
   return (
     <div
-      ref={ref}
       className={cn(
         `
           w-72 h-dvh bg-black/80 absolute transition-all top-0 z-50 flex flex-col items-center gap-8 px-6 right-0 translate-x-full
@@ -51,6 +47,6 @@ const NavUi = forwardRef<HTMLDivElement, Props>(function NavUi(
       </nav>
     </div>
   );
-});
+}
 
 export default NavUi;
