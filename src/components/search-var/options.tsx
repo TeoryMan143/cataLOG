@@ -8,18 +8,27 @@ import ProductsQuery from './query/products';
 import BusinessQuery from './query/business';
 import { CTagIcon } from '../icons/c-tag';
 
-function Options({ q }: { q: string }) {
+function Options({
+  q,
+  onTabChange,
+}: {
+  q: string;
+  onTabChange?: (val: string) => void;
+}) {
   const [tabActive, setTabActive] = useState(false);
 
   return (
     <Tabs
       onValueChange={v => {
+        if (onTabChange) {
+          onTabChange(v);
+        }
         setTabActive(v === 'business');
       }}
       defaultValue='product'
       className='
         hidden absolute group-focus-within:block left-1/2 -translate-x-1/2 bg-white top-9 rounded-md border border-black w-64 z-20
-        lg:w-full 
+        lg:w-[800px]
       '
     >
       <TabsList

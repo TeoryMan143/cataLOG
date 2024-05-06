@@ -340,6 +340,7 @@ export async function getProductsListByCategory({
 
 export async function getProductsFromQuery(
   query: string,
+  limit = 10,
 ): Promise<ActionResponse<DBProduct[]>> {
   try {
     const prods = await db.query.products.findMany({
@@ -353,7 +354,7 @@ export async function getProductsFromQuery(
           `%${query.toLowerCase()}%`,
         ),
       ),
-      limit: 10,
+      limit,
     });
 
     return {

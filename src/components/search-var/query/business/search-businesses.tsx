@@ -9,10 +9,10 @@ function SearchBusinesses({
   business: DBBusiness;
 }) {
   return (
-    <Link className='flex gap-1' href={`/v?p=${id}`}>
+    <Link className='flex gap-1 hover:bg-amber-50' href={`/v?p=${id}`}>
       <div
         className='
-          size-32 p-2 overflow-hidden
+          size-20 p-2 overflow-hidden
           lg:size-[150px]
         '
       >

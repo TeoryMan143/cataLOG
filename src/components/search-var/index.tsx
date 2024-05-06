@@ -1,7 +1,7 @@
 'use client';
 
-import { usePathname, useRouter } from 'next/navigation';
-import { useEffect, useRef } from 'react';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { useDebounceValue } from 'usehooks-ts';
 import Options from './options';
 
@@ -9,14 +9,18 @@ function SearchBar() {
   const [debQuery, setQuery] = useDebounceValue('', 350);
   const router = useRouter();
   const path = usePathname();
-
+  const searchParams = useSearchParams();
   const inputRef = useRef<HTMLInputElement>(null);
+  const [activeTab, setActiveTab] = useState('product');
+
+  const isSearchPage = useMemo(() => path.startsWith('/search'), [path]);
+  const q = searchParams.get('q') ?? '';
 
   useEffect(() => {
-    if (path.startsWith('search')) {
+    if (isSearchPage) {
       router.push(`/search?q=${debQuery}`);
     }
-  }, [debQuery, router, path]);
+  }, [debQuery, router, path, isSearchPage]);
 
   return (
     <search
@@ -41,8 +45,9 @@ function SearchBar() {
         </g>
       </svg>
       <input
+        defaultValue={q}
         onKeyDownCapture={e => {
-          if (e.key === 'Enter') {
+          if (e.key === 'Enter' && activeTab === 'product') {
             router.push(`/search?q=${debQuery}`);
           }
         }}
@@ -50,7 +55,7 @@ function SearchBar() {
         className='w-full py-0.5 px-7 rounded-lg text-center peer'
         ref={inputRef}
       />
-      <Options q={debQuery} />
+      <Options q={debQuery} onTabChange={setActiveTab} />
       <button
         onClick={() => {
           if (inputRef.current) {

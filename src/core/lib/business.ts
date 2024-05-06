@@ -247,6 +247,7 @@ export async function getAcountBusinesses(
 
 export async function getBusinessesFromQuery(
   query: string,
+  limit = 10,
 ): Promise<ActionResponse<DBBusiness[]>> {
   try {
     const buss = await db.query.businesses.findMany({
@@ -254,7 +255,7 @@ export async function getBusinessesFromQuery(
         sql`LOWER(${businesses.name})` as any,
         `%${query.toLowerCase()}%`,
       ),
-      limit: 10,
+      limit,
     });
 
     return {

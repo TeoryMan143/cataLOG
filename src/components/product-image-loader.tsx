@@ -4,6 +4,7 @@ import { REMOTE_IMG_URL, cn } from '@/core/client-utils';
 import { getProductImages } from '@/core/lib/db/products';
 import { useQuery } from '@tanstack/react-query';
 import Image from 'next/image';
+import LoadingSpin from './icons/loading-spin';
 
 function ProductImageLoader({
   productId,
@@ -42,22 +43,7 @@ function ProductImageLoader({
         },
       )}
     >
-      <svg
-        xmlns='http://www.w3.org/2000/svg'
-        width='1em'
-        height='1em'
-        viewBox='0 0 24 24'
-        className='animate-spin-clockwise text-4xl'
-      >
-        <path
-          fill='none'
-          stroke='currentColor'
-          strokeLinecap='round'
-          strokeLinejoin='round'
-          strokeWidth='2'
-          d='M12 3a9 9 0 1 0 9 9'
-        />
-      </svg>
+      <LoadingSpin className='text-4xl' />
     </div>
   ) : (
     <Image
