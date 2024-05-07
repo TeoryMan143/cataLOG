@@ -369,3 +369,17 @@ export async function getProductsFromQuery(
     };
   }
 }
+
+export async function getProductsFromComplexQuery({query}: {
+  query: string;
+  limit: number;
+  categories: string[];
+  price: number;
+}) {
+
+  try {
+    
+  } catch (e:any) {
+    
+  }
+}

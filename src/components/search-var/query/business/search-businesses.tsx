@@ -1,4 +1,4 @@
-import { REMOTE_IMG_URL, cn, formatToCOP } from '@/core/client-utils';
+import { REMOTE_IMG_URL } from '@/core/client-utils';
 import { DBBusiness } from '@/core/schemas/business';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -9,7 +9,7 @@ function SearchBusinesses({
   business: DBBusiness;
 }) {
   return (
-    <Link className='flex gap-1 hover:bg-amber-50' href={`/v?p=${id}`}>
+    <Link className='flex gap-1 hover:bg-amber-50' href={`/b/${id}`}>
       <div
         className='
           size-20 p-2 overflow-hidden
