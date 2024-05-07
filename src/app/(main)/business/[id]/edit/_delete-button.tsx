@@ -21,7 +21,7 @@ function DeleteButton({ id, name }: { id: string; name: string }) {
 
   const valid = useMemo(() => inputName === name, [inputName, name]);
 
-  const router = useRouter()
+  const router = useRouter();
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -39,9 +39,7 @@ function DeleteButton({ id, name }: { id: string; name: string }) {
             </p>
             <Input
               className='border-black border'
-              icon={
-                <UserCircleIcon className='text-black' />
-              }
+              icon={<UserCircleIcon className='text-black' />}
               onChange={e => setInputName(e.target.value)}
             />
           </div>
@@ -59,7 +57,7 @@ function DeleteButton({ id, name }: { id: string; name: string }) {
 
                 toast.success('Se eliminó correctamemte', { id: toastId });
 
-                router.replace('/business')
+                router.replace('/business');
               }}
             >
               Eliminar

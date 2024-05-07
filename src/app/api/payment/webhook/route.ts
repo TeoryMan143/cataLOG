@@ -8,6 +8,7 @@ import {
   orders,
   paymentItems,
   payments,
+  products,
 } from '@/core/db/tables';
 import { eq } from 'drizzle-orm';
 import type { PaymentMetadata } from '@/core/lib/payments';
@@ -51,12 +52,14 @@ export async function POST(req: NextRequest) {
         const itemData = await tx.query.cartItems.findFirst({
           columns: {
             id: true,
+            amount: true,
           },
           where: eq(cartItems.id, itemId),
           with: {
             product: {
               columns: {
                 id: true,
+                avialableUnits: true,
               },
               with: {
                 business: {
@@ -80,6 +83,15 @@ export async function POST(req: NextRequest) {
           address,
           itemId,
         });
+
+        if (!itemData?.product) return tx.rollback();
+
+        const { id: productId, avialableUnits } = itemData?.product;
+
+        await db
+          .update(products)
+          .set({ avialableUnits: avialableUnits - itemData.amount })
+          .where(eq(products.id, productId));
       }
 
       await tx.delete(cart).where(eq(cart.accountId, userId));
