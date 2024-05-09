@@ -454,7 +454,7 @@ export async function deleteProductById(
     return {
       success: false,
       errorType: 'auth',
-      errors: ['Must be signed in to delete a product'],
+      errors: ['Not allowed'],
     };
   }
 
@@ -486,7 +486,7 @@ export async function deleteProductById(
       return {
         success: false,
         errorType: 'auth',
-        errors: ['You are not allowed to access this business'],
+        errors: ['Not allowed'],
       };
     }
 
