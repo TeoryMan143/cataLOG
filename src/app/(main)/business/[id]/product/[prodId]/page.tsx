@@ -40,7 +40,7 @@ async function AdminProductPage({ params: { prodId, id: bissId } }: Props) {
           text-gray-800 text-xl inline-flex gap-2 items-center transition-colors my-3
           hover:text-amber-500
         '
-        href={`/business/${businessId}`}
+        href={`/business/${businessId}/catalog`}
       >
         <BackIcon /> volver al negocio
       </Link>

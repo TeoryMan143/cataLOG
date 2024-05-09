@@ -34,7 +34,7 @@ async function EditBisPage({ params: { id } }: Props) {
           lg:text-gray-800 lg:top-3
           lg:hover:text-amber-500
         '
-        href={`/business/${id}`}
+        href={`/business/${id}/catalog`}
       >
         <BackIcon /> volver a {businessData.name}
       </Link>

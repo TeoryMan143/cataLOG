@@ -12,7 +12,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog';
-import { deleteProductById } from '@/core/lib/db/products';
+import { deleteProductById } from '@/core/lib/products';
 import { useParams, useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
@@ -24,7 +24,7 @@ function DeleteProduct({ productId }: { productId: string }) {
 
   useEffect(() => {
     if (done) {
-      router.replace(`/business/${params.id}`);
+      router.replace(`/business/${params.id}/catalog`);
     }
   }, [done, router, params.id]);
 
@@ -57,8 +57,8 @@ function DeleteProduct({ productId }: { productId: string }) {
           '
             onClick={async () => {
               setIsLoading(true);
-              const success = await deleteProductById(productId);
-              setDone(!!success);
+              const res = await deleteProductById(productId);
+              setDone(res.success);
               setIsLoading(false);
             }}
           >

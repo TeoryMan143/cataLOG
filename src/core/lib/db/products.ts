@@ -1,5 +1,6 @@
 'use server';
 
+import { auth } from '@/core/auth';
 import { db } from '@/core/db/config';
 import {
   productImages,
@@ -7,6 +8,7 @@ import {
   products as productsTable,
 } from '@/core/db/tables';
 import { eq } from 'drizzle-orm';
+import { ActionResponse } from '../types';
 
 export async function getBusinessProducts(businessId: string) {
   try {
@@ -53,19 +55,6 @@ export async function getProductByIdWithImages(productId: string) {
       },
     });
     return product;
-  } catch (error) {
-    console.error(error);
-    return null;
-  }
-}
-
-export async function deleteProductById(productId: string) {
-  try {
-    const success = await db
-      .delete(products)
-      .where(eq(products.id, productId))
-      .returning();
-    return success;
   } catch (error) {
     console.error(error);
     return null;

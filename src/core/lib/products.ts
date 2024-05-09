@@ -11,7 +11,6 @@ import {
 import { auth } from '@/core/auth';
 import { db } from '../db/config';
 import {
-  categories,
   productImages as productImagesTable,
   products,
   productsCategories,
@@ -33,7 +32,6 @@ import { type DBProductCategory } from '../schemas/categories';
 import { revalidatePath } from 'next/cache';
 import { deleteFileById } from './files';
 import isEmpty from 'just-is-empty';
-import { PgColumn } from 'drizzle-orm/pg-core';
 
 export async function registerProduct(req: RequestProduct): Promise<
   ActionResponse<{
@@ -98,6 +96,9 @@ export async function registerProduct(req: RequestProduct): Promise<
         })),
       )
       .returning();
+
+    revalidatePath(`/business/${product.businessId}/catalog`);
+
     return {
       success: true,
       result: {
@@ -219,7 +220,7 @@ export async function editProduct(
       await deleteFileById(img);
     });
 
-    revalidatePath(`/product/${productId}`);
+    revalidatePath(`/product/${productId}/catalog`);
     revalidatePath(`/business/${businessId}/product/${productId}`);
 
     return {
@@ -440,6 +441,67 @@ export async function getProductsFromComplexQuery({
       success: false,
       errorType: 'unknown',
       errors: [e.message],
+    };
+  }
+}
+
+export async function deleteProductById(
+  productId: string,
+): Promise<ActionResponse> {
+  const { user } = await auth();
+
+  if (!user) {
+    return {
+      success: false,
+      errorType: 'auth',
+      errors: ['Must be signed in to delete a product'],
+    };
+  }
+
+  try {
+    const product = await db.query.products.findFirst({
+      where: eq(products.id, productId),
+      columns: {
+        id: true,
+      },
+      with: {
+        business: {
+          columns: {
+            id: true,
+            accountId: true,
+          },
+        },
+      },
+    });
+
+    if (!product) {
+      return {
+        success: false,
+        errorType: 'insertion',
+        errors: ['Product not found'],
+      };
+    }
+
+    if (product.business.accountId !== user.id) {
+      return {
+        success: false,
+        errorType: 'auth',
+        errors: ['You are not allowed to access this business'],
+      };
+    }
+
+    await db.delete(products).where(eq(products.id, productId)).returning();
+
+    return {
+      success: true,
+      result: undefined,
+    };
+  } catch (error) {
+    console.error(error);
+    return {
+      success: false,
+      errorType: 'insertion',
+      errors: ['db error'],
     };
   }
 }

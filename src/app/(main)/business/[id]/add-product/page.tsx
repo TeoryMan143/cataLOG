@@ -16,7 +16,7 @@ function AddProductPage({
           text-gray-800 text-xl flex gap-2 absolute left-3 top-3 items-center transition-colors
           hover:text-amber-500
         '
-        href={`/business/${businessId}`}
+        href={`/business/${businessId}/catalog`}
       >
         <BackIcon /> volver al negocio
       </Link>

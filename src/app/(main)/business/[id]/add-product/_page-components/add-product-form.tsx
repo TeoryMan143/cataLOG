@@ -28,7 +28,6 @@ function AddProductForm({ businessId }: { businessId: string }) {
   const {
     register,
     handleSubmit,
-    setValue,
     formState: { isSubmitting, errors },
   } = useForm<FormProduct>({
     resolver: zodResolver(formProductSchema),
@@ -60,6 +59,10 @@ function AddProductForm({ businessId }: { businessId: string }) {
 
     if (images.length < 1) {
       return toast.error('Agrega al menos una imagen', { id: toastId });
+    }
+
+    if (categories.length < 1) {
+      return toast.error('Agrega al menos una categoria', { id: toastId });
     }
 
     const res = await registerProduct({

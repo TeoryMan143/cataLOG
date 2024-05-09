@@ -13,7 +13,7 @@ async function BusinessListPre({
 
   return (
     <Link
-      href={`/business/${id}`}
+      href={`/business/${id}/catalog`}
       className='
       flex p-8 border border-black gap-12 shadow-md rounded-lg
       hover:bg-amber-100
