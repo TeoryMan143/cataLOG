@@ -24,6 +24,8 @@ function CheckoutButton({
 }) {
   const [address, setAddress] = useState<string | null>(null);
 
+  const [open, setOpen] = useState(false);
+
   return (
     <div
       className='
@@ -32,7 +34,14 @@ function CheckoutButton({
       '
     >
       <p className='text-center mb-1'>Total: {formatToCOP(total)} COP</p>
-      <Dialog>
+      <Dialog
+        open={open}
+        onOpenChange={op => {
+          if (itemsCount > 0) {
+            setOpen(op);
+          }
+        }}
+      >
         <DialogTrigger asChild>
           <Button
             className='w-full'
