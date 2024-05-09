@@ -11,11 +11,23 @@ import {
 import { auth } from '@/core/auth';
 import { db } from '../db/config';
 import {
+  categories,
   productImages as productImagesTable,
   products,
   productsCategories,
 } from '../db/tables';
-import { DrizzleError, asc, desc, eq, gte, like, or, sql } from 'drizzle-orm';
+import {
+  DrizzleError,
+  and,
+  asc,
+  desc,
+  eq,
+  gte,
+  like,
+  lte,
+  or,
+  sql,
+} from 'drizzle-orm';
 import { type ActionResponse } from './types';
 import { type DBProductCategory } from '../schemas/categories';
 import { revalidatePath } from 'next/cache';
@@ -370,16 +382,64 @@ export async function getProductsFromQuery(
   }
 }
 
-export async function getProductsFromComplexQuery({query}: {
+export async function getProductsFromComplexQuery({
+  query,
+  limit = 100,
+  categories: categoryIds,
+  minPrice = 0,
+  maxPrice,
+}: {
   query: string;
-  limit: number;
+  limit?: number;
   categories: string[];
-  price: number;
-}) {
-
+  minPrice?: number | null;
+  maxPrice?: number | null;
+}): Promise<ActionResponse<DBProduct[]>> {
   try {
-    
-  } catch (e:any) {
-    
+    const prods = await db
+      .selectDistinct({
+        id: products.id,
+        description: products.description,
+        businessId: products.businessId,
+        displayName: products.displayName,
+        price: products.price,
+        unit: products.unit,
+        avialableUnits: products.avialableUnits,
+        rating: products.rating,
+      })
+      .from(products)
+      .limit(limit)
+      .innerJoin(
+        productsCategories,
+        eq(productsCategories.productId, products.id),
+      )
+      .where(
+        and(
+          or(...categoryIds.map(cat => eq(productsCategories.categoryId, cat))),
+          or(
+            like(
+              sql`LOWER(${products.displayName})` as any,
+              `%${query.toLowerCase()}%`,
+            ),
+            like(
+              sql`LOWER(${products.description})` as any,
+              `%${query.toLowerCase()}%`,
+            ),
+          ),
+          minPrice ? gte(products.price, minPrice) : undefined,
+          maxPrice ? lte(products.price, maxPrice) : undefined,
+        ),
+      );
+
+    return {
+      success: true,
+      result: prods,
+    };
+  } catch (e: any) {
+    return {
+      success: false,
+      errorType: 'unknown',
+      errors: [e.message],
+    };
   }
 }

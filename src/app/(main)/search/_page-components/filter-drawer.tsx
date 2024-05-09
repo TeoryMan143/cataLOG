@@ -2,6 +2,7 @@
 
 import { Checkbox } from '@/components/checkbox';
 import LoadingSpin from '@/components/icons/loading-spin';
+import { Slider } from '@/components/ui/slider';
 import { cn } from '@/core/client-utils';
 import { workSans } from '@/core/fonts';
 import { getCategories } from '@/core/lib/db/categories';
@@ -13,10 +14,22 @@ import { useOnClickOutside } from 'usehooks-ts';
 
 type Props = {
   onCategoriesChange: (categories: DBCategory[]) => void;
+  onMinPriceCommit: (val: number | null) => void;
+  onMaxPriceCommit: (val: number | null) => void;
 };
 
-function FilterDrawer({ onCategoriesChange }: Props) {
+function FilterDrawer({
+  onCategoriesChange,
+  onMinPriceCommit,
+  onMaxPriceCommit,
+}: Props) {
   const [active, setActive] = useState(false);
+  const [minPrice, setMinPrice] = useState<number | null>(null);
+  const [maxPrice, setMaxPrice] = useState<number | null>(null);
+
+  const [minEnabled, setMinEnabled] = useState(false);
+  const [maxEnabled, setMaxEnabled] = useState(false);
+
   const [selectedCategories, setSelectedCategories] = useState<DBCategory[]>(
     [],
   );
@@ -61,7 +74,7 @@ function FilterDrawer({ onCategoriesChange }: Props) {
   return (
     <div
       className={cn(
-        'absolute h-full bg-white p-2 -translate-x-full transition-transform max-w-[45dvw]',
+        'fixed h-full bg-white p-2 -translate-x-full transition-transform max-w-[55dvw] z-20',
         {
           'translate-x-0': active,
         },
@@ -69,6 +82,60 @@ function FilterDrawer({ onCategoriesChange }: Props) {
       ref={ref}
     >
       <nav className='overflow-y-auto h-full p-2'>
+        <h3 className='font-bold text-2xl mb-2'>Precio</h3>
+        <div className='flex flex-col gap-3 mb-5'>
+          <div className='flex gap-2 items-center'>
+            <Checkbox
+              onCheckedChange={chk => {
+                if (chk !== 'indeterminate') {
+                  setMinEnabled(chk);
+                }
+
+                onMinPriceCommit(chk ? minPrice : null);
+              }}
+            />
+            <div
+              className={cn('flex-1 opacity-40', {
+                'opacity-100': minEnabled,
+              })}
+            >
+              <p className='text-center'>Min: {minPrice ?? ''}</p>
+              <Slider
+                onValueChange={([val]) => setMinPrice(val)}
+                onValueCommit={([val]) => onMinPriceCommit(val)}
+                min={0}
+                max={200000}
+                value={minPrice ? [minPrice] : undefined}
+                disabled={!minEnabled}
+              />
+            </div>
+          </div>
+          <div className='flex gap-2 items-center'>
+            <Checkbox
+              onCheckedChange={chk => {
+                if (chk !== 'indeterminate') {
+                  setMaxEnabled(chk);
+                }
+                onMaxPriceCommit(chk ? maxPrice : null);
+              }}
+            />
+            <div
+              className={cn('flex-1 opacity-40', {
+                'opacity-100': maxEnabled,
+              })}
+            >
+              <p className='text-center'>Max: {maxPrice ?? ''}</p>
+              <Slider
+                onValueChange={([val]) => setMaxPrice(val)}
+                onValueCommit={([val]) => onMaxPriceCommit(val)}
+                min={0}
+                max={200000}
+                value={maxPrice ? [maxPrice] : undefined}
+                disabled={!maxEnabled}
+              />
+            </div>
+          </div>
+        </div>
         <h3 className='font-bold text-2xl mb-2'>Categorias</h3>
         <div className='flex flex-col gap-2'>
           {isLoading && (

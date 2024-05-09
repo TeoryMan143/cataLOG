@@ -14,7 +14,11 @@ function SearchBar() {
   const [activeTab, setActiveTab] = useState('product');
 
   const isSearchPage = useMemo(() => path.startsWith('/search'), [path]);
-  const q = searchParams.get('q') ?? '';
+  const q = searchParams.get('q');
+
+  useEffect(() => {
+    if (q) setQuery(q);
+  }, [setQuery, q]);
 
   useEffect(() => {
     if (isSearchPage) {
@@ -45,9 +49,9 @@ function SearchBar() {
         </g>
       </svg>
       <input
-        defaultValue={q}
+        defaultValue={debQuery}
         onKeyDownCapture={e => {
-          if (e.key === 'Enter' && activeTab === 'product') {
+          if (e.key === 'Enter' && activeTab === 'product' && debQuery !== '') {
             router.push(`/search?q=${debQuery}`);
           }
         }}
