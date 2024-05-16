@@ -20,6 +20,7 @@ import EmailVerify from '../../../emails/email-verify';
 import { GoogleTokens, generateCodeVerifier, generateState } from 'arctic';
 import { google } from '../auth/oauth-providers';
 import { z } from 'zod';
+import ForgotPassword from '@root/emails/forgot-password';
 
 export async function resgisterUser(
   data: RegisterUserSchema,
@@ -367,7 +368,7 @@ export async function resendVerifyEmail(
     return {
       success: false,
       errorType: 'auth',
-      errors: [error?.message],
+      errors: [error.message],
     };
   }
 }
@@ -460,7 +461,7 @@ export async function signUpWithGoogle(
         accessTokenExpiresAt: string;
       };
 
-    const newUser = await db
+    const [newUser] = await db
       .insert(users)
       .values({
         name: decoded.name,
@@ -478,12 +479,12 @@ export async function signUpWithGoogle(
       accessToken,
       provider: 'google',
       providerUserId: decoded.id,
-      userId: newUser[0].id,
+      userId: newUser.id,
       refreshToken,
       expiresAt: new Date(accessTokenExpiresAt),
     });
 
-    const session = await lucia.createSession(newUser[0].id, {
+    const session = await lucia.createSession(newUser.id, {
       expiresIn: 60 * 60 * 24 * 30,
     });
     const sessionCookie = lucia.createSessionCookie(session.id);
@@ -500,7 +501,7 @@ export async function signUpWithGoogle(
 
     return {
       success: true,
-      result: newUser[0],
+      result: newUser,
     };
   } catch (e: any) {
     if (e instanceof JsonWebTokenError) {
@@ -514,6 +515,76 @@ export async function signUpWithGoogle(
       return {
         success: false,
         errorType: 'insertion',
+        errors: [e.message],
+      };
+    }
+    return {
+      success: false,
+      errorType: 'unknown',
+      errors: [e.message],
+    };
+  }
+}
+
+export async function recoverPassword(email: string): Promise<ActionResponse> {
+  try {
+    const token = jwt.sign({ email }, process.env.JWT_SECRET!, {
+      expiresIn: '5m',
+    });
+
+    const url = `${process.env.NEXT_PUBLIC_BASE_URL}/recoverpass?token=${token}`;
+
+    const emailData = await sendEmail({
+      to: [email],
+      subject: 'Verifica tu cuenta de cataLOG',
+      react: ForgotPassword({ url }),
+    });
+
+    if (emailData.error) {
+      return {
+        success: false,
+        errorType: 'auth',
+        errors: ['Email could not be send'],
+      };
+    }
+
+    return {
+      success: true,
+      result: undefined,
+    };
+  } catch (e: any) {
+    if (e instanceof JsonWebTokenError) {
+      return {
+        success: false,
+        errorType: 'token-validation',
+        errors: [e.message],
+      };
+    }
+    return {
+      success: false,
+      errorType: 'unknown',
+      errors: [e.message],
+    };
+  }
+}
+
+export async function validateNewPasswordToken(
+  token: string,
+): Promise<ActionResponse<string>> {
+  try {
+    const { email } = jwt.verify(token, process.env.JWT_SECRET!) as {
+      email: string;
+    };
+
+    return {
+      success: true,
+      result: email,
+    };
+  } catch (e: any) {
+    if (e instanceof JsonWebTokenError) {
+      return {
+        success: false,
+        errorType: 'token-validation',
         errors: [e.message],
       };
     }

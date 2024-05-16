@@ -6,7 +6,9 @@ export const dbUserSchema = createInsertSchema(users);
 export const requestUserSchema = dbUserSchema.omit({ id: true });
 export const formUserSchema = requestUserSchema
   .extend({
-    confirmPassword: z.string({ required_error: 'Campo requerido' }),
+    confirmPassword: z
+      .string({ required_error: 'Campo requerido' })
+      .min(1, 'Campo requerido'),
     number: z
       .string({ required_error: 'Campo requerido' })
       .min(1, 'Ingresa un numero')
@@ -17,7 +19,8 @@ export const formUserSchema = requestUserSchema
       .transform(v => +v),
     email: z
       .string({ required_error: 'Campo requerido' })
-      .email('Ingresa un email válido'),
+      .email('Ingresa un email válido')
+      .min(1, 'Campo requerido'),
     password: z
       .string({ required_error: 'Campo requerido' })
       .min(10, 'La contraseña debe ser al menos de 10 caracteres'),
@@ -32,17 +35,20 @@ export const formUserSchema = requestUserSchema
 
 export const registerUserSchema = requestUserSchema
   .extend({
-    confirmPassword: z.string({ required_error: 'Campo requerido' }),
+    confirmPassword: z
+      .string({ required_error: 'Campo requerido' })
+      .min(1, 'Campo requerido'),
     number: z.number({ required_error: 'Campo requerido' }).int().min(999999),
     email: z
       .string({ required_error: 'Campo requerido' })
-      .email('Ingresa un email válido'),
+      .email('Ingresa un email válido')
+      .min(1, 'Campo requerido'),
     password: z
       .string({ required_error: 'Campo requerido' })
       .min(10, 'La contraseña debe ser al menos de 10 caracteres'),
     name: z
       .string({ required_error: 'Campo requerido' })
-      .min(10, 'Nombre muy corto'),
+      .min(5, 'Nombre muy corto'),
   })
   .refine(fields => fields.password === fields.confirmPassword, {
     message: 'Las contraseñas no coinciden',

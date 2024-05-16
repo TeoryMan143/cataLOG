@@ -16,6 +16,8 @@ import { useCountdown } from 'usehooks-ts';
 import EmailVerifyDialog from '../../_page-components/email-verify-dialog';
 import GoogleButton from '../../_page-components/_google-button';
 import ExistEmail from './existing-email';
+import { Button as UiButton } from '@/components/ui/button';
+import ForgotPassword from './forgot-password';
 
 function LoginEmailForm() {
   const {
@@ -135,12 +137,14 @@ function LoginEmailForm() {
         </div>
       )}
 
+      <ForgotPassword />
+
       <Button
         disabled={isSubmitting}
         variant='dark'
         type='submit'
         className='
-          w-72 py-2 mt-5
+          w-72 py-2
           hover:bg-gray-900
           disabled:bg-gray-600
         '

@@ -48,7 +48,7 @@ function LoginLayout({ children }: { children: React.ReactNode }) {
       <Logo
         className='
           absolute right-0 bottom-0 text-6xl text-white
-         lg:text-black
+          lg:text-black
         '
       />
     </div>

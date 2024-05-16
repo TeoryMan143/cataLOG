@@ -25,7 +25,7 @@ export async function sendEmail({
 }: {
   to: string[];
   subject: string;
-  react: any;
+  react: React.ReactElement;
 }) {
   try {
     await trans.sendMail({
