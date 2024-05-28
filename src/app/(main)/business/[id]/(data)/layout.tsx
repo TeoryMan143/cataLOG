@@ -9,6 +9,7 @@ import { PlusRoundedIcon } from '@/components/icons/plus-rounded';
 import { EditIcon } from '@/components/icons/edit';
 import { auth } from '@/core/auth';
 import BusinessTabs from '../_page-components/tabs';
+import QrGenerator from '../_page-components/qr-generator';
 
 type Props = {
   children: React.ReactNode;
@@ -56,7 +57,7 @@ async function BusinessLayout({ children, params: { id } }: Props) {
           />
           <div className='space-y-4'>
             <h3 className={cn('text-5xl font-bold', workSans.className)}>
-              {name}
+              {name} <QrGenerator id={id} />
             </h3>
             <SocialLinks id={id} />
             <div className='flex gap-4'>
