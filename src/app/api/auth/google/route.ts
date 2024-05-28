@@ -77,6 +77,7 @@ export async function GET({ nextUrl: { searchParams } }: NextRequest) {
           expiresIn: '15m',
         },
       );
+
       cookies().set('google_token', token, {
         httpOnly: true,
       });

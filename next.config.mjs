@@ -12,6 +12,9 @@ const nextConfig = {
     config.externals.push('@node-rs/argon2', '@node-rs/bcrypt');
     return config;
   },
+  experimental: {
+    typedRoutes: true,
+  },
 };
 
 export default nextConfig;

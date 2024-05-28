@@ -529,10 +529,10 @@ export async function signUpWithGoogle(
 export async function recoverPassword(email: string): Promise<ActionResponse> {
   try {
     const token = jwt.sign({ email }, process.env.JWT_SECRET!, {
-      expiresIn: '5m',
+      expiresIn: '15m',
     });
 
-    const url = `${process.env.NEXT_PUBLIC_BASE_URL}/recoverpass?token=${token}`;
+    const url = `${process.env.NEXT_PUBLIC_BASE_URL}/api/recoverpass?token=${token}`;
 
     const emailData = await sendEmail({
       to: [email],
@@ -592,6 +592,34 @@ export async function validateNewPasswordToken(
       success: false,
       errorType: 'unknown',
       errors: [e.message],
+    };
+  }
+}
+
+export async function setNewPassword(
+  password: string,
+  email: string,
+): Promise<ActionResponse> {
+  try {
+    const hashedPass = await hashPassword(password);
+
+    await db
+      .update(users)
+      .set({ password: hashedPass })
+      .where(eq(users.email, email));
+
+    cookies().delete('recover_token');
+
+    return {
+      success: true,
+      result: undefined,
+    };
+  } catch (e) {
+    console.log(e);
+    return {
+      success: false,
+      errorType: 'unknown',
+      errors: [''],
     };
   }
 }

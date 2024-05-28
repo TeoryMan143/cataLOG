@@ -3,12 +3,25 @@ import LoginEmailForm from './_page-components/_login-email-form';
 import { Metadata } from 'next';
 import { cn } from '@/core/client-utils';
 import { workSans } from '@/core/fonts';
+import { cookies } from 'next/headers';
+import { redirect } from 'next/navigation';
 
 export const metadata: Metadata = {
   title: 'Iniciar Sesión',
 };
 
 function Login() {
+  const hasGoogleToken = cookies().has('google_token');
+  const hasRecoverToken = cookies().has('recover_token');
+
+  if (hasGoogleToken) {
+    redirect('/register/google-number');
+  }
+
+  if (hasRecoverToken) {
+    redirect('/login/recoverpass');
+  }
+
   return (
     <div className='flex flex-col gap-6 items-center'>
       <h2

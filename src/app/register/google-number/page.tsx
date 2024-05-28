@@ -17,8 +17,8 @@ function GoogleNumberPage() {
         className={cn(
           workSans.className,
           `
-          font-bold text-[1.7rem] text-white text-center
-          lg:text-black lg:px-10
+            font-bold text-[1.7rem] text-white text-center
+            lg:text-black lg:px-10
           `,
         )}
       >

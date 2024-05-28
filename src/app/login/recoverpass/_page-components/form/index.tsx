@@ -4,20 +4,39 @@ import PasswordFillIcon from '@/components/icons/password-fill';
 import PasswordRegularIcon from '@/components/icons/password-regular';
 import Input from '@/components/input';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useForm } from 'react-hook-form';
+import { SubmitHandler, useForm } from 'react-hook-form';
 import { type NewPassword, newPasswordSchema } from './schema';
 import { Button } from '@/components/ui/button';
+import { toast } from 'sonner';
+import { setNewPassword } from '@/core/lib/auth';
+import { useRouter } from 'next/navigation';
 
 function RecoverPassForm({ email }: { email: string }) {
   const {
     register,
+    handleSubmit,
     formState: { isLoading, errors },
   } = useForm<NewPassword>({
     resolver: zodResolver(newPasswordSchema),
   });
 
+  const router = useRouter();
+
+  const onSumbit: SubmitHandler<NewPassword> = async data => {
+    const toastId = toast.loading('Cambiando contraseña');
+
+    const res = await setNewPassword(data.password, email);
+
+    if (!res.success) {
+      return toast.error('Ha ocurrido un error', { id: toastId });
+    }
+
+    toast.success('Contraseña modificada correctamente', { id: toastId });
+    router.replace('/login');
+  };
+
   return (
-    <form>
+    <form onSubmit={handleSubmit(onSumbit)} className='space-y-3'>
       <Input
         className='
           border-black 
