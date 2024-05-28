@@ -1,6 +1,6 @@
 'use server';
 
-import { DrizzleError, eq, like, sql } from 'drizzle-orm';
+import { DrizzleError, eq, like, or, sql } from 'drizzle-orm';
 import { auth } from '@/core/auth';
 import {
   DBBusiness,
@@ -251,9 +251,12 @@ export async function getBusinessesFromQuery(
 ): Promise<ActionResponse<DBBusiness[]>> {
   try {
     const buss = await db.query.businesses.findMany({
-      where: like(
-        sql`LOWER(${businesses.name})` as any,
-        `%${query.toLowerCase()}%`,
+      where: or(
+        like(sql`LOWER(${businesses.name})` as any, `%${query.toLowerCase()}%`),
+        like(
+          sql`LOWER(${businesses.address})` as any,
+          `%${query.toLowerCase()}%`,
+        ),
       ),
       limit,
     });
