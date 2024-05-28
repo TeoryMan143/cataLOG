@@ -16,7 +16,7 @@ function EditButton() {
         active:scale-95
       '
       onClick={() => {
-        router.push(`${params.prodId}/edit`);
+        router.push(`/business/${params.id}/product/${params.prodId}/edit`);
       }}
     >
       <EditIcon /> <span>Editar</span>

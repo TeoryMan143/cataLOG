@@ -72,7 +72,7 @@ async function ViewProductPage({ searchParams: { p: prodId } }: Props) {
               {formatToCOP(price)} COP / {unitLabel}
             </p>
           </div>
-          <ProductRating rating={Math.floor(rating)} />
+          {/* <ProductRating rating={Math.floor(rating)} /> */}
           <div className='space-y-3'>
             <p className='font-semibold mb-2'>Descripción del producto</p>
             <Categories productId={prodId} />

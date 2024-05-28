@@ -12,7 +12,7 @@ const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 
 const WEBHOOK_URL =
   process.env.VERCEL_ENV === 'development'
-    ? 'https://6e56-181-234-160-44.ngrok-free.app'
+    ? 'https://3afb-186-168-216-106.ngrok-free.app'
     : BASE_URL;
 
 export type PaymentMetadata = {
